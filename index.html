@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OnlyFans4U - Home Lab Build</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* bg-gray-900 */
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #4f46e5, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gallery-img {
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        }
+        .gallery-img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.2), 0 8px 10px -6px rgb(0 0 0 / 0.2);
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+
+    <!-- Main Container -->
+    <div class="container mx-auto px-4 py-8 md:py-16">
+
+        <!-- Header Section -->
+        <header class="text-center mb-12 md:mb-20">
+            <h1 class="text-4xl md:text-6xl font-black text-white tracking-tight">The <span class="gradient-text">OnlyFans4U</span> Build</h1>
+            <p class="mt-4 text-lg md:text-xl text-gray-400 max-w-3xl mx-auto">A detailed look at the components and assembly of a custom 10-inch 4U home lab server rack.</p>
+        </header>
+
+        <!-- Image Gallery Section -->
+        <section class="mb-12 md:mb-20">
+            <h2 class="text-3xl font-bold text-white mb-8 text-center">Build Gallery</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                <!-- Image 1: Fan Wall -->
+                <div class="gallery-img rounded-xl overflow-hidden shadow-lg">
+                    <img src="6AC09EE6-EF0D-479D-AA61-5466965FD22F_1_105_c.jpeg" alt="Front view of the server rack showing a wall of Noctua fans" class="w-full h-full object-cover">
+                </div>
+                <!-- Image 2: Rear I/O -->
+                <div class="gallery-img rounded-xl overflow-hidden shadow-lg">
+                    <img src="D29F915A-294D-4B0D-904D-FA84D3CD4B50_1_105_c.jpeg" alt="Rear view showing the I/O of the Supermicro server nodes" class="w-full h-full object-cover">
+                </div>
+                <!-- Image 3: Top-down with Screen -->
+                <div class="gallery-img rounded-xl overflow-hidden shadow-lg">
+                    <img src="5D6A82F0-A483-4F3E-B1EE-0C1EB9AEE22C_1_105_c.jpg" alt="Top-down view of the rack with wiring and the Raspberry Pi monitor active" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- Bill of Materials Section -->
+        <section>
+            <h2 class="text-3xl font-bold text-white mb-8 text-center">Bill of Materials</h2>
+            <div id="bom-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <!-- BOM items will be dynamically inserted here by JavaScript -->
+            </div>
+        </section>
+
+    </div>
+
+    <!-- JavaScript to render the BOM -->
+    <script>
+        const billOfMaterials = [
+            {
+                category: "Chassis & Mounting",
+                name: "DeskPi RackMate T0 Rackmount",
+                description: "10 Inch 4U Server Cabinet for Network and Server Equipment.",
+                quantity: 1,
+                link: null
+            },
+            {
+                category: "Chassis & Mounting",
+                name: "DeskPi Mini-ITX Shell",
+                description: "Custom enclosure for mounting Mini-ITX boards in the Rackmate.",
+                quantity: 4,
+                link: "https://deskpi.com/products/deskpi-rackmate-accessory-mini-itx-shell"
+            },
+             {
+                category: "Cooling",
+                name: "10-inch Fan Rack Mount",
+                description: "Bracket for mounting 40mm fans for push/pull airflow.",
+                quantity: 4,
+                link: "https://hivets.au/products/10-inch-rack-mount-for-40mm-fans-5"
+            },
+            {
+                category: "Cooling",
+                name: "Noctua NF-A4x20 PWM Fan",
+                description: "Premium quiet 40x20mm fan for high-static pressure cooling.",
+                quantity: 20,
+                link: "https://noctua.at/en/nf-a4x20-pwm"
+            },
+            {
+                category: "Compute Nodes",
+                name: "Supermicro SYS-E200-8D",
+                description: "Compact Mini-ITX server with Intel Xeon D-1528 processor.",
+                quantity: 4,
+                link: "https://www.supermicro.com/en/products/system/Mini-ITX/SYS-E200-8D.cfm"
+            },
+            {
+                category: "Networking",
+                name: "Gowin R86S-P2",
+                description: "High-performance fanless router/firewall appliance.",
+                quantity: 1,
+                link: "https://www.gowinfanless.com/uncategorised/gw-r86s-p-series/gw-r86s-p2"
+            },
+            {
+                category: "Networking",
+                name: "Netgear GS305E Switch",
+                description: "5-Port Gigabit Plus Smart Managed Switch.",
+                quantity: 1,
+                link: "https://www.netgear.com/support/product/gs305e/"
+            },
+             {
+                category: "Networking",
+                name: "MikroTik CRS305-1G-4S+",
+                description: "Compact switch with 1G Ethernet and four 10G SFP+ ports.",
+                quantity: 1,
+                link: "https://mikrotik.com/product/crs305_1g_4s_in"
+            },
+            {
+                category: "Networking",
+                name: "DeskPi 12 Port Patch Panel",
+                description: "0.5U CAT6 Network Patch Panel for 10-inch racks.",
+                quantity: 1,
+                link: null
+            },
+            {
+                category: "Power",
+                name: "Mean Well LRS-350-12",
+                description: "350W 12V single-output enclosed power supply.",
+                quantity: 1,
+                link: "https://www.meanwell.com/webapp/product/search.aspx?prod=LRS-350"
+            },
+            {
+                category: "Peripherals & Cables",
+                name: "8\" Raspberry Pi Monitor",
+                description: "1280x800 IPS HDMI portable touchscreen for system monitoring.",
+                quantity: 1,
+                link: null
+            },
+            {
+                category: "Peripherals & Cables",
+                name: "DC Power Pigtail Cables",
+                description: "5.5mm x 2.5mm right angle connectors for custom power distribution.",
+                quantity: 1,
+                link: null
+            },
+            {
+                category: "Peripherals & Cables",
+                name: "Ankuly Cat6A LAN Cable (0.15m)",
+                description: "Short run 10Gbps patch cables for clean wiring.",
+                quantity: 1,
+                link: null
+            },
+             {
+                category: "Peripherals & Cables",
+                name: "Ankuly Cat6A LAN Cable (0.3m)",
+                description: "Short run 10Gbps patch cables for clean wiring.",
+                quantity: 1,
+                link: null
+            }
+        ];
+
+        const bomContainer = document.getElementById('bom-container');
+
+        // Function to create and append a BOM item card
+        const createBomCard = (item) => {
+            const card = document.createElement('div');
+            card.className = 'bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-lg p-5 flex flex-col h-full shadow-md hover:bg-gray-700/60 transition-colors duration-200';
+
+            let linkButton = '';
+            if (item.link) {
+                linkButton = `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="mt-auto inline-block text-center bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200">View Product</a>`;
+            } else {
+                 linkButton = `<div class="mt-auto text-center text-gray-500 font-semibold py-2 px-4 rounded-md">No Link</div>`;
+            }
+            
+            card.innerHTML = `
+                <div class="flex-grow">
+                    <span class="text-xs font-semibold uppercase text-indigo-400">${item.category}</span>
+                    <h3 class="text-lg font-bold text-white mt-1">${item.name}</h3>
+                    <p class="text-sm text-gray-400 mt-2 mb-4">${item.description}</p>
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <span class="text-gray-300 font-medium">Quantity</span>
+                    <span class="text-2xl font-bold text-white">${item.quantity}</span>
+                </div>
+                ${linkButton}
+            `;
+            bomContainer.appendChild(card);
+        };
+        
+        // Sort items by category before rendering
+        billOfMaterials.sort((a, b) => a.category.localeCompare(b.category));
+        
+        // Generate a card for each item
+        billOfMaterials.forEach(createBomCard);
+    </script>
+</body>
+</html>
