@@ -5,81 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>sddc.info | Automation & Infrastructure</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Page-specific styles */
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
-            background-color: #fff;
-        }
-        .hero h1 {
-            font-size: 4em;
-            font-weight: 700;
-            color: #2c3e50;
-            margin-bottom: 10px;
-        }
-        .hero p {
-            font-size: 1.3em;
-            color: #7f8c8d;
-            margin-bottom: 40px;
-        }
-        .card-container {
-            display: flex;
-            justify-content: center;
-            gap: 30px;
-            flex-wrap: wrap;
-        }
-        .card {
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.07);
-            padding: 40px;
-            width: 320px;
-            text-decoration: none;
-            color: #333;
-            transition: transform 0.3s, box-shadow 0.3s;
-            border: 1px solid #eee;
-        }
-        .card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.1);
-        }
-        .card h2 {
-            font-size: 1.8em;
-            color: #3498db;
-            margin-top: 0;
-            border-bottom: none;
-        }
-        .card p {
-            font-size: 1em;
-            color: #555;
-        }
-    </style>
 </head>
 <body>
-    <div class="nav-container"></div>
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="/">sddc.info</a>
+            </div>
+            <nav class="sidebar-nav">
+                <h3>Main</h3>
+                <ul>
+                    <li><a href="/index.html" class="active">Home</a></li>
+                    <li><a href="/hardware.html">Hardware</a></li>
+                    <li><a href="/performance.html">Performance</a></li>
+                </ul>
+                <h3>Documentation</h3>
+                <ul>
+                    <li><a href="/documentation/index.html">Overview</a></li>
+                    <li><a href="/documentation/provisioning_server.html">Provisioning Server</a></li>
+                    <li><a href="/documentation/kubernetes_cluster.html">Kubernetes Cluster</a></li>
+                    <li><a href="/documentation/end_to_end_workflow.html">Workflow</a></li>
+                </ul>
+            </nav>
+        </aside>
 
-    <div class="hero">
-        <h1>sddc.info</h1>
-        <p>A collection of projects and documentation for infrastructure automation.</p>
-        <div class="card-container">
-            <a href="hardware.html" class="card">
-                <h2>Hardware Build</h2>
-                <p>Explore the bill of materials and photo gallery for the custom 4U home lab server rack.</p>
-            </a>
-            <a href="documentation/index.html" class="card">
-                <h2>Project Documentation</h2>
-                <p>Dive into the comprehensive documentation for the bare-metal Kubernetes provisioning ecosystem.</p>
-            </a>
-            <a href="performance.html" class="card">
-                <h2>Performance</h2>
-                <p>View the performance metrics and benchmarks for various infrastructure components.</p>
-            </a>
-        </div>
+        <main class="main-content">
+            <div class="hero">
+                <h1>Welcome to sddc.info</h1>
+                <p>A collection of projects and documentation for infrastructure automation.</p>
+                
+                <div class="card-container">
+                    <a href="/hardware.html" class="card">
+                        <h2>Hardware Build</h2>
+                        <p>Explore the bill of materials and photo gallery for the custom 4U home lab server rack.</p>
+                    </a>
+                    <a href="/documentation/index.html" class="card">
+                        <h2>Project Documentation</h2>
+                        <p>Dive into the comprehensive documentation for the bare-metal Kubernetes provisioning ecosystem.</p>
+                    </a>
+                    <a href="/performance.html" class="card">
+                        <h2>Performance</h2>
+                        <p>View the performance metrics and benchmarks for various infrastructure components.</p>
+                    </a>
+                </div>
+            </div>
+        </main>
     </div>
-
-    <div class="footer"></div>
-
-    <script src="nav.js"></script>
 </body>
 </html>

@@ -8,40 +8,58 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <div class="nav-container"></div>
-
-    <div class="container mx-auto px-4 py-8 md:py-12">
-        <header class="text-center mb-12 md:mb-16">
-            <h1 class="text-4xl md:text-5xl font-black text-gray-800 tracking-tight">The Hardware Build</h1>
-            <p class="mt-4 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">A detailed look at the components and assembly of the custom 10-inch 4U home lab server rack.</p>
-        </header>
-
-        <section class="mb-12 md:mb-20">
-            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Build Gallery</h2>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                <div class="rounded-xl overflow-hidden shadow-lg transition-transform transform hover:scale-105">
-                    <img src="6AC09EE6-EF0D-479D-AA61-5466965FD22F_1_105_c.jpeg" alt="Front view of the server rack showing a wall of Noctua fans" class="w-full h-full object-cover">
-                </div>
-                <div class="rounded-xl overflow-hidden shadow-lg transition-transform transform hover:scale-105">
-                    <img src="D29F915A-294D-4B0D-904D-FA84D3CD4B50_1_105_c.jpeg" alt="Rear view showing the I/O of the Supermicro server nodes" class="w-full h-full object-cover">
-                </div>
-                <div class="rounded-xl overflow-hidden shadow-lg transition-transform transform hover:scale-105">
-                    <img src="5D6A82F0-A483-4F3E-B1EE-0C1EB9AEE22C_1_105_c.jpeg" alt="Top-down view of the rack with wiring and the monitor active" class="w-full h-full object-cover">
-                </div>
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="/">sddc.info</a>
             </div>
-        </section>
+            <nav class="sidebar-nav">
+                <h3>Main</h3>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/hardware.html" class="active">Hardware</a></li>
+                    <li><a href="/performance.html">Performance</a></li>
+                </ul>
+                <h3>Documentation</h3>
+                <ul>
+                    <li><a href="/documentation/index.html">Overview</a></li>
+                    <li><a href="/documentation/provisioning_server.html">Provisioning Server</a></li>
+                    <li><a href="/documentation/kubernetes_cluster.html">Kubernetes Cluster</a></li>
+                    <li><a href="/documentation/end_to_end_workflow.html">Workflow</a></li>
+                </ul>
+            </nav>
+        </aside>
 
-        <section>
-            <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Bill of Materials</h2>
-            <div id="bom-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- BOM items will be dynamically inserted here by JavaScript -->
+        <main class="main-content">
+            <div class="content-wrapper">
+                <h1>The Hardware Build</h1>
+                <p class="lead">A detailed look at the components and assembly of the custom 10-inch 4U home lab server rack.</p>
+
+                <section id="gallery">
+                    <h2>Build Gallery</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+                        <div class="rounded-xl overflow-hidden shadow-lg transition-transform transform hover:scale-105">
+                            <img src="6AC09EE6-EF0D-479D-AA61-5466965FD22F_1_105_c.jpeg" alt="Front view of the server rack showing a wall of Noctua fans" class="w-full h-full object-cover">
+                        </div>
+                        <div class="rounded-xl overflow-hidden shadow-lg transition-transform transform hover:scale-105">
+                            <img src="D29F915A-294D-4B0D-904D-FA84D3CD4B50_1_105_c.jpeg" alt="Rear view showing the I/O of the Supermicro server nodes" class="w-full h-full object-cover">
+                        </div>
+                        <div class="rounded-xl overflow-hidden shadow-lg transition-transform transform hover:scale-105">
+                            <img src="5D6A82F0-A483-4F3E-B1EE-0C1EB9AEE22C_1_105_c.jpeg" alt="Top-down view of the rack with wiring and the monitor active" class="w-full h-full object-cover">
+                        </div>
+                    </div>
+                </section>
+
+                <section id="bom">
+                    <h2>Bill of Materials</h2>
+                    <div id="bom-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <!-- BOM items will be dynamically inserted here by JavaScript -->
+                    </div>
+                </section>
             </div>
-        </section>
+        </main>
     </div>
 
-    <div class="footer"></div>
-
-    <script src="nav.js"></script>
     <script>
         const billOfMaterials = [
             { category: "Chassis & Mounting", name: "DeskPi RackMate T0 Rackmount", description: "10 Inch 4U Server Cabinet for Network and Server Equipment.", quantity: 1, link: "https://deskpi.com/products/deskpi-rackmate-t1-rackmount-10-inch-4u-server-cabinet-for-network-servers-audio-and-video-equipment" },
