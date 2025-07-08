@@ -4,24 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>End-to-End Workflow</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
-    <div class="header">
-        <h1>End-to-End Workflow</h1>
-        <p>From bare metal to a running cluster in four steps.</p>
-    </div>
-
-    <div class="nav">
-        <a href="index.html">Home</a>
-        <a href="provisioning_server.html">Provisioning Server</a>
-        <a href="kubernetes_cluster.html">Kubernetes Cluster</a>
-        <a href="end_to_end_workflow.html">End-to-End Workflow</a>
-    </div>
+    <div class="nav-container"></div>
 
     <div class="container">
         <div class="content">
-            <h2>Execution Guide</h2>
+            <h2>End-to-End Execution Guide</h2>
             <p>This guide provides the exact commands and procedures to operate the entire automation ecosystem. It assumes you have already cloned the <a href="https://github.com/sddcinfo/ansible-provisioning-server" target="_blank">ansible-provisioning-server</a> and <a href="https://github.com/sddcinfo/ansible-kubernetes-nodes" target="_blank">ansible-kubernetes-nodes</a> repositories.</p>
 
             <h3>Step 1: Configure Your Environment</h3>
@@ -69,8 +59,7 @@ ansible-playbook -i inventory.ini site.yml</code></pre>
         </div>
     </div>
 
-    <div class="footer">
-        <p>Documentation generated for the sddc.info infrastructure.</p>
-    </div>
+    <div class="footer"></div>
+    <script src="../nav.js"></script>
 </body>
 </html>
