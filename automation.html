@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ubuntu PXE/Autoinstall Server Documentation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3 {
+            color: #0056b3;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        code {
+            background-color: #e9e9e9;
+            padding: 2px 4px;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #e9e9e9;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        ul {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+        .note {
+            background-color: #e0f7fa;
+            border-left: 5px solid #00bcd4;
+            padding: 10px 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Ubuntu PXE/Autoinstall Server Documentation</h1>
+
+        <p>This document describes an Ansible-driven setup for an Ubuntu PXE/Autoinstall server. This system allows for automated, hands-off installation of Ubuntu 24.04 onto new machines via network boot (PXE/iPXE).</p>
+
+        <h2>Project Structure</h2>
+        <p>The entire setup is contained within the <code>ansible_provisioning_server/</code> directory:</p>
+        <pre>
+ansible_provisioning_server/
+├── ansible.cfg
+├── inventory
+├── site.yml
+├── roles/
+│   ├── common/
+│   │   ├── tasks/
+│   │   └── vars/
+│   ├── iso_preparation/
+│   │   ├── tasks/
+│   │   └── vars/
+│   ├── netboot/
+│   │   ├── handlers/
+│   │   ├── tasks/
+│   │   ├── templates/
+│   │   │   └── provisioning.conf.j2
+│   │   └── vars/
+│   ├── web/
+│   │   ├── files/
+│   │   │   └── webroot/
+│   │   │       ├── autoinstall_templates/
+│   │   │       │   ├── ac:1f:6b:6c:5a:20.json
+│   │   │       │   ├── ac:1f:6b:6c:5a:28.json
+│   │   │       │   ├── ac:1f:6b:6c:5a:6c.json
+│   │   │       │   ├── ac:1f:6b:6c:5a:76.json
+│   │   │       │   ├── default.json
+│   │   │       │   └── user-data.j2
+│   │   │       ├── index.php
+│   │   │       ├── state.json
+│   │   │       └── ... (other web content)
+│   │   ├── handlers/
+│   │   ├── tasks/
+│   │   ├── templates/
+│   │   │   ├── index.php.j2
+│   │   │   └── nginx.conf.j2
+│   │   └── vars/
+└── index.html (this file)
+        </pre>
+
+        <h2>Ansible Roles Overview</h2>
+        <p>The setup is modularized into several Ansible roles:</p>
+        <ul>
+            <li><strong><code>common</code></strong>: Handles basic system updates and installs essential utilities (e.g., <code>vim</code>, <code>git</code>, <code>curl</code>, <code>unzip</code>).</li>
+            <li><strong><code>netboot</code></strong>: Configures <code>dnsmasq</code> for DHCP and TFTP services. It manages iPXE bootloader downloads and sets up the iPXE chainloading logic for UEFI clients.</li>
+            <li><strong><code>web</code></strong>: Installs and configures <code>nginx</code> and <code>php-fpm</code>. It deploys the web content, including the dynamic <code>index.php</code> script and the modular autoinstall templates.</li>
+            <li><strong><code>iso_preparation</code></strong>: Downloads the specified Ubuntu 24.04 ISO, mounts it, copies necessary installation files to the web server's provisioning directory, and cleans up. This role is idempotent.</li>
+        </ul>
+
+        <h2>Key Components & Configuration</h2>
+
+        <h3>Dnsmasq (<code>netboot</code> role)</h3>
+        <p><code>dnsmasq</code> acts as the DHCP and TFTP server. It provides IP addresses to clients and serves the initial iPXE bootloaders. The configuration is templated (<code>roles/netboot/templates/provisioning.conf.j2</code>) and uses variables defined in <code>roles/netboot/vars/main.yml</code>. It supports iPXE chainloading for UEFI clients only.</p>
+        <p>The iPXE chainloading logic ensures that clients first download a small iPXE bootloader, which then fetches a more complex iPXE script (<code>index.php?mac=...</code>) from the web server to continue the boot process.</p>
+
+        <h3>Nginx & PHP-FPM (<code>web</code> role)</h3>
+        <p><code>nginx</code> serves the web content, including the autoinstall configuration files and the Ubuntu ISO content. <code>php-fpm</code> processes the dynamic <code>index.php</code> script.</p>
+        <ul>
+            <li><strong>Nginx Configuration</strong>: Templated in <code>roles/web/templates/nginx.conf.j2</code>, it's configured to serve files from <code>/var/www/html</code> and pass PHP requests to <code>php-fpm</code>.</li>
+            <li><strong><code>index.php</code></strong>: This PHP script (templated in <code>roles/web/templates/index.php.j2</code>) is crucial for the autoinstall process. It dynamically generates the <code>user-data</code> for cloud-init based on the client's MAC address, allowing for host-specific configurations. It also handles callbacks from installed machines to update their status.</li>
+            <li><strong><code>state.json</code></strong>: Located in <code>/var/www/html/</code>, this file is used by <code>index.php</code> to track the installation status of each MAC address.</li>
+            <li><strong><code>sessions/</code> directory</strong>: Located in <code>/var/www/html/</code>, this directory is created by <code>index.php</code> to store the dynamically generated <code>user-data</code>, <code>meta-data</code>, and <code>vendor-data</code> files for each client during the installation process. It must be writable by the web server user (<code>www-data</code>).</li>
+        </ul>
+
+        <h3>Autoinstall Templates (<code>web</code> role)</h3>
+        <p>The autoinstall configurations for Ubuntu's cloud-init are modularized:</p>
+        <ul>
+            <li><strong><code>roles/web/files/webroot/autoinstall_templates/user-data.j2</code></strong>: This is the base Jinja2-like template for the <code>user-data</code> file. It contains all the common configuration for a new Ubuntu installation (e.g., partitioning, packages, SSH keys). Placeholders like <code>{{hostname}}</code> are used for dynamic values.</li>
+            <li><strong><code>roles/web/files/webroot/autoinstall_templates/*.json</code></strong>: These JSON files contain host-specific variables (e.g., <code>{"hostname": "node1"}</code>). The <code>index.php</code> script reads the JSON file corresponding to the client's MAC address (e.g., <code>ac:1f:6b:6c:5a:76.json</code>) or falls back to <code>default.json</code> if a specific file is not found.</li>
+            <li><strong><code>meta-data</code> and <code>vendor-data</code></strong>: These files (if present in the old <code>autoinstall_configs</code>) are copied directly. If not present, <code>index.php</code> ensures a valid, empty <code>vendor-data</code> is created.</li>
+        </ul>
+
+        <h2>How to Use This Setup</h2>
+        <p>To deploy and use this Ubuntu PXE/Autoinstall server:</p>
+        <ol>
+            <li><strong>Prerequisites</strong>: Ensure Ansible is installed on your control machine.</li>
+            <li><strong>Target Server</strong>: Have a fresh Ubuntu 24.04 server ready to be provisioned.</li>
+            <li><strong>Update Inventory</strong>: Edit the <code>ansible_provisioning_server/inventory</code> file. Replace <code>your_server_ip</code> with the actual IP address or hostname of your target server.
+                <pre>
+[provisioner]
+your_server_ip ansible_user=sysadmin
+                </pre>
+            </li>
+            <li><strong>Customize Variables (Optional)</strong>: Review and adjust variables in:
+                <ul>
+                    <li><code>roles/netboot/vars/main.yml</code> (e.g., <code>dnsmasq_interface</code>, DHCP ranges)</li>
+                    <li><code>roles/web/vars/main.yml</code> (e.g., <code>server_ip</code>, <code>iso_base_url</code>)</li>
+                    <li><code>roles/iso_preparation/vars/main.yml</code> (e.g., <code>ubuntu_iso_url</code> if you need a different ISO)</li>
+                </ul>
+            </li>
+            <li><strong>Customize Autoinstall Templates</strong>:
+                <ul>
+                    <li>Modify <code>roles/web/files/webroot/autoinstall_templates/user-data.j2</code> to fit your base installation needs.</li>
+                    <li>Create or modify the <code>.json</code> files in the same directory for host-specific configurations.</li>
+                </ul>
+            </li>
+            <li><strong>Run the Playbook</strong>: Execute the Ansible playbook from the <code>ansible_provisioning_server/</code> directory:
+                <pre>
+ansible-playbook -i inventory site.yml
+                </pre>
+                <div class="note">
+                    <strong>Note:</strong> The first run will download the ISO and copy files. Subsequent runs will be idempotent and only make changes if necessary.
+                </div>
+            </li>
+            <li><strong>Network Boot Clients</strong>: Configure your client machines to network boot (PXE/iPXE). They should receive DHCP from the provisioned server and then proceed with the automated Ubuntu installation.</li>
+        </ol>
+
+        <h2>Further Customization</h2>
+        <p>All configurable parameters are exposed as Ansible variables within the <code>vars/main.yml</code> files of each role. For deeper customization, examine the <code>templates/</code> directories within each role to modify the underlying configuration files (e.g., <code>dnsmasq</code>, <code>nginx</code>, <code>index.php</code>, <code>user-data</code>).</p>
+    </div>
+</body>
+</html>
