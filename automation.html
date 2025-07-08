@@ -3,172 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ubuntu PXE/Autoinstall Server Documentation</title>
+    <title>Ansible Bare-Metal Kubernetes Provisioning</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
             color: #333;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.8em;
+        }
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
         }
         .container {
-            max-width: 900px;
-            margin: auto;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        .section {
             background: #fff;
             padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        h1, h2, h3 {
-            color: #0056b3;
-        }
-        h1 {
-            text-align: center;
             margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        h2 {
+            font-size: 2em;
+            color: #3498db;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h3 {
+            font-size: 1.5em;
+            color: #2980b9;
         }
         code {
-            background-color: #e9e9e9;
-            padding: 2px 4px;
+            background-color: #ecf0f1;
+            padding: 3px 6px;
             border-radius: 4px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
         }
         pre {
-            background-color: #e9e9e9;
+            background-color: #34495e;
+            color: #f8f8f2;
             padding: 15px;
-            border-radius: 4px;
+            border-radius: 5px;
             overflow-x: auto;
         }
-        ul {
-            list-style-type: disc;
-            margin-left: 20px;
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
         }
-        .note {
-            background-color: #e0f7fa;
-            border-left: 5px solid #00bcd4;
-            padding: 10px 15px;
-            margin: 20px 0;
-            border-radius: 4px;
+        .step-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #3498db;
+            margin-right: 20px;
+            min-width: 40px;
+            text-align: center;
+        }
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9em;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Ubuntu PXE/Autoinstall Server Documentation</h1>
 
-        <p>This document describes an Ansible-driven setup for an Ubuntu PXE/Autoinstall server. This system allows for automated, hands-off installation of Ubuntu 24.04 onto new machines via network boot (PXE/iPXE).</p>
-
-        <h2>Project Structure</h2>
-        <p>The entire setup is contained within the <code>ansible_provisioning_server/</code> directory:</p>
-        <pre>
-ansible_provisioning_server/
-├── ansible.cfg
-├── inventory
-├── site.yml
-├── roles/
-│   ├── common/
-│   │   ├── tasks/
-│   │   └── vars/
-│   ├── iso_preparation/
-│   │   ├── tasks/
-│   │   └── vars/
-│   ├── netboot/
-│   │   ├── handlers/
-│   │   ├── tasks/
-│   │   ├── templates/
-│   │   │   └── provisioning.conf.j2
-│   │   └── vars/
-│   ├── web/
-│   │   ├── files/
-│   │   │   └── webroot/
-│   │   │       ├── autoinstall_templates/
-│   │   │       │   ├── ac:1f:6b:6c:5a:20.json
-│   │   │       │   ├── ac:1f:6b:6c:5a:28.json
-│   │   │       │   ├── ac:1f:6b:6c:5a:6c.json
-│   │   │       │   ├── ac:1f:6b:6c:5a:76.json
-│   │   │       │   ├── default.json
-│   │   │       │   └── user-data.j2
-│   │   │       ├── index.php
-│   │   │       ├── state.json
-│   │   │       └── ... (other web content)
-│   │   ├── handlers/
-│   │   ├── tasks/
-│   │   ├── templates/
-│   │   │   ├── index.php.j2
-│   │   │   └── nginx.conf.j2
-│   │   └── vars/
-└── index.html (this file)
-        </pre>
-
-        <h2>Ansible Roles Overview</h2>
-        <p>The setup is modularized into several Ansible roles:</p>
-        <ul>
-            <li><strong><code>common</code></strong>: Handles basic system updates and installs essential utilities (e.g., <code>vim</code>, <code>git</code>, <code>curl</code>, <code>unzip</code>).</li>
-            <li><strong><code>netboot</code></strong>: Configures <code>dnsmasq</code> for DHCP and TFTP services. It manages iPXE bootloader downloads and sets up the iPXE chainloading logic for UEFI clients.</li>
-            <li><strong><code>web</code></strong>: Installs and configures <code>nginx</code> and <code>php-fpm</code>. It deploys the web content, including the dynamic <code>index.php</code> script and the modular autoinstall templates.</li>
-            <li><strong><code>iso_preparation</code></strong>: Downloads the specified Ubuntu 24.04 ISO, mounts it, copies necessary installation files to the web server's provisioning directory, and cleans up. This role is idempotent.</li>
-        </ul>
-
-        <h2>Key Components & Configuration</h2>
-
-        <h3>Dnsmasq (<code>netboot</code> role)</h3>
-        <p><code>dnsmasq</code> acts as the DHCP and TFTP server. It provides IP addresses to clients and serves the initial iPXE bootloaders. The configuration is templated (<code>roles/netboot/templates/provisioning.conf.j2</code>) and uses variables defined in <code>roles/netboot/vars/main.yml</code>. It supports iPXE chainloading for UEFI clients only.</p>
-        <p>The iPXE chainloading logic ensures that clients first download a small iPXE bootloader, which then fetches a more complex iPXE script (<code>index.php?mac=...</code>) from the web server to continue the boot process.</p>
-
-        <h3>Nginx & PHP-FPM (<code>web</code> role)</h3>
-        <p><code>nginx</code> serves the web content, including the autoinstall configuration files and the Ubuntu ISO content. <code>php-fpm</code> processes the dynamic <code>index.php</code> script.</p>
-        <ul>
-            <li><strong>Nginx Configuration</strong>: Templated in <code>roles/web/templates/nginx.conf.j2</code>, it's configured to serve files from <code>/var/www/html</code> and pass PHP requests to <code>php-fpm</code>.</li>
-            <li><strong><code>index.php</code></strong>: This PHP script (templated in <code>roles/web/templates/index.php.j2</code>) is crucial for the autoinstall process. It dynamically generates the <code>user-data</code> for cloud-init based on the client's MAC address, allowing for host-specific configurations. It also handles callbacks from installed machines to update their status.</li>
-            <li><strong><code>state.json</code></strong>: Located in <code>/var/www/html/</code>, this file is used by <code>index.php</code> to track the installation status of each MAC address.</li>
-            <li><strong><code>sessions/</code> directory</strong>: Located in <code>/var/www/html/</code>, this directory is created by <code>index.php</code> to store the dynamically generated <code>user-data</code>, <code>meta-data</code>, and <code>vendor-data</code> files for each client during the installation process. It must be writable by the web server user (<code>www-data</code>).</li>
-        </ul>
-
-        <h3>Autoinstall Templates (<code>web</code> role)</h3>
-        <p>The autoinstall configurations for Ubuntu's cloud-init are modularized:</p>
-        <ul>
-            <li><strong><code>roles/web/files/webroot/autoinstall_templates/user-data.j2</code></strong>: This is the base Jinja2-like template for the <code>user-data</code> file. It contains all the common configuration for a new Ubuntu installation (e.g., partitioning, packages, SSH keys). Placeholders like <code>{{hostname}}</code> are used for dynamic values.</li>
-            <li><strong><code>roles/web/files/webroot/autoinstall_templates/*.json</code></strong>: These JSON files contain host-specific variables (e.g., <code>{"hostname": "node1"}</code>). The <code>index.php</code> script reads the JSON file corresponding to the client's MAC address (e.g., <code>ac:1f:6b:6c:5a:76.json</code>) or falls back to <code>default.json</code> if a specific file is not found.</li>
-            <li><strong><code>meta-data</code> and <code>vendor-data</code></strong>: These files (if present in the old <code>autoinstall_configs</code>) are copied directly. If not present, <code>index.php</code> ensures a valid, empty <code>vendor-data</code> is created.</li>
-        </ul>
-
-        <h2>How to Use This Setup</h2>
-        <p>To deploy and use this Ubuntu PXE/Autoinstall server:</p>
-        <ol>
-            <li><strong>Prerequisites</strong>: Ensure Ansible is installed on your control machine.</li>
-            <li><strong>Target Server</strong>: Have a fresh Ubuntu 24.04 server ready to be provisioned.</li>
-            <li><strong>Update Inventory</strong>: Edit the <code>ansible_provisioning_server/inventory</code> file. Replace <code>your_server_ip</code> with the actual IP address or hostname of your target server.
-                <pre>
-[provisioner]
-your_server_ip ansible_user=sysadmin
-                </pre>
-            </li>
-            <li><strong>Customize Variables (Optional)</strong>: Review and adjust variables in:
-                <ul>
-                    <li><code>roles/netboot/vars/main.yml</code> (e.g., <code>dnsmasq_interface</code>, DHCP ranges)</li>
-                    <li><code>roles/web/vars/main.yml</code> (e.g., <code>server_ip</code>, <code>iso_base_url</code>)</li>
-                    <li><code>roles/iso_preparation/vars/main.yml</code> (e.g., <code>ubuntu_iso_url</code> if you need a different ISO)</li>
-                </ul>
-            </li>
-            <li><strong>Customize Autoinstall Templates</strong>:
-                <ul>
-                    <li>Modify <code>roles/web/files/webroot/autoinstall_templates/user-data.j2</code> to fit your base installation needs.</li>
-                    <li>Create or modify the <code>.json</code> files in the same directory for host-specific configurations.</li>
-                </ul>
-            </li>
-            <li><strong>Run the Playbook</strong>: Execute the Ansible playbook from the <code>ansible_provisioning_server/</code> directory:
-                <pre>
-ansible-playbook -i inventory site.yml
-                </pre>
-                <div class="note">
-                    <strong>Note:</strong> The first run will download the ISO and copy files. Subsequent runs will be idempotent and only make changes if necessary.
-                </div>
-            </li>
-            <li><strong>Network Boot Clients</strong>: Configure your client machines to network boot (PXE/iPXE). They should receive DHCP from the provisioned server and then proceed with the automated Ubuntu installation.</li>
-        </ol>
-
-        <h2>Further Customization</h2>
-        <p>All configurable parameters are exposed as Ansible variables within the <code>vars/main.yml</code> files of each role. For deeper customization, examine the <code>templates/</code> directories within each role to modify the underlying configuration files (e.g., <code>dnsmasq</code>, <code>nginx</code>, <code>index.php</code>, <code>user-data</code>).</p>
+    <div class="header">
+        <h1>Ansible Bare-Metal Kubernetes Ecosystem</h1>
+        <p>A fully automated solution for provisioning a Kubernetes cluster from scratch.</p>
     </div>
+
+    <div class="container">
+        <div class="section">
+            <h2>Core Architecture</h2>
+            <p>This ecosystem uses a two-part Ansible setup to achieve complete, end-to-end automation. The process begins with a dedicated provisioning server that prepares the environment for bare-metal machines to install their operating system automatically. Once a machine is provisioned, a second Ansible project configures it into a production-ready Kubernetes node.</p>
+        </div>
+
+        <div class="section">
+            <h2>Part 1: The Provisioning Server</h2>
+            <h3>Project: <code>ansible_provisioning_server</code></h3>
+            <p>This project configures a central server to provide all necessary services for network booting and unattended OS installation. Its key roles are:</p>
+            <ul>
+                <li><strong>DHCP & TFTP (dnsmasq, tftpd-hpa):</strong> Listens for new nodes on the network, assigns them IP addresses, and provides the iPXE bootloader.</li>
+                <li><strong>HTTP Server (Nginx & PHP):</strong> Serves the main iPXE boot script and all necessary autoinstall configuration files. It also hosts a live HTML status page to monitor the provisioning process.</li>
+                <li><strong>NAT Gateway (iptables):</strong> Provides internet access to the internal cluster nodes, allowing them to pull packages and container images.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Part 2: The Kubernetes Cluster</h2>
+            <h3>Project: <code>node1-ansible</code></h3>
+            <p>After a node has been automatically provisioned with Ubuntu, this project takes over to perform all application-level configuration. It transforms the fresh OS into a fully configured Kubernetes node.</p>
+            <ul>
+                <li><strong>System Hardening:</strong> Disables IPv6 and configures kernel parameters for container networking.</li>
+                <li><strong>Container Runtime:</strong> Installs and configures <code>containerd</code> as the Kubernetes container runtime.</li>
+                <li><strong>Kubernetes Components:</strong> Installs the exact version of <code>kubelet</code>, <code>kubeadm</code>, and <code>kubectl</code> required for the cluster.</li>
+                <li><strong>Cluster Initialization:</strong> Initializes the control plane on the controller node and joins worker nodes to the cluster.</li>
+                <li><strong>Storage Preparation:</strong> Installs prerequisites for a Ceph storage cluster.</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>The Automated Workflow: Step-by-Step</h2>
+            <div class="workflow-step">
+                <div class="step-number">1</div>
+                <div>
+                    <strong>Configure the Provisioner:</strong> You run the <code>ansible-playbook -i inventory site.yml</code> command inside the <code>ansible_provisioning_server</code> directory. This sets up the central server.
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-number">2</div>
+                <div>
+                    <strong>Power On Nodes:</strong> You power on the bare-metal machines. They automatically PXE boot, get an IP address, and are directed to the provisioning server.
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-number">3</div>
+                <div>
+                    <strong>Automated OS Installation:</strong> The nodes fetch an iPXE script from the server, which in turn points them to the Ubuntu installer and a unique cloud-init configuration file. The OS installs without any manual input. You can monitor this live at <code>http://10.10.1.1</code>.
+                </div>
+            </div>
+            <div class="workflow-step">
+                <div class="step-number">4</div>
+                <div>
+                    <strong>Configure Kubernetes:</strong> Once the nodes are installed, you run <code>ansible-playbook -i inventory.ini site.yml</code> from the <code>node1-ansible</code> directory. This configures the entire Kubernetes cluster.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>This documentation was generated automatically to reflect the current state of the Ansible ecosystem.</p>
+    </div>
+
 </body>
 </html>
