@@ -1,10 +1,10 @@
 document.addEventListener("DOMContentLoaded", function() {
     const navHTML = `
         <div class="nav">
-            <a href="index.html">Home</a>
-            <a href="hardware.html">Hardware</a>
-            <a href="performance.html">Performance</a>
-            <a href="documentation/index.html">Documentation</a>
+            <a href="/index.html">Home</a>
+            <a href="/hardware.html">Hardware</a>
+            <a href="/performance.html">Performance</a>
+            <a href="/documentation/index.html">Documentation</a>
         </div>
     `;
     const footerHTML = `
