@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>End-to-End Workflow</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>End-to-End Workflow</h1>
+        <p>From bare metal to a running cluster in four steps.</p>
+    </div>
+
+    <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="provisioning_server.html">Provisioning Server</a>
+        <a href="kubernetes_cluster.html">Kubernetes Cluster</a>
+        <a href="end_to_end_workflow.html">End-to-End Workflow</a>
+    </div>
+
+    <div class="container">
+        <div class="content">
+            <h2>Execution Guide</h2>
+            <p>This guide provides the exact commands and procedures to operate the entire automation ecosystem. It assumes you have already cloned the <a href="https://github.com/sddcinfo/ansible-provisioning-server" target="_blank">ansible-provisioning-server</a> and <a href="https://github.com/sddcinfo/ansible-kubernetes-nodes" target="_blank">ansible-kubernetes-nodes</a> repositories.</p>
+
+            <h3>Step 1: Configure Your Environment</h3>
+            <p>Before running any playbooks, you must configure the variables to match your specific hardware and environment.</p>
+            <ol>
+                <li>
+                    <strong>Configure the Provisioning Server:</strong>
+                    <p>Edit <code>ansible-provisioning-server/roles/netboot/vars/main.yml</code>. Update the <code>provisioning_nodes</code> list with the correct MAC addresses, desired IP addresses, and hostnames for your bare-metal machines.</p>
+                </li>
+                <li>
+                    <strong>Configure the Kubernetes Cluster:</strong>
+                    <p>Edit <code>ansible-kubernetes-nodes/group_vars/all.yml</code>. This is the most critical step. Set the <code>k8s_version</code> and, most importantly, provide the correct block device paths for <code>ceph_devices</code>.</p>
+                </li>
+                 <li>
+                    <strong>Define Inventory:</strong>
+                    <p>Edit <code>ansible-kubernetes-nodes/inventory.ini</code> to assign your nodes to the <code>k8s_controller</code> and <code>k8s_workers</code> groups.</p>
+                </li>
+            </ol>
+
+            <h3>Step 2: Run the Provisioning Server Playbook</h3>
+            <p>This command configures your central server. It only needs to be run once, or whenever you update its configuration.</p>
+            <pre><code># Navigate to the provisioning server's Ansible directory
+cd /path/to/ansible-provisioning-server
+
+# Run the main playbook
+ansible-playbook -i inventory site.yml</code></pre>
+
+            <h3>Step 3: Boot the Bare-Metal Nodes</h3>
+            <p>Power on your bare-metal servers and ensure they are set to PXE boot. The automated process will now take over:</p>
+            <ol>
+                <li>The node will receive an IP address and boot instructions from the provisioning server.</li>
+                <li>The Ubuntu operating system will be installed automatically.</li>
+                <li>The node will report back when it's finished.</li>
+            </ol>
+            <p>You can monitor this entire process by opening a web browser and navigating to the IP of your provisioning server (e.g., <code>http://10.10.1.1</code>). The live status page will show the progress of each node.</p>
+
+            <h3>Step 4: Run the Kubernetes Cluster Playbook</h3>
+            <p>Once the status page shows your nodes as "DONE", you can proceed with configuring them as a Kubernetes cluster. Run the main playbook from the second project:</p>
+            <pre><code># Navigate to the Kubernetes nodes' Ansible directory
+cd /path/to/ansible-kubernetes-nodes
+
+# Run the main playbook to set up the entire cluster
+ansible-playbook -i inventory.ini site.yml</code></pre>
+            <p>After this playbook completes, your Kubernetes cluster will be fully operational and ready for you to deploy applications.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Documentation generated for the sddc.info infrastructure.</p>
+    </div>
+</body>
+</html>

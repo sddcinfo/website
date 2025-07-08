@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Provisioning Server Details</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="header">
+        <h1>The Provisioning Server</h1>
+        <p>The foundation of the automated ecosystem.</p>
+    </div>
+
+    <div class="nav">
+        <a href="index.html">Home</a>
+        <a href="provisioning_server.html">Provisioning Server</a>
+        <a href="kubernetes_cluster.html">Kubernetes Cluster</a>
+        <a href="end_to_end_workflow.html">End-to-End Workflow</a>
+    </div>
+
+    <div class="container">
+        <div class="content">
+            <h2>Architecture and Roles</h2>
+            <p>The Provisioning Server is a standard Ubuntu server configured by the <a href="https://github.com/sddcinfo/ansible-provisioning-server" target="_blank">ansible-provisioning-server</a> project. It runs a suite of services that work in concert to guide a new, bare-metal machine through an automated installation of Ubuntu.</p>
+
+            <h3>DHCP Server (dnsmasq)</h3>
+            <p>This is the first point of contact for a new node. When a machine is powered on and set to PXE boot, it sends out a DHCP request. Dnsmasq is configured to:</p>
+            <ul>
+                <li>Listen for these requests.</li>
+                <li>Assign a specific IP address based on the node's MAC address. The mappings are defined in <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/roles/netboot/vars/main.yml" target="_blank"><code>roles/netboot/vars/main.yml</code></a>.</li>
+                <li>Tell the node where to find the next piece of the puzzle: the TFTP server.</li>
+            </ul>
+
+            <h3>TFTP Server (tftpd-hpa)</h3>
+            <p>The TFTP server has one simple job: to serve the iPXE bootloader (<code>undionly.kpxe</code> or <code>ipxe.efi</code>) to the node. This bootloader is more powerful than a standard PXE ROM and allows for booting from an HTTP source.</p>
+
+            <h3>HTTP Server (Nginx & PHP)</h3>
+            <p>The HTTP server is the main engine of the provisioning process. It has several key responsibilities:</p>
+            <ul>
+                <li><strong>iPXE Scripting:</strong> When the iPXE bootloader starts, it contacts the server. The <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/roles/web/templates/index.php.j2" target="_blank"><code>index.php</code></a> script dynamically generates a boot script that tells the node how to download the Ubuntu kernel and initrd.</li>
+                <li><strong>Ubuntu ISO Files:</strong> The server hosts a full, extracted copy of the Ubuntu Server ISO, which the installer uses to find its packages. This is managed by the <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/roles/iso_preparation/tasks/main.yml" target="_blank"><code>iso_preparation</code></a> role.</li>
+                <li><strong>Cloud-Init Autoinstall Configuration:</strong> For each node, the server provides a unique set of `user-data` and `meta-data` files. These files are the blueprint for the Ubuntu installer, telling it everything from what hostname to set to how to partition the disks. This is all handled by the <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/roles/web/tasks/main.yml" target="_blank"><code>web</code></a> role.</li>
+                <li><strong>Live Status Page:</strong> The same <code>index.php</code> script also serves a human-readable HTML status page, showing the real-time progress of all provisioning nodes.</li>
+            </ul>
+
+            <h3>NAT Gateway (iptables)</h3>
+            <p>To allow the newly provisioned nodes to access the internet (for pulling packages or container images), the provisioning server is also configured to act as a NAT gateway. It uses `iptables` to masquerade traffic from the internal `10.10.1.0/24` network, routing it out through its primary `ens34` interface. This is configured in the <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/roles/common/tasks/main.yml" target="_blank"><code>common</code></a> role.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Documentation generated for the sddc.info infrastructure.</p>
+    </div>
+</body>
+</html>
