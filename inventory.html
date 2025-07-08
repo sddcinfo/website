@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hardware Inventory - sddc.info</title>
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        /* Styles for the lshw-generated table */
+        #lshw {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.9em;
+        }
+        #lshw, #lshw th, #lshw td {
+            border: 1px solid var(--border-color);
+        }
+        #lshw th, #lshw td {
+            padding: 8px 12px;
+            text-align: left;
+        }
+        #lshw th {
+            background-color: #f8f9fa;
+        }
+        #lshw .node-disabled {
+            color: #adb5bd;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="/">sddc.info</a>
+            </div>
+            <nav class="sidebar-nav">
+                <h3>Main</h3>
+                <ul>
+                    <li><a href="/index.html">Home</a></li>
+                    <li><a href="/hardware.html">Hardware</a></li>
+                    <li><a href="/performance.html">Performance</a></li>
+                    <li><a href="/inventory.html" class="active">Inventory</a></li>
+                </ul>
+                <h3>Documentation</h3>
+                <ul>
+                    <li><a href="/documentation/index.html">Overview</a></li>
+                    <li><a href="/documentation/provisioning_server.html">Provisioning Server</a></li>
+                    <li><a href="/documentation/kubernetes_cluster.html">Kubernetes Cluster</a></li>
+                    <li><a href="/documentation/end_to_end_workflow.html">Workflow</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <div class="content-wrapper">
+                <h1>Hardware Inventory: Node 1</h1>
+                <p class="lead">A detailed, automatically generated inventory of all hardware components for node `10.10.1.21`.</p>
+                
+                <div id="inventory-content">
+                    <!-- The hardware inventory from lshw will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Fetch the raw HTML from lshw and inject its table into our page
+        fetch('hardware_inventory_node1.html')
+            .then(response => response.text())
+            .then(data => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(data, 'text/html');
+                const lshwTable = doc.querySelector('table');
+                if (lshwTable) {
+                    lshwTable.id = 'lshw'; // Add an ID for styling
+                    document.getElementById('inventory-content').appendChild(lshwTable);
+                } else {
+                    document.getElementById('inventory-content').innerHTML = '<p>Error: Could not load hardware inventory data.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching hardware inventory:', error);
+                document.getElementById('inventory-content').innerHTML = '<p>Error: Could not load hardware inventory data.</p>';
+            });
+    </script>
+</body>
+</html>
