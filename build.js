@@ -9,18 +9,7 @@ const PUBLIC_DIR = path.join(__dirname, 'public');
 const TAILWIND_INPUT_PATH = path.join(SOURCE_DIR, 'input.css');
 const TAILWIND_OUTPUT_PATH = path.join(PUBLIC_DIR, 'styles.css');
 
-async function getGitCommitHash() {
-    if (process.env.CF_PAGES_COMMIT_SHA) {
-        return process.env.CF_PAGES_COMMIT_SHA.slice(0, 7);
-    }
-    try {
-        const { stdout } = await execPromise('git rev-parse --short HEAD');
-        return stdout.trim();
-    } catch (error) {
-        console.warn('Could not get git commit hash. Using timestamp instead.');
-        return Date.now().toString();
-    }
-}
+
 
 async function findFiles(dir) {
     const dirents = await fs.readdir(dir, { withFileTypes: true });
@@ -38,8 +27,7 @@ function extractTitle(htmlContent) {
 
 async function build() {
     console.log('Starting build...');
-    const version = await getGitCommitHash();
-    console.log(`Using version: ${version}`);
+    
 
     // Clean and create public directory
     await fs.rm(PUBLIC_DIR, { recursive: true, force: true });
@@ -81,8 +69,7 @@ async function build() {
             // Inject sidebar
             finalHtml = finalHtml.replace('<div id="sidebar-placeholder"></div>', sidebarContent);
 
-            // Add cache-busting
-            finalHtml = finalHtml.replace(/(href|src)="(.*?)(\.css|\.js)"/g, `$1="$2$3?v=${version}"`);
+            
             
             await fs.writeFile(destPath, finalHtml, 'utf8');
 
