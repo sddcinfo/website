@@ -1,13 +1,32 @@
-<div class="content-wrapper">
-    <h1>Kubernetes Cluster Configuration</h1>
-    <p class="lead">Transforming bare-metal nodes into a production-ready cluster.</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kubernetes Cluster - sddc.info</title>
+    <link rel="stylesheet" href="/styles.css?v=8aac0b7">
+</head>
+<body>
+    <button class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
+    <div class="main-container">
+        <div id="sidebar-placeholder"></div>
 
-    <h2>Ansible Configuration</h2>
-    <p>Once a server has been automatically provisioned with a base Ubuntu OS, the <a href="https://github.com/sddcinfo/ansible-kubernetes-nodes" target="_blank">ansible-kubernetes-nodes</a> project takes over. This collection of Ansible roles performs all the necessary steps to configure the node and have it join the Kubernetes cluster.</p>
+        <main class="main-content">
+            <div class="content-wrapper">
+                <h1>Kubernetes Cluster Configuration</h1>
+                <p class="lead">Transforming bare-metal nodes into a production-ready cluster.</p>
 
-    <h3>Key Configuration File</h3>
-    <p>The most critical file for customization is <a href="https://github.com/sddcinfo/ansible-kubernetes-nodes/blob/main/group_vars/all.yml" target="_blank"><code>group_vars/all.yml</code></a>. This is where you define the global settings for your cluster, including the Kubernetes version, pod network CIDR, and the block devices to be used for Ceph.</p>
+                <h2>Ansible Configuration</h2>
+                <p>Once a server has been automatically provisioned with a base Ubuntu OS, the <a href="https://github.com/sddcinfo/ansible-kubernetes-nodes" target="_blank">ansible-kubernetes-nodes</a> project takes over. This collection of Ansible roles performs all the necessary steps to configure the node and have it join the Kubernetes cluster.</p>
 
-    <h3>Role Breakdown</h3>
-    <p>The main <a href="https://github.com/sddcinfo/ansible-kubernetes-nodes/blob/main/site.yml" target="_blank"><code>site.yml</code></a> playbook executes roles to prepare for Ceph, install common components like <code>containerd</code> and the kubelet, and then configures the controller and worker nodes.</p>
-</div>
+                <h3>Key Configuration File</h3>
+                <p>The most critical file for customization is <a href="https://github.com/sddcinfo/ansible-kubernetes-nodes/blob/main/group_vars/all.yml" target="_blank"><code>group_vars/all.yml</code></a>. This is where you define the global settings for your cluster, including the Kubernetes version, pod network CIDR, and the block devices to be used for Ceph.</p>
+
+                <h3>Role Breakdown</h3>
+                <p>The main <a href="https://github.com/sddcinfo/ansible-kubernetes-nodes/blob/main/site.yml" target="_blank"><code>site.yml</code></a> playbook executes roles to prepare for Ceph, install common components like <code>containerd</code> and the kubelet, and then configures the controller and worker nodes.</p>
+            </div>
+        </main>
+    </div>
+    <script src="/site.js?v=8aac0b7"></script>
+</body>
+</html>

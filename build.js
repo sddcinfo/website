@@ -48,26 +48,13 @@ async function build() {
         }
     }
 
-    // 3. Process HTML files
-    const layoutPath = path.join(PAGES_DIR, 'layout.html');
-    const sidebarPath = path.join(PAGES_DIR, 'sidebar.html');
-    const layoutTemplate = await fs.readFile(layoutPath, 'utf8');
-    const sidebarContent = await fs.readFile(sidebarPath, 'utf8');
-
-    const htmlFiles = (await findFiles(PAGES_DIR)).filter(file => file.endsWith('.html') && !file.endsWith('layout.html') && !file.endsWith('sidebar.html'));
+    // 3. Copy HTML files
+    const htmlFiles = (await findFiles(PAGES_DIR)).filter(file => file.endsWith('.html'));
 
     for (const file of htmlFiles) {
         const relativePath = path.relative(PAGES_DIR, file);
         const destPath = path.join(PUBLIC_DIR, relativePath);
-
-        let pageContent = await fs.readFile(file, 'utf8');
-        const pageTitle = extractTitle(pageContent);
-
-        let finalHtml = layoutTemplate.replace('<!-- PAGE_CONTENT -->', pageContent);
-        finalHtml = finalHtml.replace('<!-- PAGE_TITLE -->', `${pageTitle} | sddc.info`);
-        finalHtml = finalHtml.replace('<div id="sidebar-placeholder"></div>', sidebarContent);
-
-        await fs.writeFile(destPath, finalHtml, 'utf8');
+        await fs.copyFile(file, destPath);
     }
 
     console.log('Build finished successfully!');
