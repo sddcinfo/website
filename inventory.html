@@ -5,26 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hardware Inventory - sddc.info</title>
     <link rel="stylesheet" href="/styles.css">
-    <style>
-        #lshw {
-            border-collapse: collapse;
-            width: 100%;
-            font-size: 0.9em;
-        }
-        #lshw, #lshw th, #lshw td {
-            border: 1px solid var(--border-color);
-        }
-        #lshw th, #lshw td {
-            padding: 8px 12px;
-            text-align: left;
-        }
-        #lshw th {
-            background-color: #f8f9fa;
-        }
-        #lshw .node-disabled {
-            color: #adb5bd;
-        }
-    </style>
 </head>
 <body>
     <div class="main-container">
@@ -54,32 +34,71 @@
             <div class="content-wrapper">
                 <h1>Hardware Inventory: Node 1</h1>
                 <p class="lead">A detailed, automatically generated inventory of all hardware components for node `10.10.1.21`.</p>
-                
-                <div id="inventory-content">
-                    <!-- The hardware inventory from lshw will be loaded here -->
-                </div>
+                <pre><code>System:
+  Kernel: 6.8.0-63-generic arch: x86_64 bits: 64 compiler: gcc v: 13.3.0
+  Console: pty pts/2 Distro: Ubuntu 24.04.2 LTS (Noble Numbat)
+Machine:
+  Type: Kvm System: Supermicro product: SYS-E200-8D v: 0123456789 serial: &lt;superuser required&gt;
+    Chassis: type: 1 v: 0123456789 serial: &lt;superuser required&gt;
+  Mobo: Supermicro model: X10SDV-6C-TLN4F v: 2.00 serial: &lt;superuser required&gt;
+    UEFI: American Megatrends v: 2.6 date: 02/05/2024
+CPU:
+  Info: 6-core model: Intel Xeon D-1528 bits: 64 type: MT MCP arch: Broadwell rev: 3 cache:
+    L1: 384 KiB L2: 1.5 MiB L3: 9 MiB
+  Speed (MHz): avg: 1133 high: 2000 min/max: 800/2500 cores: 1: 800 2: 800 3: 1600 4: 1700
+    5: 2000 6: 1000 7: 800 8: 800 9: 800 10: 800 11: 800 12: 1700 bogomips: 45598
+  Flags: avx avx2 ht lm nx pae sse sse2 sse3 sse4_1 sse4_2 ssse3 vmx
+Graphics:
+  Device-1: ASPEED Graphics Family vendor: Super Micro driver: ast v: kernel ports: active: VGA-1
+    empty: Virtual-1 bus-ID: 07:00.0 chip-ID: 1a03:2000
+  Display: server: No display server data found. Headless machine? tty: 80x40
+  Monitor-1: VGA-1 size-res: N/A in console
+  API: EGL v: 1.5 platforms: device: 0 drv: swrast surfaceless: drv: swrast
+    inactive: gbm,wayland,x11
+  API: OpenGL v: 4.5 vendor: mesa v: 24.2.8-1ubuntu1~24.04.1 note: console (EGL sourced)
+    renderer: llvmpipe (LLVM 19.1.1 256 bits)
+Audio:
+  Message: No device data found.
+  API: ALSA v: k6.8.0-63-generic status: inactive
+Network:
+  Device-1: Intel Ethernet X552/X557-AT 10GBASE-T vendor: Super Micro driver: ixgbe v: kernel pcie:
+    speed: 2.5 GT/s lanes: 1 port: N/A bus-ID: 03:00.0 chip-ID: 8086:15ad
+  IF: eno3 state: up speed: 10000 Mbps duplex: full mac: &lt;filter&gt;
+  Device-2: Intel Ethernet X552/X557-AT 10GBASE-T vendor: Super Micro driver: ixgbe v: kernel
+    pcie: speed: 2.5 GT/s lanes: 1 port: N/A bus-ID: 03:00.1 chip-ID: 8086:15ad
+  IF: eno4 state: down mac: &lt;filter&gt;
+  Device-3: Intel I350 Gigabit Network vendor: Super Micro driver: igb v: kernel pcie:
+    speed: 5 GT/s lanes: 4 port: e020 bus-ID: 05:00.0 chip-ID: 8086:1521 temp: 56.0 C
+  IF: eno1 state: up speed: 1000 Mbps duplex: full mac: &lt;filter&gt;
+  Device-4: Intel I350 Gigabit Network vendor: Super Micro driver: igb v: kernel pcie:
+    speed: 5 GT/s lanes: 4 port: e000 bus-ID: 05:00.1 chip-ID: 8086:1521
+  IF: eno2 state: down mac: &lt;filter&gt;
+Drives:
+  Local Storage: total: 1.88 TiB used: 10.23 GiB (0.5%)
+  ID-1: /dev/nvme0n1 vendor: Samsung model: SSD 980 1TB size: 931.51 GiB speed: 31.6 Gb/s
+    lanes: 4 serial: &lt;filter&gt; temp: 33.9 C
+  ID-2: /dev/nvme1n1 vendor: Samsung model: SSD 980 1TB size: 931.51 GiB speed: 31.6 Gb/s
+    lanes: 4 serial: &lt;filter&gt; temp: 27.9 C
+  ID-3: /dev/sda vendor: SuperMicro model: SSD size: 59 GiB speed: 6.0 Gb/s serial: &lt;filter&gt;
+Partition:
+  ID-1: / size: 27.37 GiB used: 10.12 GiB (37.0%) fs: ext4 dev: /dev/dm-0
+    mapped: ubuntu--vg-ubuntu--lv
+  ID-2: /boot size: 1.9 GiB used: 100.5 MiB (5.2%) fs: ext4 dev: /dev/sda2
+  ID-3: /boot/efi size: 1.05 GiB used: 6.1 MiB (0.6%) fs: vfat dev: /dev/sda1
+Swap:
+  ID-1: swap-1 type: file size: 6.28 GiB used: 0 KiB (0.0%) priority: -2 file: /swap.img
+Sensors:
+  System Temperatures: cpu: 47.0 C pch: 69.0 C mobo: N/A
+  Fan Speeds (rpm): N/A
+Info:
+  Memory: total: 128 GiB available: 125.69 GiB used: 1.71 GiB (1.4%)
+  Processes: 216 Power: uptime: 1d 1h 34m wakeups: 0 Init: systemd v: 255 target: graphical (5)
+    default: graphical
+  Packages: pm: dpkg pkgs: 883 Compilers: gcc: 13.3.0 Client: shell wrapper v: 5.2.21-release
+    inxi: 3.3.34
+</code></pre>
             </div>
         </main>
     </div>
-
-    <script>
-        fetch('/hardware_inventory_node1.html')
-            .then(response => {
-                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
-                return response.text();
-            })
-            .then(html => {
-                const inventoryContent = document.getElementById('inventory-content');
-                if (html && html.trim().length > 0) {
-                    inventoryContent.innerHTML = html;
-                } else {
-                    inventoryContent.innerHTML = '<p>Error: Hardware inventory report is empty.</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching or processing hardware inventory:', error);
-                document.getElementById('inventory-content').innerHTML = `<p>Error: Could not load hardware inventory data. ${error}</p>`;
-            });
-    </script>
 </body>
 </html>
