@@ -134,6 +134,26 @@ pre code {
     padding: 0;
 }
 
+/* Inventory Page DL Styles */
+dl {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #f8f9fa;
+}
+dt {
+    font-weight: 600;
+    color: #495057;
+    width: 150px;
+    float: left;
+    clear: left;
+}
+dd {
+    margin-left: 170px;
+    margin-bottom: 10px;
+}
+
 /* 5. Homepage Specific Styles */
 .hero {
     text-align: center;
