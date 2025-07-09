@@ -1,74 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hardware Build - sddc.info</title>
-    <link rel="stylesheet" href="/styles.css?v=8aac0b7">
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body>
-    <button class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
+<h1>The Hardware Build</h1>
+<p class="lead">A detailed look at the components and assembly of the custom 10-inch 4U home lab server rack.</p>
 
-        <main class="main-content">
-            <div class="content-wrapper">
-                <h1>The Hardware Build</h1>
-                <p class="lead">A detailed look at the components and assembly of the custom 10-inch 4U home lab server rack.</p>
-
-                <section id="gallery">
-                    <h2>Build Gallery</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-                        <div class="rounded-xl overflow-hidden shadow-lg transition-transform transform hover:scale-105">
-                            <img src="/6AC09EE6-EF0D-479D-AA61-5466965FD22F_1_105_c.jpeg" alt="Front view of the server rack showing a wall of Noctua fans" class="w-full h-full object-cover">
-                        </div>
-                        <div class="rounded-xl overflow-hidden shadow-lg transition-transform transform hover:scale-105">
-                            <img src="/D29F915A-294D-4B0D-904D-FA84D3CD4B50_1_105_c.jpeg" alt="Rear view showing the I/O of the Supermicro server nodes" class="w-full h-full object-cover">
-                        </div>
-                        <div class="rounded-xl overflow-hidden shadow-lg transition-transform transform hover:scale-105">
-                            <img src="/5D6A82F0-A483-4F3E-B1EE-0C1EB9AEE22C_1_105_c.jpeg" alt="Top-down view of the rack with wiring and the monitor active" class="w-full h-full object-cover">
-                        </div>
-                    </div>
-                </section>
-
-                <section id="bom">
-                    <h2>Bill of Materials</h2>
-                    <div id="bom-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <!-- BOM items will be dynamically inserted here by JavaScript -->
-                    </div>
-                </section>
-            </div>
-        </main>
+<section id="gallery">
+    <h2>Build Gallery</h2>
+    <div class="card-container">
+        <div class="card">
+            <img src="assets/6AC09EE6-EF0D-479D-AA61-5466965FD22F_1_105_c.jpeg" alt="Front view of the server rack showing a wall of Noctua fans">
+        </div>
+        <div class="card">
+            <img src="assets/D29F915A-294D-4B0D-904D-FA84D3CD4B50_1_105_c.jpeg" alt="Rear view showing the I/O of the Supermicro server nodes">
+        </div>
+        <div class="card">
+            <img src="assets/5D6A82F0-A483-4F3E-B1EE-0C1EB9AEE22C_1_105_c.jpeg" alt="Top-down view of the rack with wiring and the monitor active">
+        </div>
     </div>
+</section>
 
-    <script src="/site.js?v=8aac0b7"></script>
-    <script>
-        const billOfMaterials = [
-            { category: "Chassis & Mounting", name: "DeskPi RackMate T0 Rackmount", description: "10 Inch 4U Server Cabinet for Network and Server Equipment.", quantity: 1, link: "https://deskpi.com/products/deskpi-rackmate-t1-rackmount-10-inch-4u-server-cabinet-for-network-servers-audio-and-video-equipment" },
-            { category: "Chassis & Mounting", name: "DeskPi Mini-ITX Shell", description: "Custom enclosure for mounting Mini-ITX boards in the Rackmate.", quantity: 4, link: "https://deskpi.com/products/deskpi-rackmate-accessory-mini-itx-shell" },
-            { category: "Cooling", name: "10-inch Fan Rack Mount", description: "Bracket for mounting 40mm fans for push/pull airflow.", quantity: 4, link: "https://hivets.au/products/10-inch-rack-mount-for-40mm-fans-5" },
-            { category: "Cooling", name: "Noctua NF-A4x20 PWM Fan", description: "Premium quiet 40x20mm fan for high-static pressure cooling.", quantity: 20, link: "https://noctua.at/en/nf-a4x20-pwm" },
-            { category: "Compute Nodes", name: "Supermicro SYS-E200-8D", description: "Compact Mini-ITX server with Intel Xeon D-1528 processor.", quantity: 4, link: "https://www.supermicro.com/en/products/system/Mini-ITX/SYS-E200-8D.cfm" },
-            { category: "Networking", name: "Gowin R86S-P2", description: "High-performance fanless router/firewall appliance.", quantity: 1, link: "https://www.gowinfanless.com/uncategorised/gw-r86s-p-series/gw-r86s-p2" },
-            { category: "Networking", name: "Netgear GS305E Switch", description: "5-Port Gigabit Plus Smart Managed Switch.", quantity: 1, link: "https://www.netgear.com/support/product/gs305e/" },
-            { category: "Networking", name: "MikroTik CRS305-1G-4S+", description: "Compact switch with 1G Ethernet and four 10G SFP+ ports.", quantity: 1, link: "https://mikrotik.com/product/crs305_1g_4s_in" },
-            { category: "Networking", name: "DeskPi 12 Port Patch Panel", description: "0.5U CAT6 Network Patch Panel for 10-inch racks.", quantity: 1, link: "https://deskpi.com/products/deskpi-rackmate-accessory-10-inch-network-switch" },
-            { category: "Power", name: "Mean Well LRS-350-12", description: "350W 12V single-output enclosed power supply.", quantity: 1, link: "https://www.meanwell.com/webapp/product/search.aspx?prod=LRS-350" },
-            { category: "Peripherals & Cables", name: "8\" Raspberry Pi Monitor", description: "1280x800 IPS HDMI portable touchscreen for system monitoring.", quantity: 1, link: "https://www.aliexpress.us/item/3256806185163801.html" },
-            { category: "Peripherals & Cables", name: "DC Power Pigtail Cables", description: "5.5mm x 2.5mm right angle connectors for custom power distribution.", quantity: 1, link: null },
-            { category: "Peripherals & Cables", name: "Ankuly Cat6A LAN Cable (0.15m)", description: "Short run 10Gbps patch cables for clean wiring.", quantity: 1, link: null },
-            { category: "Peripherals & Cables", name: "Ankuly Cat6A LAN Cable (0.3m)", description: "Short run 10Gbps patch cables for clean wiring.", quantity: 1, link: null }
-        ];
-        const bomContainer = document.getElementById('bom-container');
-        const createBomCard = (item) => {
-            const card = document.createElement('div');
-            card.className = 'bg-white border border-gray-200 rounded-lg p-5 flex flex-col h-full shadow-sm hover:shadow-lg transition-shadow duration-300';
-            let linkButton = item.link ? `<a href="${item.link}" target="_blank" rel="noopener noreferrer" class="mt-auto inline-block text-center bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-md transition-colors duration-200">View Product</a>` : `<div class="mt-auto text-center text-gray-400 font-semibold py-2 px-4 rounded-md">No Link</div>`;
-            card.innerHTML = `<div class="flex-grow"><span class="text-xs font-semibold uppercase text-blue-500">${item.category}</span><h3 class="text-lg font-bold text-gray-900 mt-1">${item.name}</h3><p class="text-sm text-gray-600 mt-2 mb-4">${item.description}</p></div><div class="flex justify-between items-center mb-4"><span class="text-gray-600 font-medium">Quantity</span><span class="text-2xl font-bold text-gray-900">${item.quantity}</span></div>${linkButton}`;
-            bomContainer.appendChild(card);
-        };
-        billOfMaterials.sort((a, b) => a.category.localeCompare(b.category)).forEach(createBomCard);
-    </script>
-</body>
-</html>
+<section id="bom">
+    <h2>Bill of Materials</h2>
+    <div id="bom-container">
+        <!-- BOM items will be dynamically inserted here by JavaScript -->
+    </div>
+</section>
+<script>
+    const billOfMaterials = [
+        { category: "Chassis & Mounting", name: "DeskPi RackMate T0 Rackmount", description: "10 Inch 4U Server Cabinet for Network and Server Equipment.", quantity: 1, link: "https://deskpi.com/products/deskpi-rackmate-t1-rackmount-10-inch-4u-server-cabinet-for-network-servers-audio-and-video-equipment" },
+        { category: "Chassis & Mounting", name: "DeskPi Mini-ITX Shell", description: "Custom enclosure for mounting Mini-ITX boards in the Rackmate.", quantity: 4, link: "https://deskpi.com/products/deskpi-rackmate-accessory-mini-itx-shell" },
+        { category: "Cooling", name: "10-inch Fan Rack Mount", description: "Bracket for mounting 40mm fans for push/pull airflow.", quantity: 4, link: "https://hivets.au/products/10-inch-rack-mount-for-40mm-fans-5" },
+        { category: "Cooling", name: "Noctua NF-A4x20 PWM Fan", description: "Premium quiet 40x20mm fan for high-static pressure cooling.", quantity: 20, link: "https://noctua.at/en/nf-a4x20-pwm" },
+        { category: "Compute Nodes", name: "Supermicro SYS-E200-8D", description: "Compact Mini-ITX server with Intel Xeon D-1528 processor.", quantity: 4, link: "https://www.supermicro.com/en/products/system/Mini-ITX/SYS-E200-8D.cfm" },
+        { category: "Networking", name: "Gowin R86S-P2", description: "High-performance fanless router/firewall appliance.", quantity: 1, link: "https://www.gowinfanless.com/uncategorised/gw-r86s-p-series/gw-r86s-p2" },
+        { category: "Networking", name: "Netgear GS305E Switch", description: "5-Port Gigabit Plus Smart Managed Switch.", quantity: 1, link: "https://www.netgear.com/support/product/gs305e/" },
+        { category: "Networking", name: "MikroTik CRS305-1G-4S+", description: "Compact switch with 1G Ethernet and four 10G SFP+ ports.", quantity: 1, link: "https://mikrotik.com/product/crs305_1g_4s_in" },
+        { category: "Networking", name: "DeskPi 12 Port Patch Panel", description: "0.5U CAT6 Network Patch Panel for 10-inch racks.", quantity: 1, link: "https://deskpi.com/products/deskpi-rackmate-accessory-10-inch-network-switch" },
+        { category: "Power", name: "Mean Well LRS-350-12", description: "350W 12V single-output enclosed power supply.", quantity: 1, link: "https://www.meanwell.com/webapp/product/search.aspx?prod=LRS-350" },
+        { category: "Peripherals & Cables", name: "8\" Raspberry Pi Monitor", description: "1280x800 IPS HDMI portable touchscreen for system monitoring.", quantity: 1, link: "https://www.aliexpress.us/item/3256806185163801.html" },
+        { category: "Peripherals & Cables", name: "DC Power Pigtail Cables", description: "5.5mm x 2.5mm right angle connectors for custom power distribution.", quantity: 1, link: null },
+        { category: "Peripherals & Cables", name: "Ankuly Cat6A LAN Cable (0.15m)", description: "Short run 10Gbps patch cables for clean wiring.", quantity: 1, link: null },
+        { category: "Peripherals & Cables", name: "Ankuly Cat6A LAN Cable (0.3m)", description: "Short run 10Gbps patch cables for clean wiring.", quantity: 1, link: null }
+    ];
+    const bomContainer = document.getElementById('bom-container');
+    const createBomCard = (item) => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        let linkButton = item.link ? `<a href="${item.link}" target="_blank" rel="noopener noreferrer">View Product</a>` : `<div>No Link</div>`;
+        card.innerHTML = `<h3>${item.name}</h3><p>${item.description}</p><div><span>Quantity</span><span>${item.quantity}</span></div>${linkButton}`;
+        bomContainer.appendChild(card);
+    };
+    billOfMaterials.sort((a, b) => a.category.localeCompare(b.category)).forEach(createBomCard);
+</script>

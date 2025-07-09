@@ -1,24 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workflow - sddc.info</title>
-    <link rel="stylesheet" href="/styles.css?v=8aac0b7">
-</head>
-<body>
-    <button class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
+<h1>End-to-End Execution Guide</h1>
+<p class="lead">A fully automated workflow from a clean machine to a running cluster.</p>
 
-        <main class="main-content">
-            <div class="content-wrapper">
-                <h1>End-to-End Execution Guide</h1>
-                <p class="lead">A fully automated workflow from a clean machine to a running cluster.</p>
-
-                <h2>Step 1: Bootstrap the Control Node</h2>
-                <p>From a clean Ubuntu machine that will act as your control node, clone the two Ansible repositories. Then, run the bootstrap script in each project directory. This only needs to be done once.</p>
-                <pre><code># Clone the repositories
+<h2>Step 1: Bootstrap the Control Node</h2>
+<p>From a clean Ubuntu machine that will act as your control node, clone the two Ansible repositories. Then, run the bootstrap script in each project directory. This only needs to be done once.</p>
+<pre><code># Clone the repositories
 git clone https://github.com/sddcinfo/ansible-provisioning-server.git
 git clone https://github.com/sddcinfo/ansible-kubernetes-nodes.git
 
@@ -31,29 +16,23 @@ cd ../ansible-kubernetes-nodes
 ./bootstrap.sh
 </code></pre>
 
-                <h2>Step 2: Configure Your Environment</h2>
-                <p>Before running the playbooks, configure the variables to match your hardware in both projects as described in the previous documentation.</p>
+<h2>Step 2: Configure Your Environment</h2>
+<p>Before running the playbooks, configure the variables to match your hardware in both projects as described in the previous documentation.</p>
 
-                <h2>Step 3: Run the Provisioning Server Playbook</h2>
-                <p>This command configures your central server and generates the necessary SSH keys for automation.</p>
-                <pre><code>cd ../ansible-provisioning-server
+<h2>Step 3: Run the Provisioning Server Playbook</h2>
+<p>This command configures your central server and generates the necessary SSH keys for automation.</p>
+<pre><code>cd ../ansible-provisioning-server
 ansible-playbook -i inventory site.yml</code></pre>
 
-                <h2>Step 4: Synchronize the SSH Keys</h2>
-                <p>This is the new, automated step that replaces the manual copy-paste process. This playbook connects to the provisioning server, fetches the public keys, and injects them into the Kubernetes project.</p>
-                <pre><code>cd ../ansible-kubernetes-nodes
+<h2>Step 4: Synchronize the SSH Keys</h2>
+<p>This is the new, automated step that replaces the manual copy-paste process. This playbook connects to the provisioning server, fetches the public keys, and injects them into the Kubernetes project.</p>
+<pre><code>cd ../ansible-kubernetes-nodes
 ansible-playbook sync_keys.yml</code></pre>
 
-                <h2>Step 5: Boot the Bare-Metal Nodes</h2>
-                <p>Power on your servers. They will automatically PXE boot and install Ubuntu. Monitor the progress on the live status page at <code>http://10.10.1.1</code>.</p>
+<h2>Step 5: Boot the Bare-Metal Nodes</h2>
+<p>Power on your servers. They will automatically PXE boot and install Ubuntu. Monitor the progress on the live status page at <code>http://10.10.1.1</code>.</p>
 
-                <h2>Step 6: Run the Kubernetes Cluster Playbook</h2>
-                <p>Once the status page shows your nodes as "DONE", run the final playbook to configure the cluster.</p>
-                <pre><code>ansible-playbook -i inventory.ini site.yml</code></pre>
-                <p>After this playbook completes, your Kubernetes cluster will be fully operational.</p>
-            </div>
-        </main>
-    </div>
-    <script src="/site.js?v=8aac0b7"></script>
-</body>
-</html>
+<h2>Step 6: Run the Kubernetes Cluster Playbook</h2>
+<p>Once the status page shows your nodes as "DONE", run the final playbook to configure the cluster.</p>
+<pre><code>ansible-playbook -i inventory.ini site.yml</code></pre>
+<p>After this playbook completes, your Kubernetes cluster will be fully operational.</p>

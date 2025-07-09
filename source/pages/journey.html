@@ -1,77 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>sddc.info | The Journey</title>
-    <link rel="stylesheet" href="styles.css?v=8aac0b7">
-</head>
-<body>
-    <button class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
+<h1>The Journey from Manual Toil to Automated Value</h1>
+<p><strong>A Gemini-CLI Story</strong></p>
 
-        <main class="main-content">
-            <div class="content-wrapper">
-                <h1>The Journey from Manual Toil to Automated Value</h1>
-                <p><strong>A Gemini-CLI Story</strong></p>
+<h2>The Beginning: A Dusty Workshop</h2>
+<p>
+    Our story begins not with a grand design, but with a folder named <code>backup</code>. This folder was the digital equivalent of a dusty workshop, filled with the remnants of a manual, yet functional, server provisioning system. Inside, directories named after MAC addresses held static <code>user-data</code> and <code>meta-data</code> files. A simple <code>dnsmasq.conf</code> directed PXE booting clients, and a basic <code>index.php</code> served up the right files. It worked, but it was brittle. Adding a new server meant manually copying files, updating configs, and hoping no typos were made. Scaling was a chore, and documentation was an oral tradition. The system was a monument to manual effort, a solution born of necessity but groaning under its own weight.
+</p>
+<p>
+    The goal was clear: transform this fragile artifact into a robust, repeatable, and scalable platform using Infrastructure as Code (IaC). The traditional path would involve weeks of research, learning the nuances of Ansible best practices, Jinja2 templating, and web design. This is where the journey took a pivotal turn with the introduction of <code>gemini-cli</code>.
+</p>
 
-                <h2>The Beginning: A Dusty Workshop</h2>
-                <p>
-                    Our story begins not with a grand design, but with a folder named <code>backup</code>. This folder was the digital equivalent of a dusty workshop, filled with the remnants of a manual, yet functional, server provisioning system. Inside, directories named after MAC addresses held static <code>user-data</code> and <code>meta-data</code> files. A simple <code>dnsmasq.conf</code> directed PXE booting clients, and a basic <code>index.php</code> served up the right files. It worked, but it was brittle. Adding a new server meant manually copying files, updating configs, and hoping no typos were made. Scaling was a chore, and documentation was an oral tradition. The system was a monument to manual effort, a solution born of necessity but groaning under its own weight.
-                </p>
-                <p>
-                    The goal was clear: transform this fragile artifact into a robust, repeatable, and scalable platform using Infrastructure as Code (IaC). The traditional path would involve weeks of research, learning the nuances of Ansible best practices, Jinja2 templating, and web design. This is where the journey took a pivotal turn with the introduction of <code>gemini-cli</code>.
-                </p>
+<h2>Phase 1: From Static Files to Dynamic Templates</h2>
+<p>
+    The first step was to tackle the provisioning server itself. Instead of spending days reading Ansible documentation, the conversation started simply: "Gemini, look at the contents of <code>backup/autoinstall_configs/default/user-data</code>. Can you convert this into a Jinja2 template for an Ansible role?"
+</p>
+<p>
+    In minutes, <code>gemini-cli</code> responded, not just with the template, but with the context of where to place it. It scaffolded a new directory, <code>ansible-provisioning-server</code>, with a proper role structure. The static, hardcoded values for network configuration, user passwords, and hostnames were replaced with Ansible variables. What was once a copy-paste task became a configuration change in a single <code>group_vars/all.yml</code> file.
+</p>
+<p>
+    The iterative process had begun. Gemini helped refactor the monolithic logic into distinct Ansible roles: <code>iso_preparation</code> for handling the Ubuntu installer, <code>netboot</code> for managing DHCP and TFTP, and <code>web</code> for serving the autoinstall scripts. With each step, Gemini acted as an expert pair programmer. When a service needed to be restarted, it suggested an Ansible handler to ensure it only happened when the configuration actually changed—an efficiency I wouldn't have thought of initially. The <code>ansible-provisioning-server</code> was born, not in weeks, but in a matter of hours. <strong>The time to value had been slashed by an order of magnitude.</strong>
+</p>
 
-                <h2>Phase 1: From Static Files to Dynamic Templates</h2>
-                <p>
-                    The first step was to tackle the provisioning server itself. Instead of spending days reading Ansible documentation, the conversation started simply: "Gemini, look at the contents of <code>backup/autoinstall_configs/default/user-data</code>. Can you convert this into a Jinja2 template for an Ansible role?"
-                </p>
-                <p>
-                    In minutes, <code>gemini-cli</code> responded, not just with the template, but with the context of where to place it. It scaffolded a new directory, <code>ansible-provisioning-server</code>, with a proper role structure. The static, hardcoded values for network configuration, user passwords, and hostnames were replaced with Ansible variables. What was once a copy-paste task became a configuration change in a single <code>group_vars/all.yml</code> file.
-                </p>
-                <p>
-                    The iterative process had begun. Gemini helped refactor the monolithic logic into distinct Ansible roles: <code>iso_preparation</code> for handling the Ubuntu installer, <code>netboot</code> for managing DHCP and TFTP, and <code>web</code> for serving the autoinstall scripts. With each step, Gemini acted as an expert pair programmer. When a service needed to be restarted, it suggested an Ansible handler to ensure it only happened when the configuration actually changed—an efficiency I wouldn't have thought of initially. The <code>ansible-provisioning-server</code> was born, not in weeks, but in a matter of hours. <strong>The time to value had been slashed by an order of magnitude.</strong>
-                </p>
+<h2>Phase 2: Expanding the Ambition to a Kubernetes Cluster</h2>
+<p>
+    With the base operating system provisioning fully automated, the horizon expanded. Why stop at a blank server? The new goal became deploying a full Kubernetes cluster. This would typically require a specialized skillset in Kubernetes administration and complex networking.
+</p>
+<p>
+    Again, the dialogue with <code>gemini-cli</code> drove the process: "Gemini, create a new Ansible project, <code>ansible-kubernetes-nodes</code>, to configure a cluster. I need a role for controllers and a role for workers."
+</p>
+<p>
+    Gemini scaffolded the project, complete with tasks to install <code>kubeadm</code>, <code>kubelet</code>, and <code>kubectl</code>. When faced with the challenge of configuring the specific network interfaces for the cluster's storage network, Gemini templated the Netplan configuration files (<code>01-netcfg.yaml.j2</code>), pulling the IP addresses and interface names from the Ansible inventory. The <code>fix_kernel_modules.yml</code> and <code>ceph_prereqs</code> role show how we iteratively tackled challenges as they arose, adding more context and letting Gemini generate the necessary code to solve them. A task that would have been a significant project for a dedicated DevOps engineer was completed in an afternoon.
+</p>
 
-                <h2>Phase 2: Expanding the Ambition to a Kubernetes Cluster</h2>
-                <p>
-                    With the base operating system provisioning fully automated, the horizon expanded. Why stop at a blank server? The new goal became deploying a full Kubernetes cluster. This would typically require a specialized skillset in Kubernetes administration and complex networking.
-                </p>
-                <p>
-                    Again, the dialogue with <code>gemini-cli</code> drove the process: "Gemini, create a new Ansible project, <code>ansible-kubernetes-nodes</code>, to configure a cluster. I need a role for controllers and a role for workers."
-                </p>
-                <p>
-                    Gemini scaffolded the project, complete with tasks to install <code>kubeadm</code>, <code>kubelet</code>, and <code>kubectl</code>. When faced with the challenge of configuring the specific network interfaces for the cluster's storage network, Gemini templated the Netplan configuration files (<code>01-netcfg.yaml.j2</code>), pulling the IP addresses and interface names from the Ansible inventory. The <code>fix_kernel_modules.yml</code> and <code>ceph_prereqs</code> role show how we iteratively tackled challenges as they arose, adding more context and letting Gemini generate the necessary code to solve them. A task that would have been a significant project for a dedicated DevOps engineer was completed in an afternoon.
-                </p>
+<h2>Phase 3: From Opaque Infrastructure to a Documented, Visible Platform</h2>
+<p>
+    The infrastructure was now automated, but it was still invisible. The knowledge of what servers existed, their hardware specifications, and their roles was locked away in configuration files and command-line outputs. The final, and perhaps most valuable, phase was to create a user-facing portal to document the entire system.
+</p>
+<p>
+    This is where <code>gemini-cli</code> truly bridged the skills gap. As someone who is not a web developer, I could describe what I wanted:
+</p>
+<ol>
+    <li><strong>Data Aggregation:</strong> "Gemini, I have raw output from <code>lshw</code> (as XML) and <code>ipmitool</code>. Write a Python script, <code>build_inventory.py</code>, to parse these files and generate a single <code>inventory.json</code>."</li>
+    <li><strong>Web Frontend:</strong> "Now, create an <code>inventory.html</code> page. Use JavaScript (<code>site.js</code>) to fetch the <code>inventory.json</code> and display it in a clean, sortable table. Use a modern, readable stylesheet (<code>styles.css</code>)."</li>
+    <li><strong>Comprehensive Documentation:</strong> "Let's create a full documentation site. Generate pages that explain the end-to-end workflow, the provisioning server, and the Kubernetes cluster. Link them all from a central <code>index.html</code>."</li>
+</ol>
+<p>
+    The <code>website</code> directory is the result of this collaboration. It’s not just a collection of files; it’s a high-value asset. It provides a single pane of glass for viewing the hardware inventory. It documents the complex automation in simple, human-readable language. It allows anyone, regardless of their Ansible or Kubernetes expertise, to understand the platform's architecture and status.
+</p>
 
-                <h2>Phase 3: From Opaque Infrastructure to a Documented, Visible Platform</h2>
-                <p>
-                    The infrastructure was now automated, but it was still invisible. The knowledge of what servers existed, their hardware specifications, and their roles was locked away in configuration files and command-line outputs. The final, and perhaps most valuable, phase was to create a user-facing portal to document the entire system.
-                </p>
-                <p>
-                    This is where <code>gemini-cli</code> truly bridged the skills gap. As someone who is not a web developer, I could describe what I wanted:
-                </p>
-                <ol>
-                    <li><strong>Data Aggregation:</strong> "Gemini, I have raw output from <code>lshw</code> (as XML) and <code>ipmitool</code>. Write a Python script, <code>build_inventory.py</code>, to parse these files and generate a single <code>inventory.json</code>."</li>
-                    <li><strong>Web Frontend:</strong> "Now, create an <code>inventory.html</code> page. Use JavaScript (<code>site.js</code>) to fetch the <code>inventory.json</code> and display it in a clean, sortable table. Use a modern, readable stylesheet (<code>styles.css</code>)."</li>
-                    <li><strong>Comprehensive Documentation:</strong> "Let's create a full documentation site. Generate pages that explain the end-to-end workflow, the provisioning server, and the Kubernetes cluster. Link them all from a central <code>index.html</code>."</li>
-                </ol>
-                <p>
-                    The <code>website</code> directory is the result of this collaboration. It’s not just a collection of files; it’s a high-value asset. It provides a single pane of glass for viewing the hardware inventory. It documents the complex automation in simple, human-readable language. It allows anyone, regardless of their Ansible or Kubernetes expertise, to understand the platform's architecture and status.
-                </p>
-
-                <h2>Conclusion: A Force Multiplier</h2>
-                <p>
-                    The journey from the <code>backup</code> folder to the final, integrated system of Ansible automation and a documentation website would have traditionally been a multi-month endeavor requiring specialized expertise in systems administration, network engineering, and web development.
-                </p>
-                <p>
-                    With <code>gemini-cli</code>, it became an iterative, collaborative process of days. It acted as a force multiplier, translating high-level intent into expert-level code. It democratized the creation of complex infrastructure, removing the need for a specialized skillset and allowing the focus to remain on the desired outcome. The result is not just the code in the repositories, but a dramatic compression of the time required to gain value—a transformation from a manual, high-friction process to a documented, automated, and valuable platform.
-                </p>
-            </div>
-        </main>
-    </div>
-    <script src="/site.js?v=8aac0b7"></script>
-</body>
-</html>
+<h2>Conclusion: A Force Multiplier</h2>
+<p>
+    The journey from the <code>backup</code> folder to the final, integrated system of Ansible automation and a documentation website would have traditionally been a multi-month endeavor requiring specialized expertise in systems administration, network engineering, and web development.
+</p>
+<p>
+    With <code>gemini-cli</code>, it became an iterative, collaborative process of days. It acted as a force multiplier, translating high-level intent into expert-level code. It democratized the creation of complex infrastructure, removing the need for a specialized skillset and allowing the focus to remain on the desired outcome. The result is not just the code in the repositories, but a dramatic compression of the time required to gain value—a transformation from a manual, high-friction process to a documented, automated, and valuable platform.
+</p>
