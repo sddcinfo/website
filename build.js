@@ -41,9 +41,9 @@ async function build() {
         if (file.includes(PAGES_DIR)) continue;
         const relativePath = path.relative(SOURCE_DIR, file);
         const destPath = path.join(PUBLIC_DIR, relativePath);
-        if ((await fs.stat(file)).isDirectory()) {
-            await fs.mkdir(destPath, { recursive: true });
-        } else {
+        const destDir = path.dirname(destPath);
+        await fs.mkdir(destDir, { recursive: true });
+        if (!(await fs.stat(file)).isDirectory()) {
             await fs.copyFile(file, destPath);
         }
     }
