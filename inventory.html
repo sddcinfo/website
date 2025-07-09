@@ -6,7 +6,6 @@
     <title>Hardware Inventory - sddc.info</title>
     <link rel="stylesheet" href="/styles.css">
     <style>
-        /* Styles for the lshw-generated table */
         #lshw {
             border-collapse: collapse;
             width: 100%;
@@ -64,28 +63,17 @@
     </div>
 
     <script>
-        // Fetch the raw HTML from the inventory file, parse it, and inject the body content.
-        fetch('hardware_inventory_node1.html')
+        fetch('/hardware_inventory_node1.html')
             .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok: ${response.statusText}`);
-                }
+                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
                 return response.text();
             })
             .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                const inventoryBody = doc.body.innerHTML;
                 const inventoryContent = document.getElementById('inventory-content');
-
-                if (inventoryBody && inventoryBody.trim().length > 0) {
-                    inventoryContent.innerHTML = inventoryBody;
-                    const table = inventoryContent.querySelector('table');
-                    if (table) {
-                        table.id = 'lshw'; // Add ID for styling
-                    }
+                if (html && html.trim().length > 0) {
+                    inventoryContent.innerHTML = html;
                 } else {
-                    inventoryContent.innerHTML = '<p>Error: Hardware inventory report is empty or could not be parsed.</p>';
+                    inventoryContent.innerHTML = '<p>Error: Hardware inventory report is empty.</p>';
                 }
             })
             .catch(error => {
