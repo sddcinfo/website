@@ -47,6 +47,14 @@
     The <code>website</code> directory is the result of this collaboration. It’s not just a collection of files; it’s a high-value asset. It provides a single pane of glass for viewing the hardware inventory. It documents the complex automation in simple, human-readable language. It allows anyone, regardless of their Ansible or Kubernetes expertise, to understand the platform's architecture and status.
 </p>
 
+<h2>Phase 4: Introducing a Staging Environment</h2>
+<p>
+    As the website grew in importance, making direct changes to the live version became risky. A simple mistake could break the documentation for everyone. To address this, the development process matured with the introduction of a formal staging environment.
+</p>
+<p>
+    The workflow was updated to use Git branches. All new development and content updates now happen on a <code>staging</code> branch. When changes are ready, they are pushed to this branch, which automatically deploys to a separate, non-production staging website. This provides a crucial opportunity to review and test everything in a live-like environment. We can catch broken links, layout issues, or data parsing errors before they ever impact the main site. This two-step process—develop, stage, and then promote to production—is a critical best practice. It ensures stability, minimizes risk, and guarantees that the live documentation remains a reliable resource for the entire team.
+</p>
+
 <h2>Conclusion: A Force Multiplier</h2>
 <p>
     The journey from the <code>backup</code> folder to the final, integrated system of Ansible automation and a documentation website would have traditionally been a multi-month endeavor requiring specialized expertise in systems administration, network engineering, and web development.
