@@ -47,7 +47,7 @@ async function build() {
 
     // 1. Build Tailwind CSS
     console.log('Building Tailwind CSS...');
-    await execPromise('npm run build:css');
+    await execPromise('node node_modules/tailwindcss/dist/lib.js -i ./source/input.css -o ./public/styles.css --minify');
 
     // Find all files in source directory
     const allFiles = await findFiles(SOURCE_DIR);
