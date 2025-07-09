@@ -61,29 +61,28 @@
 
 <section id="conclusion">
     <h2>Conclusion & Key Finding</h2>
-    <div class="perf-conclusion-grid">
-        <div>
-            <h3>Network is the Primary Bottleneck</h3>
-            <p>The benchmark results confirm that the cluster is healthy, resilient, and performing well for its configuration. The high-speed NVMe drives are significantly underutilized, with performance being limited by the 10GbE network fabric.</p>
-            <p>This is most evident in the write performance, which is impacted by Ceph's 3x replication factor. As illustrated, a single write request from an application results in three separate write operations across the cluster network, multiplying traffic and latency.</p>
-            <div class="recommendation-box">
-                <p>Recommendation</p>
-                <p>Future performance enhancements should focus on upgrading the network infrastructure (e.g., to 25GbE or higher) before considering faster storage.</p>
+     <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
+        <div class="md:col-span-3">
+            <h3 class="text-xl font-bold mb-3">Network is the Primary Bottleneck</h3>
+            <p class="mb-4">The benchmark results confirm that the cluster is healthy, resilient, and performing well for its configuration. The high-speed NVMe drives are significantly underutilized, with performance being limited by the 10GbE network fabric.</p>
+            <p class="mb-4">This is most evident in the write performance, which is impacted by Ceph's 3x replication factor. As illustrated, a single write request from an application results in three separate write operations across the cluster network, multiplying traffic and latency.</p>
+             <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md"><p class="font-semibold text-blue-800">Recommendation</p><p class="text-blue-700">Future performance enhancements should focus on upgrading the network infrastructure (e.g., to 25GbE or higher) before considering faster storage.</p></div>
+        </div>
+        <div class="md:col-span-2 flex flex-col items-center justify-center bg-slate-50 p-4 rounded-lg border">
+            <h4 class="font-semibold text-center mb-3">Ceph 3x Write Replication</h4>
+            <div class="w-full space-y-2 text-center text-sm">
+                <div class="bg-slate-200 p-2 rounded-md shadow-sm">App Write Request</div>
+                <div class="pl-4 text-2xl text-slate-400">↓</div>
+                <div class="bg-blue-200 border border-blue-300 text-blue-800 p-2 rounded-md shadow-sm">Primary OSD Write</div>
+                 <div class="pl-4 text-2xl text-slate-400">↓</div>
+                <div class="flex justify-around">
+                     <div class="bg-amber-200 border border-amber-300 text-amber-800 p-2 rounded-md shadow-sm">Replica 1 Write</div>
+                     <div class="bg-amber-200 border border-amber-300 text-amber-800 p-2 rounded-md shadow-sm">Replica 2 Write</div>
+                </div>
+                <p class="text-xs text-slate-500 pt-2">(Over 10GbE Network)</p>
             </div>
         </div>
-        <div class="replication-diagram">
-            <h4>Ceph 3x Write Replication</h4>
-            <div>App Write Request</div>
-            <div class="arrow">↓</div>
-            <div>Primary OSD Write</div>
-            <div class="arrow">↓</div>
-            <div class="replicas">
-                 <div>Replica 1 Write</div>
-                 <div>Replica 2 Write</div>
-            </div>
-            <p>(Over 10GbE Network)</p>
-        </div>
-    </div>
+     </div>
 </section>
 <style>
     .chart-container {
