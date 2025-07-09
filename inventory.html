@@ -5,8 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hardware Inventory - sddc.info</title>
     <link rel="stylesheet" href="/styles.css">
+    <style>
+        #lshw {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 0.9em;
+        }
+        #lshw, #lshw th, #lshw td {
+            border: 1px solid var(--border-color);
+        }
+        #lshw th, #lshw td {
+            padding: 8px 12px;
+            text-align: left;
+        }
+        #lshw th {
+            background-color: #f8f9fa;
+        }
+        #lshw .node-disabled {
+            color: #adb5bd;
+        }
+    </style>
 </head>
 <body>
+    <button class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
     <div class="main-container">
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -33,29 +54,34 @@
         <main class="main-content">
             <div class="content-wrapper">
                 <h1>Hardware Inventory: Node 1</h1>
-                <p class="lead">A summarized, "purchasable parts" inventory for node `10.10.1.21`.</p>
+                <p class="lead">A detailed, automatically generated inventory of all hardware components for node `10.10.1.21`.</p>
                 
                 <div id="inventory-content">
-                    <h2>Machine / Motherboard</h2><dl>
-<dt>Motherboard</dt><dd>Supermicro model: X10SDV-6C-TLN4F Version: 2.00 serial: &lt;superuser required&gt;</dd>
-</dl>
-<h2>Processor</h2><dl>
-<dt>Model</dt><dd>6-core model: Intel Xeon D-1528 bits: 64 type: MT MCP arch: Broadwell rev: 3 cache:</dd>
-</dl>
-<h2>Network Devices</h2><dl>
-<dt>Device 1</dt><dd>Intel Ethernet X552/X557-AT 10GBASE-T vendor: Super Micro</dd>
-<dt>Device 2</dt><dd>Intel Ethernet X552/X557-AT 10GBASE-T vendor: Super Micro</dd>
-<dt>Device 3</dt><dd>Intel I350 Gigabit Network vendor: Super Micro</dd>
-<dt>Device 4</dt><dd>Intel I350 Gigabit Network vendor: Super Micro</dd>
-</dl>
-<h2>Storage</h2><dl>
-<dt>Drive 1</dt><dd>/dev/nvme0n1 vendor: Samsung model: SSD 980 1TB</dd>
-<dt>Drive 2</dt><dd>/dev/nvme1n1 vendor: Samsung model: SSD 980 1TB</dd>
-<dt>Drive 3</dt><dd>/dev/sda vendor: SuperMicro model: SSD</dd>
-</dl>
+                    <!-- The hardware inventory from lshw will be loaded here -->
                 </div>
             </div>
         </main>
     </div>
+
+    <script src="/site.js"></script>
+    <script>
+        fetch('/hardware_inventory_node1.html')
+            .then(response => {
+                if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
+                return response.text();
+            })
+            .then(html => {
+                const inventoryContent = document.getElementById('inventory-content');
+                if (html && html.trim().length > 0) {
+                    inventoryContent.innerHTML = html;
+                } else {
+                    inventoryContent.innerHTML = '<p>Error: Hardware inventory report is empty.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching or processing hardware inventory:', error);
+                document.getElementById('inventory-content').innerHTML = `<p>Error: Could not load hardware inventory data. ${error}</p>`;
+            });
+    </script>
 </body>
 </html>
