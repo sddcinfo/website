@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-gray-50 text-gray-700;
+    }
+    h1 {
+        @apply text-4xl font-bold text-gray-900 tracking-tight;
+    }
+    h2 {
+        @apply text-2xl font-semibold text-gray-800 mt-10 pb-2 border-b border-gray-200;
+    }
+    h3 {
+        @apply text-xl font-semibold text-gray-800 mt-8;
+    }
+    a {
+        @apply text-blue-600 hover:text-blue-800 transition-colors duration-200;
+    }
+    p, ul, ol, pre {
+        @apply mt-4 leading-relaxed;
+    }
+    ul, ol {
+        @apply pl-5;
+    }
+    ul {
+        @apply list-disc;
+    }
+    ol {
+        @apply list-decimal;
+    }
+    pre {
+        @apply bg-gray-800 text-white p-4 rounded-lg overflow-x-auto;
+    }
+    code {
+        @apply bg-gray-200 text-gray-800 font-mono text-sm px-1 py-0.5 rounded;
+    }
+    pre code {
+        @apply bg-transparent text-white p-0;
+    }
+    .lead {
+        @apply text-lg text-gray-600 mt-2;
+    }
+}
+
+@layer components {
+    .main-container {
+        @apply flex;
+    }
+    .sidebar {
+        @apply bg-gray-900 text-gray-300 w-64 min-h-screen p-4 fixed flex-col lg:flex hidden;
+        transition: transform 0.3s ease-in-out;
+    }
+    .sidebar.is-open {
+        @apply flex;
+        transform: translateX(0);
+    }
+    .sidebar-header {
+        @apply text-center mb-8;
+    }
+    .sidebar-header a {
+        @apply text-white text-2xl font-bold tracking-wider;
+    }
+    .sidebar-nav h3 {
+        @apply text-gray-500 text-xs font-bold uppercase tracking-wider px-3 mt-6 mb-2;
+    }
+    .sidebar-nav a {
+        @apply flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors duration-150;
+    }
+    .sidebar-nav a:hover {
+        @apply bg-gray-700 text-white;
+    }
+    .sidebar-nav a.active {
+        @apply bg-blue-600 text-white;
+    }
+    .main-content {
+        @apply p-6 lg:ml-64 w-full;
+    }
+    .content-wrapper {
+        @apply max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-sm;
+    }
+    .mobile-nav-toggle {
+        @apply lg:hidden fixed top-4 left-4 z-20 bg-gray-800 text-white p-2 rounded-md;
+    }
+    .card {
+        @apply bg-white p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300;
+    }
+    .card h2 {
+        @apply text-xl font-bold text-blue-600 mt-0 border-none;
+    }
+    .card p {
+        @apply text-gray-600;
+    }
+    dl {
+        @apply border border-gray-200 rounded-lg p-4 mt-4 bg-gray-50;
+    }
+    dt {
+        @apply font-semibold text-gray-800;
+    }
+    dd {
+        @apply pl-4 text-gray-600 mb-2;
+    }
+}

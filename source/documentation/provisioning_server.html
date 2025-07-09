@@ -1,38 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Provisioning Server - sddc.info</title>
-    <link rel="stylesheet" href="/styles.css?v=8aac0b7">
-</head>
-<body>
-    <button class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
+<div class="content-wrapper">
+    <h1>The Provisioning Server</h1>
+    <p class="lead">The foundation of the automated ecosystem.</p>
 
-        <main class="main-content">
-            <div class="content-wrapper">
-                <h1>The Provisioning Server</h1>
-                <p class="lead">The foundation of the automated ecosystem.</p>
+    <h2>Architecture and Roles</h2>
+    <p>The Provisioning Server is a standard Ubuntu server configured by the <a href="https://github.com/sddcinfo/ansible-provisioning-server" target="_blank">ansible-provisioning-server</a> project. It runs a suite of services that work in concert to guide a new, bare-metal machine through an automated installation of Ubuntu.</p>
 
-                <h2>Architecture and Roles</h2>
-                <p>The Provisioning Server is a standard Ubuntu server configured by the <a href="https://github.com/sddcinfo/ansible-provisioning-server" target="_blank">ansible-provisioning-server</a> project. It runs a suite of services that work in concert to guide a new, bare-metal machine through an automated installation of Ubuntu.</p>
+    <h3>DHCP Server (dnsmasq)</h3>
+    <p>This is the first point of contact for a new node. When a machine is powered on and set to PXE boot, it sends out a DHCP request. Dnsmasq is configured to listen for these requests, assign a specific IP address based on the node's MAC address (defined in <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/roles/netboot/vars/main.yml" target="_blank"><code>roles/netboot/vars/main.yml</code></a>), and tell the node where to find the TFTP server.</p>
 
-                <h3>DHCP Server (dnsmasq)</h3>
-                <p>This is the first point of contact for a new node. When a machine is powered on and set to PXE boot, it sends out a DHCP request. Dnsmasq is configured to listen for these requests, assign a specific IP address based on the node's MAC address (defined in <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/roles/netboot/vars/main.yml" target="_blank"><code>roles/netboot/vars/main.yml</code></a>), and tell the node where to find the TFTP server.</p>
+    <h3>TFTP Server (tftpd-hpa)</h3>
+    <p>The TFTP server has one simple job: to serve the iPXE bootloader (<code>undionly.kpxe</code> or <code>ipxe.efi</code>) to the node. This bootloader is more powerful than a standard PXE ROM and allows for booting from an HTTP source.</p>
 
-                <h3>TFTP Server (tftpd-hpa)</h3>
-                <p>The TFTP server has one simple job: to serve the iPXE bootloader (<code>undionly.kpxe</code> or <code>ipxe.efi</code>) to the node. This bootloader is more powerful than a standard PXE ROM and allows for booting from an HTTP source.</p>
+    <h3>HTTP Server (Nginx & PHP)</h3>
+    <p>The HTTP server is the main engine of the provisioning process, responsible for serving the iPXE boot script, the Ubuntu ISO files, and the cloud-init autoinstall configurations. It also hosts the live status page. All of this is managed by the <code>web</code> and <code>iso_preparation</code> roles.</p>
 
-                <h3>HTTP Server (Nginx & PHP)</h3>
-                <p>The HTTP server is the main engine of the provisioning process, responsible for serving the iPXE boot script, the Ubuntu ISO files, and the cloud-init autoinstall configurations. It also hosts the live status page. All of this is managed by the <code>web</code> and <code>iso_preparation</code> roles.</p>
-
-                <h3>NAT Gateway (iptables)</h3>
-                <p>To allow the newly provisioned nodes to access the internet, the provisioning server is also configured to act as a NAT gateway, masquerading traffic from the internal network out to the internet. This is configured in the <code>common</code> role.</p>
-            </div>
-        </main>
-    </div>
-    <script src="/site.js?v=8aac0b7"></script>
-</body>
-</html>
+    <h3>NAT Gateway (iptables)</h3>
+    <p>To allow the newly provisioned nodes to access the internet, the provisioning server is also configured to act as a NAT gateway, masquerading traffic from the internal network out to the internet. This is configured in the <code>common</code> role.</p>
+</div>

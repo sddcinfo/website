@@ -1,20 +1,23 @@
 const fs = require('fs').promises;
 const path = require('path');
-const exec = require('util').promisify(require('child_process').exec);
+const { exec } = require('child_process');
+const util = require('util');
+const execPromise = util.promisify(exec);
 
 const SOURCE_DIR = path.join(__dirname, 'source');
 const PUBLIC_DIR = path.join(__dirname, 'public');
+const TAILWIND_INPUT_PATH = path.join(SOURCE_DIR, 'input.css');
+const TAILWIND_OUTPUT_PATH = path.join(PUBLIC_DIR, 'styles.css');
 
 async function getGitCommitHash() {
-    // Use the environment variable provided by Cloudflare Pages, or get it from git locally.
     if (process.env.CF_PAGES_COMMIT_SHA) {
         return process.env.CF_PAGES_COMMIT_SHA.slice(0, 7);
     }
     try {
-        const { stdout } = await exec('git rev-parse --short HEAD');
+        const { stdout } = await execPromise('git rev-parse --short HEAD');
         return stdout.trim();
     } catch (error) {
-        console.warn('Could not get git commit hash. Using timestamp instead.', error);
+        console.warn('Could not get git commit hash. Using timestamp instead.');
         return Date.now().toString();
     }
 }
@@ -28,6 +31,11 @@ async function findFiles(dir) {
     return Array.prototype.concat(...files);
 }
 
+function extractTitle(htmlContent) {
+    const match = htmlContent.match(/<h1.*?>(.*?)<\/h1>/);
+    return match ? match[1].trim() : 'sddc.info';
+}
+
 async function build() {
     console.log('Starting build...');
     const version = await getGitCommitHash();
@@ -37,11 +45,17 @@ async function build() {
     await fs.rm(PUBLIC_DIR, { recursive: true, force: true });
     await fs.mkdir(PUBLIC_DIR, { recursive: true });
 
+    // 1. Build Tailwind CSS
+    console.log('Building Tailwind CSS...');
+    await execPromise(`npx tailwindcss -i "${TAILWIND_INPUT_PATH}" -o "${TAILWIND_OUTPUT_PATH}" --minify`);
+
     // Find all files in source directory
     const allFiles = await findFiles(SOURCE_DIR);
-
-    // Read sidebar content
+    
+    // Read layout and sidebar templates
+    const layoutPath = path.join(SOURCE_DIR, 'layout.html');
     const sidebarPath = path.join(SOURCE_DIR, 'sidebar.html');
+    const layoutTemplate = await fs.readFile(layoutPath, 'utf8');
     const sidebarContent = await fs.readFile(sidebarPath, 'utf8');
 
     // Process each file
@@ -52,19 +66,28 @@ async function build() {
         // Ensure destination directory exists
         await fs.mkdir(path.dirname(destPath), { recursive: true });
 
-        if (path.extname(file) === '.html' && path.basename(file) !== 'sidebar.html') {
-            // It's an HTML file to be processed
-            let content = await fs.readFile(file, 'utf8');
+        const ext = path.extname(file);
+        const base = path.basename(file);
 
-            // 1. Inject sidebar
-            content = content.replace(/<div id="sidebar-placeholder"><\/div>/g, sidebarContent);
+        if (ext === '.html' && base !== 'layout.html' && base !== 'sidebar.html') {
+            // It's a content HTML file
+            let pageContent = await fs.readFile(file, 'utf8');
+            const pageTitle = extractTitle(pageContent);
 
-            // 2. Add cache-busting query string
-            content = content.replace(/(href|src)="(.*?)(\.css|\.js)"/g, `$1="$2$3?v=${version}"`);
+            // Inject page content into layout
+            let finalHtml = layoutTemplate.replace('<!-- PAGE_CONTENT -->', pageContent);
+            finalHtml = finalHtml.replace('<!-- PAGE_TITLE -->', `${pageTitle} | sddc.info`);
             
-            await fs.writeFile(destPath, content, 'utf8');
-        } else if (path.basename(file) !== 'sidebar.html') {
-            // It's an asset (CSS, JS, image, etc.), just copy it
+            // Inject sidebar
+            finalHtml = finalHtml.replace('<div id="sidebar-placeholder"></div>', sidebarContent);
+
+            // Add cache-busting
+            finalHtml = finalHtml.replace(/(href|src)="(.*?)(\.css|\.js)"/g, `$1="$2$3?v=${version}"`);
+            
+            await fs.writeFile(destPath, finalHtml, 'utf8');
+
+        } else if (ext !== '.html' && ext !== '.css') {
+            // It's a non-CSS, non-HTML asset (JS, image, etc.), just copy it
             await fs.copyFile(file, destPath);
         }
     }

@@ -1,173 +1,152 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Performance Report - sddc.info</title>
-    <link rel="stylesheet" href="/styles.css?v=8aac0b7">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <style>
-        .chart-container {
-            position: relative;
-            width: 100%;
-            height: 350px;
-            max-height: 40vh;
-        }
-        .active-toggle {
-            background-color: #007bff;
-            color: white;
-        }
-    </style>
-</head>
-<body>
-    <button class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
+<div class="content-wrapper">
+    <h1>Performance Benchmark Report</h1>
+    <p class="lead">An analysis of the K8s-Ceph-Production-Sim Cluster as of June 26, 2025.</p>
 
-        <main class="main-content">
-            <div class="content-wrapper">
-                <h1>Performance Benchmark Report</h1>
-                <p class="lead">An analysis of the K8s-Ceph-Production-Sim Cluster as of June 26, 2025.</p>
+    <section id="summary">
+        <h2>Executive Summary</h2>
+        <p>This report details the performance benchmarks conducted on a newly provisioned 4-node Kubernetes cluster utilizing a Rook Ceph storage backend. The results indicate a healthy, stable, and resilient cluster, with performance consistent with expectations for its configuration (3x data replication over a 10GbE network). The primary performance bottleneck was identified as the 10GbE network, not the underlying NVMe storage. The cluster is performing well and is ready for production workloads that require high availability and data durability.</p>
+    </section>
 
-                <section id="summary">
-                    <h2>Executive Summary</h2>
-                    <p>This report details the performance benchmarks conducted on a newly provisioned 4-node Kubernetes cluster utilizing a Rook Ceph storage backend. The results indicate a healthy, stable, and resilient cluster, with performance consistent with expectations for its configuration (3x data replication over a 10GbE network). The primary performance bottleneck was identified as the 10GbE network, not the underlying NVMe storage. The cluster is performing well and is ready for production workloads that require high availability and data durability.</p>
-                </section>
-
-                <section id="config">
-                    <h2>Test Environment Configuration</h2>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="bg-slate-50 p-5 rounded-lg flex items-center space-x-4 border">
-                            <div class="text-3xl">💻</div>
-                            <div><h3 class="font-semibold">Servers & CPU</h3><p>4 Nodes / Xeon D-1528</p></div>
-                        </div>
-                        <div class="bg-slate-50 p-5 rounded-lg flex items-center space-x-4 border">
-                            <div class="text-3xl">🧠</div>
-                            <div><h3 class="font-semibold">RAM</h3><p>128 GB per node</p></div>
-                        </div>
-                        <div class="bg-slate-50 p-5 rounded-lg flex items-center space-x-4 border">
-                            <div class="text-3xl">💾</div>
-                            <div><h3 class="font-semibold">Storage</h3><p>8x Samsung 980 1TB NVMe</p></div>
-                        </div>
-                         <div class="bg-slate-50 p-5 rounded-lg flex items-center space-x-4 border">
-                            <div class="text-3xl">🌐</div>
-                            <div><h3 class="font-semibold">Network & Ceph</h3><p>10GbE / 3x Replication</p></div>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="benchmarks">
-                    <h2>Benchmark Dashboard</h2>
-                    <div class="flex justify-center mb-6">
-                        <div class="inline-flex rounded-md shadow-sm" role="group">
-                            <button type="button" id="btn-random" class="px-4 py-2 text-sm font-medium text-slate-900 bg-white border border-slate-200 rounded-l-lg hover:bg-slate-100 focus:z-10 focus:ring-2 focus:ring-blue-500">Random I/O</button>
-                            <button type="button" id="btn-sequential" class="px-4 py-2 text-sm font-medium text-slate-900 bg-white border-t border-b border-r border-slate-200 rounded-r-md hover:bg-slate-100 focus:z-10 focus:ring-2 focus:ring-blue-500">Sequential I/O</button>
-                        </div>
-                    </div>
-                    <div id="dashboard-content" class="bg-slate-50 p-6 rounded-lg border">
-                        <h3 id="benchmark-title" class="text-xl font-bold mb-1"></h3>
-                        <p id="benchmark-description" class="text-slate-600 mb-6"></p>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                            <div class="bg-white p-4 rounded-lg text-center border"><p class="text-sm font-medium text-slate-500" id="stat1-label"></p><p class="text-3xl font-bold text-blue-600" id="stat1-value"></p></div>
-                            <div class="bg-white p-4 rounded-lg text-center border"><p class="text-sm font-medium text-slate-500" id="stat2-label"></p><p class="text-3xl font-bold" id="stat2-value"></p></div>
-                            <div class="bg-white p-4 rounded-lg text-center border"><p class="text-sm font-medium text-slate-500" id="stat3-label"></p><p class="text-3xl font-bold" id="stat3-value"></p></div>
-                        </div>
-                        <div class="chart-container"><canvas id="benchmarkChart"></canvas></div>
-                        <div class="mt-6 border-t border-slate-200 pt-4"><h4 class="font-semibold">Analysis</h4><p id="benchmark-analysis" class="mt-2 leading-relaxed"></p></div>
-                    </div>
-                </section>
-
-                <section id="conclusion">
-                    <h2>Conclusion & Key Finding</h2>
-                     <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
-                        <div class="md:col-span-3">
-                            <h3 class="text-xl font-bold mb-3">Network is the Primary Bottleneck</h3>
-                            <p class="mb-4">The benchmark results confirm that the cluster is healthy, resilient, and performing well for its configuration. The high-speed NVMe drives are significantly underutilized, with performance being limited by the 10GbE network fabric.</p>
-                            <p class="mb-4">This is most evident in the write performance, which is impacted by Ceph's 3x replication factor. As illustrated, a single write request from an application results in three separate write operations across the cluster network, multiplying traffic and latency.</p>
-                             <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md"><p class="font-semibold text-blue-800">Recommendation</p><p class="text-blue-700">Future performance enhancements should focus on upgrading the network infrastructure (e.g., to 25GbE or higher) before considering faster storage.</p></div>
-                        </div>
-                        <div class="md:col-span-2 flex flex-col items-center justify-center bg-slate-50 p-4 rounded-lg border">
-                            <h4 class="font-semibold text-center mb-3">Ceph 3x Write Replication</h4>
-                            <div class="w-full space-y-2 text-center text-sm">
-                                <div class="bg-slate-200 p-2 rounded-md shadow-sm">App Write Request</div>
-                                <div class="pl-4 text-2xl text-slate-400">↓</div>
-                                <div class="bg-blue-200 border border-blue-300 text-blue-800 p-2 rounded-md shadow-sm">Primary OSD Write</div>
-                                 <div class="pl-4 text-2xl text-slate-400">↓</div>
-                                <div class="flex justify-around">
-                                     <div class="bg-amber-200 border border-amber-300 text-amber-800 p-2 rounded-md shadow-sm">Replica 1 Write</div>
-                                     <div class="bg-amber-200 border border-amber-300 text-amber-800 p-2 rounded-md shadow-sm">Replica 2 Write</div>
-                                </div>
-                                <p class="text-xs text-slate-500 pt-2">(Over 10GbE Network)</p>
-                            </div>
-                        </div>
-                     </div>
-                </section>
+    <section id="config">
+        <h2>Test Environment Configuration</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-slate-50 p-5 rounded-lg flex items-center space-x-4 border">
+                <div class="text-3xl">💻</div>
+                <div><h3 class="font-semibold">Servers & CPU</h3><p>4 Nodes / Xeon D-1528</p></div>
             </div>
-        </main>
-    </div>
+            <div class="bg-slate-50 p-5 rounded-lg flex items-center space-x-4 border">
+                <div class="text-3xl">🧠</div>
+                <div><h3 class="font-semibold">RAM</h3><p>128 GB per node</p></div>
+            </div>
+            <div class="bg-slate-50 p-5 rounded-lg flex items-center space-x-4 border">
+                <div class="text-3xl">💾</div>
+                <div><h3 class="font-semibold">Storage</h3><p>8x Samsung 980 1TB NVMe</p></div>
+            </div>
+             <div class="bg-slate-50 p-5 rounded-lg flex items-center space-x-4 border">
+                <div class="text-3xl">🌐</div>
+                <div><h3 class="font-semibold">Network & Ceph</h3><p>10GbE / 3x Replication</p></div>
+            </div>
+        </div>
+    </section>
 
-    <script src="/site.js?v=8aac0b7"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const benchmarkData = {
-                random: {
-                    title: "Random I/O Performance",
-                    description: "Simulates a database-like workload with small, random reads and writes.",
-                    analysis: "The total random I/O performance is strong for a distributed system. The write performance is lower than the read performance due to Ceph's 3x replication factor, where every write must be committed over the network to two other nodes before being acknowledged. This result is limited by network latency and the overhead of ensuring data safety.",
-                    labels: ['Read', 'Write'],
-                    values: [65.5, 21.9],
-                    unit: 'MiB/s',
-                    stats: { stat1: { label: 'Total IOPS', value: '~22,300' }, stat2: { label: 'Read Performance', value: '16,700 IOPS' }, stat3: { label: 'Write Performance', value: '5,600 IOPS' } }
+    <section id="benchmarks">
+        <h2>Benchmark Dashboard</h2>
+        <div class="flex justify-center mb-6">
+            <div class="inline-flex rounded-md shadow-sm" role="group">
+                <button type="button" id="btn-random" class="px-4 py-2 text-sm font-medium text-slate-900 bg-white border border-slate-200 rounded-l-lg hover:bg-slate-100 focus:z-10 focus:ring-2 focus:ring-blue-500">Random I/O</button>
+                <button type="button" id="btn-sequential" class="px-4 py-2 text-sm font-medium text-slate-900 bg-white border-t border-b border-r border-slate-200 rounded-r-md hover:bg-slate-100 focus:z-10 focus:ring-2 focus:ring-blue-500">Sequential I/O</button>
+            </div>
+        </div>
+        <div id="dashboard-content" class="bg-slate-50 p-6 rounded-lg border">
+            <h3 id="benchmark-title" class="text-xl font-bold mb-1"></h3>
+            <p id="benchmark-description" class="text-slate-600 mb-6"></p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                <div class="bg-white p-4 rounded-lg text-center border"><p class="text-sm font-medium text-slate-500" id="stat1-label"></p><p class="text-3xl font-bold text-blue-600" id="stat1-value"></p></div>
+                <div class="bg-white p-4 rounded-lg text-center border"><p class="text-sm font-medium text-slate-500" id="stat2-label"></p><p class="text-3xl font-bold" id="stat2-value"></p></div>
+                <div class="bg-white p-4 rounded-lg text-center border"><p class="text-sm font-medium text-slate-500" id="stat3-label"></p><p class="text-3xl font-bold" id="stat3-value"></p></div>
+            </div>
+            <div class="chart-container"><canvas id="benchmarkChart"></canvas></div>
+            <div class="mt-6 border-t border-slate-200 pt-4"><h4 class="font-semibold">Analysis</h4><p id="benchmark-analysis" class="mt-2 leading-relaxed"></p></div>
+        </div>
+    </section>
+
+    <section id="conclusion">
+        <h2>Conclusion & Key Finding</h2>
+         <div class="grid grid-cols-1 md:grid-cols-5 gap-8 items-center">
+            <div class="md:col-span-3">
+                <h3 class="text-xl font-bold mb-3">Network is the Primary Bottleneck</h3>
+                <p class="mb-4">The benchmark results confirm that the cluster is healthy, resilient, and performing well for its configuration. The high-speed NVMe drives are significantly underutilized, with performance being limited by the 10GbE network fabric.</p>
+                <p class="mb-4">This is most evident in the write performance, which is impacted by Ceph's 3x replication factor. As illustrated, a single write request from an application results in three separate write operations across the cluster network, multiplying traffic and latency.</p>
+                 <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-md"><p class="font-semibold text-blue-800">Recommendation</p><p class="text-blue-700">Future performance enhancements should focus on upgrading the network infrastructure (e.g., to 25GbE or higher) before considering faster storage.</p></div>
+            </div>
+            <div class="md:col-span-2 flex flex-col items-center justify-center bg-slate-50 p-4 rounded-lg border">
+                <h4 class="font-semibold text-center mb-3">Ceph 3x Write Replication</h4>
+                <div class="w-full space-y-2 text-center text-sm">
+                    <div class="bg-slate-200 p-2 rounded-md shadow-sm">App Write Request</div>
+                    <div class="pl-4 text-2xl text-slate-400">↓</div>
+                    <div class="bg-blue-200 border border-blue-300 text-blue-800 p-2 rounded-md shadow-sm">Primary OSD Write</div>
+                     <div class="pl-4 text-2xl text-slate-400">↓</div>
+                    <div class="flex justify-around">
+                         <div class="bg-amber-200 border border-amber-300 text-amber-800 p-2 rounded-md shadow-sm">Replica 1 Write</div>
+                         <div class="bg-amber-200 border border-amber-300 text-amber-800 p-2 rounded-md shadow-sm">Replica 2 Write</div>
+                    </div>
+                    <p class="text-xs text-slate-500 pt-2">(Over 10GbE Network)</p>
+                </div>
+            </div>
+         </div>
+    </section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .chart-container {
+        position: relative;
+        width: 100%;
+        height: 350px;
+        max-height: 40vh;
+    }
+    .active-toggle {
+        background-color: #007bff;
+        color: white;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const benchmarkData = {
+            random: {
+                title: "Random I/O Performance",
+                description: "Simulates a database-like workload with small, random reads and writes.",
+                analysis: "The total random I/O performance is strong for a distributed system. The write performance is lower than the read performance due to Ceph's 3x replication factor, where every write must be committed over the network to two other nodes before being acknowledged. This result is limited by network latency and the overhead of ensuring data safety.",
+                labels: ['Read', 'Write'],
+                values: [65.5, 21.9],
+                unit: 'MiB/s',
+                stats: { stat1: { label: 'Total IOPS', value: '~22,300' }, stat2: { label: 'Read Performance', value: '16,700 IOPS' }, stat3: { label: 'Write Performance', value: '5,600 IOPS' } }
+            },
+            sequential: {
+                title: "Sequential I/O Performance",
+                description: "Simulates large file access, common for backups, AI/ML datasets, or video streaming.",
+                analysis: "The sequential throughput results clearly indicate that a single client workload is constrained by the 10GbE network. The performance is stable and demonstrates that the underlying NVMe drives and Ceph OSDs are functioning correctly, but cannot reach their full potential without a faster network fabric.",
+                labels: ['Read', 'Write'],
+                values: [191, 201],
+                unit: 'MiB/s',
+                stats: { stat1: { label: 'Total Throughput', value: '~392 MiB/s' }, stat2: { label: 'Read Throughput', value: '191 MiB/s' }, stat3: { label: 'Write Throughput', value: '201 MiB/s' } }
+            }
+        };
+        const ctx = document.getElementById('benchmarkChart').getContext('2d');
+        let benchmarkChart;
+        function renderChart(data) {
+            if (benchmarkChart) benchmarkChart.destroy();
+            benchmarkChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: data.labels,
+                    datasets: [{
+                        label: `Performance in ${data.unit}`,
+                        data: data.values,
+                        backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(245, 158, 11, 0.7)'],
+                        borderColor: ['rgba(37, 99, 235, 1)', 'rgba(217, 119, 6, 1)'],
+                        borderWidth: 1
+                    }]
                 },
-                sequential: {
-                    title: "Sequential I/O Performance",
-                    description: "Simulates large file access, common for backups, AI/ML datasets, or video streaming.",
-                    analysis: "The sequential throughput results clearly indicate that a single client workload is constrained by the 10GbE network. The performance is stable and demonstrates that the underlying NVMe drives and Ceph OSDs are functioning correctly, but cannot reach their full potential without a faster network fabric.",
-                    labels: ['Read', 'Write'],
-                    values: [191, 201],
-                    unit: 'MiB/s',
-                    stats: { stat1: { label: 'Total Throughput', value: '~392 MiB/s' }, stat2: { label: 'Read Throughput', value: '191 MiB/s' }, stat3: { label: 'Write Throughput', value: '201 MiB/s' } }
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw} ${data.unit}` } } },
+                    scales: { y: { beginAtZero: true, title: { display: true, text: `Bandwidth (${data.unit})` } } }
                 }
-            };
-            const ctx = document.getElementById('benchmarkChart').getContext('2d');
-            let benchmarkChart;
-            function renderChart(data) {
-                if (benchmarkChart) benchmarkChart.destroy();
-                benchmarkChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: {
-                        labels: data.labels,
-                        datasets: [{
-                            label: `Performance in ${data.unit}`,
-                            data: data.values,
-                            backgroundColor: ['rgba(59, 130, 246, 0.7)', 'rgba(245, 158, 11, 0.7)'],
-                            borderColor: ['rgba(37, 99, 235, 1)', 'rgba(217, 119, 6, 1)'],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true, maintainAspectRatio: false,
-                        plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => `${c.label}: ${c.raw} ${data.unit}` } } },
-                        scales: { y: { beginAtZero: true, title: { display: true, text: `Bandwidth (${data.unit})` } } }
-                    }
-                });
-            }
-            function updateDashboard(mode) {
-                const data = benchmarkData[mode];
-                ['title', 'description', 'analysis'].forEach(key => { document.getElementById(`benchmark-${key}`).textContent = data[key]; });
-                ['stat1', 'stat2', 'stat3'].forEach(key => {
-                    document.getElementById(`${key}-label`).textContent = data.stats[key].label;
-                    document.getElementById(`${key}-value`).textContent = data.stats[key].value;
-                });
-                document.getElementById('btn-random').classList.toggle('active-toggle', mode === 'random');
-                document.getElementById('btn-sequential').classList.toggle('active-toggle', mode === 'sequential');
-                renderChart(data);
-            }
-            document.getElementById('btn-random').addEventListener('click', () => updateDashboard('random'));
-            document.getElementById('btn-sequential').addEventListener('click', () => updateDashboard('sequential'));
-            updateDashboard('random');
-        });
-    </script>
-</body>
-</html>
+            });
+        }
+        function updateDashboard(mode) {
+            const data = benchmarkData[mode];
+            ['title', 'description', 'analysis'].forEach(key => { document.getElementById(`benchmark-${key}`).textContent = data[key]; });
+            ['stat1', 'stat2', 'stat3'].forEach(key => {
+                document.getElementById(`${key}-label`).textContent = data.stats[key].label;
+                document.getElementById(`${key}-value`).textContent = data.stats[key].value;
+            });
+            document.getElementById('btn-random').classList.toggle('active-toggle', mode === 'random');
+            document.getElementById('btn-sequential').classList.toggle('active-toggle', mode === 'sequential');
+            renderChart(data);
+        }
+        document.getElementById('btn-random').addEventListener('click', () => updateDashboard('random'));
+        document.getElementById('btn-sequential').addEventListener('click', () => updateDashboard('sequential'));
+        updateDashboard('random');
+    });
+</script>
