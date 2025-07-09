@@ -32,21 +32,35 @@
         <main class="main-content">
             <div class="content-wrapper">
                 <h1>End-to-End Execution Guide</h1>
-                <p class="lead">From bare metal to a running cluster in four steps.</p>
+                <p class="lead">From bare metal to a running cluster.</p>
 
                 <h2>Step 1: Configure Your Environment</h2>
-                <p>Before running any playbooks, you must configure the variables to match your specific hardware and environment in the <code>ansible-provisioning-server</code> and <code>ansible-kubernetes-nodes</code> projects.</p>
+                <p>Before running any playbooks, you must configure the variables to match your specific hardware and environment.</p>
+                 <ol>
+                    <li><strong>Configure Node Details:</strong> Edit <code>ansible-provisioning-server/roles/netboot/vars/main.yml</code> to define the MAC addresses, IPs, and hostnames for your machines.</li>
+                    <li><strong>Configure Cluster Details:</strong> Edit <code>ansible-kubernetes-nodes/group_vars/all.yml</code> to set the Kubernetes version and Ceph devices.</li>
+                    <li><strong>Define Inventory:</strong> Edit <code>ansible-kubernetes-nodes/inventory.ini</code> to assign nodes to controller and worker groups.</li>
+                </ol>
 
                 <h2>Step 2: Run the Provisioning Server Playbook</h2>
-                <p>This command configures your central server. It only needs to be run once, or whenever you update its configuration.</p>
+                <p>This command configures your central server. The first time it runs, it will generate new SSH keys for automation.</p>
                 <pre><code>cd /path/to/ansible-provisioning-server
 ansible-playbook -i inventory site.yml</code></pre>
 
-                <h2>Step 3: Boot the Bare-Metal Nodes</h2>
-                <p>Power on your bare-metal servers and ensure they are set to PXE boot. The automated process will now take over. You can monitor this entire process by opening a web browser and navigating to the IP of your provisioning server (e.g., <code>http://10.10.1.1</code>).</p>
+                <h2>Step 3: Distribute SSH Keys</h2>
+                <p>This is a critical one-time step. After the provisioning server is set up, copy the public SSH keys it generated to the Kubernetes cluster project.</p>
+                <ol>
+                    <li>Copy the content of <code>/home/sysadmin/.ssh/sysadmin_automation_key.pub</code> from the provisioning server.</li>
+                    <li>Paste it into the <code>sysadmin_ssh_pub_key</code> variable in <code>ansible-kubernetes-nodes/group_vars/all.yml</code>.</li>
+                    <li>Copy the content of <code>/root/.ssh/root_automation_key.pub</code> from the provisioning server.</li>
+                    <li>Paste it into the <code>root_ssh_pub_key</code> variable in <code>ansible-kubernetes-nodes/group_vars/all.yml</code>.</li>
+                </ol>
 
-                <h2>Step 4: Run the Kubernetes Cluster Playbook</h2>
-                <p>Once the status page shows your nodes as "DONE", you can proceed with configuring them as a Kubernetes cluster.</p>
+                <h2>Step 4: Boot the Bare-Metal Nodes</h2>
+                <p>Power on your servers. They will automatically PXE boot and install Ubuntu. Monitor the progress on the live status page at <code>http://10.10.1.1</code>.</p>
+
+                <h2>Step 5: Run the Kubernetes Cluster Playbook</h2>
+                <p>Once the status page shows your nodes as "DONE", run the final playbook to configure the cluster.</p>
                 <pre><code>cd /path/to/ansible-kubernetes-nodes
 ansible-playbook -i inventory.ini site.yml</code></pre>
                 <p>After this playbook completes, your Kubernetes cluster will be fully operational.</p>
