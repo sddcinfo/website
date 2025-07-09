@@ -32,37 +32,42 @@
         <main class="main-content">
             <div class="content-wrapper">
                 <h1>End-to-End Execution Guide</h1>
-                <p class="lead">From bare metal to a running cluster.</p>
+                <p class="lead">A fully automated workflow from a clean machine to a running cluster.</p>
 
-                <h2>Step 1: Configure Your Environment</h2>
-                <p>Before running any playbooks, you must configure the variables to match your specific hardware and environment.</p>
-                 <ol>
-                    <li><strong>Configure Node Details:</strong> Edit <code>ansible-provisioning-server/roles/netboot/vars/main.yml</code> to define the MAC addresses, IPs, and hostnames for your machines.</li>
-                    <li><strong>Configure Cluster Details:</strong> Edit <code>ansible-kubernetes-nodes/group_vars/all.yml</code> to set the Kubernetes version and Ceph devices.</li>
-                    <li><strong>Define Inventory:</strong> Edit <code>ansible-kubernetes-nodes/inventory.ini</code> to assign nodes to controller and worker groups.</li>
-                </ol>
+                <h2>Step 1: Bootstrap the Control Node</h2>
+                <p>From a clean Ubuntu machine that will act as your control node, clone the two Ansible repositories. Then, run the bootstrap script in each project directory. This only needs to be done once.</p>
+                <pre><code># Clone the repositories
+git clone https://github.com/sddcinfo/ansible-provisioning-server.git
+git clone https://github.com/sddcinfo/ansible-kubernetes-nodes.git
 
-                <h2>Step 2: Run the Provisioning Server Playbook</h2>
-                <p>This command configures your central server. The first time it runs, it will generate new SSH keys for automation.</p>
-                <pre><code>cd /path/to/ansible-provisioning-server
+# Bootstrap the provisioning project
+cd ansible-provisioning-server
+./bootstrap.sh
+
+# Bootstrap the Kubernetes project
+cd ../ansible-kubernetes-nodes
+./bootstrap.sh
+</code></pre>
+
+                <h2>Step 2: Configure Your Environment</h2>
+                <p>Before running the playbooks, configure the variables to match your hardware in both projects as described in the previous documentation.</p>
+
+                <h2>Step 3: Run the Provisioning Server Playbook</h2>
+                <p>This command configures your central server and generates the necessary SSH keys for automation.</p>
+                <pre><code>cd ../ansible-provisioning-server
 ansible-playbook -i inventory site.yml</code></pre>
 
-                <h2>Step 3: Distribute SSH Keys</h2>
-                <p>This is a critical one-time step. After the provisioning server is set up, copy the public SSH keys it generated to the Kubernetes cluster project.</p>
-                <ol>
-                    <li>Copy the content of <code>/home/sysadmin/.ssh/sysadmin_automation_key.pub</code> from the provisioning server.</li>
-                    <li>Paste it into the <code>sysadmin_ssh_pub_key</code> variable in <code>ansible-kubernetes-nodes/group_vars/all.yml</code>.</li>
-                    <li>Copy the content of <code>/root/.ssh/root_automation_key.pub</code> from the provisioning server.</li>
-                    <li>Paste it into the <code>root_ssh_pub_key</code> variable in <code>ansible-kubernetes-nodes/group_vars/all.yml</code>.</li>
-                </ol>
+                <h2>Step 4: Synchronize the SSH Keys</h2>
+                <p>This is the new, automated step that replaces the manual copy-paste process. This playbook connects to the provisioning server, fetches the public keys, and injects them into the Kubernetes project.</p>
+                <pre><code>cd ../ansible-kubernetes-nodes
+ansible-playbook sync_keys.yml</code></pre>
 
-                <h2>Step 4: Boot the Bare-Metal Nodes</h2>
+                <h2>Step 5: Boot the Bare-Metal Nodes</h2>
                 <p>Power on your servers. They will automatically PXE boot and install Ubuntu. Monitor the progress on the live status page at <code>http://10.10.1.1</code>.</p>
 
-                <h2>Step 5: Run the Kubernetes Cluster Playbook</h2>
+                <h2>Step 6: Run the Kubernetes Cluster Playbook</h2>
                 <p>Once the status page shows your nodes as "DONE", run the final playbook to configure the cluster.</p>
-                <pre><code>cd /path/to/ansible-kubernetes-nodes
-ansible-playbook -i inventory.ini site.yml</code></pre>
+                <pre><code>ansible-playbook -i inventory.ini site.yml</code></pre>
                 <p>After this playbook completes, your Kubernetes cluster will be fully operational.</p>
             </div>
         </main>
