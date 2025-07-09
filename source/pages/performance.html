@@ -61,26 +61,27 @@
 
 <section id="conclusion">
     <h2>Conclusion & Key Finding</h2>
-    <div>
+    <div class="perf-conclusion-grid">
         <div>
             <h3>Network is the Primary Bottleneck</h3>
             <p>The benchmark results confirm that the cluster is healthy, resilient, and performing well for its configuration. The high-speed NVMe drives are significantly underutilized, with performance being limited by the 10GbE network fabric.</p>
             <p>This is most evident in the write performance, which is impacted by Ceph's 3x replication factor. As illustrated, a single write request from an application results in three separate write operations across the cluster network, multiplying traffic and latency.</p>
-            <div><p>Recommendation</p><p>Future performance enhancements should focus on upgrading the network infrastructure (e.g., to 25GbE or higher) before considering faster storage.</p></div>
-        </div>
-        <div>
-            <h4>Ceph 3x Write Replication</h4>
-            <div>
-                <div>App Write Request</div>
-                <div>↓</div>
-                <div>Primary OSD Write</div>
-                <div>↓</div>
-                <div>
-                    <div>Replica 1 Write</div>
-                    <div>Replica 2 Write</div>
-                </div>
-                <p>(Over 10GbE Network)</p>
+            <div class="recommendation-box">
+                <p>Recommendation</p>
+                <p>Future performance enhancements should focus on upgrading the network infrastructure (e.g., to 25GbE or higher) before considering faster storage.</p>
             </div>
+        </div>
+        <div class="replication-diagram">
+            <h4>Ceph 3x Write Replication</h4>
+            <div>App Write Request</div>
+            <div class="arrow">↓</div>
+            <div>Primary OSD Write</div>
+            <div class="arrow">↓</div>
+            <div class="replicas">
+                 <div>Replica 1 Write</div>
+                 <div>Replica 2 Write</div>
+            </div>
+            <p>(Over 10GbE Network)</p>
         </div>
     </div>
 </section>

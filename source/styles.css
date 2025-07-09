@@ -257,3 +257,79 @@ dd {
         margin-bottom: 15px;
     }
 }
+
+/* 9. Grid System */
+.grid-container {
+    display: grid;
+    gap: 30px;
+}
+
+.grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.perf-conclusion-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Default for mobile */
+    gap: 30px;
+    align-items: start;
+}
+
+@media (min-width: 768px) {
+    .perf-conclusion-grid {
+        grid-template-columns: 3fr 2fr; /* 3/5 and 2/5 width on desktop */
+    }
+}
+
+/* 10. Special Component Styles */
+.recommendation-box {
+    background-color: #e7f3ff;
+    border: 1px solid #b3d7ff;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.recommendation-box p:first-child {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-top: 0;
+}
+
+.replication-diagram {
+    background-color: #f8f9fa;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.replication-diagram div {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+}
+
+.replication-diagram .arrow {
+    border: none;
+    background: none;
+    font-size: 1.5em;
+    color: #6c757d;
+    margin: 0;
+    padding: 0;
+}
+
+.replication-diagram .replicas {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
