@@ -192,6 +192,22 @@ pre code {
     color: #495057;
 }
 
+.card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.icon-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon-card .icon {
+    font-size: 2.5em;
+}
+
 /* 7. Inventory Page DL Styles */
 dl {
     border: 1px solid var(--border-color);
