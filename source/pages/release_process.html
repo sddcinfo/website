@@ -1,0 +1,53 @@
+<h1>Website Release Process</h1>
+<p class='lead'>This document outlines the automated release train for the sddc.info website, powered by Cloudflare Pages and GitHub.</p>
+
+    <section>
+        <h2>Overview</h2>
+        <p>The website employs a Git-flow methodology using two primary, long-lived branches within the <code>sddcinfo/website</code> repository. Each branch is linked to a distinct environment on Cloudflare Pages, enabling a safe and efficient promotion path from development to the live production site.</p>
+        <ul>
+            <li><strong>Staging Environment:</strong> Deployed from the <code>staging</code> branch to <a href="https://dev.sddc.info" target="_blank">dev.sddc.info</a>. This environment is used for testing and validating changes.</li>
+            <li><strong>Production Environment:</strong> Deployed from the <code>main</code> branch to <a href="https://sddc.info" target="_blank">sddc.info</a>. This is the live, public-facing website.</li>
+        </ul>
+    </section>
+    
+    <section>
+        <h2>The Value of Cloudflare Pages</h2>
+        <p>Using Cloudflare Pages provides a robust, secure, and highly efficient platform for deploying modern web applications. It simplifies the entire CI/CD (Continuous Integration/Continuous Deployment) pipeline and offers several key advantages:</p>
+        <ul>
+            <li><strong>Seamless Git Integration:</strong> Deployments are triggered automatically by a simple <code>git push</code> to a configured branch. This removes the need for complex, manual deployment steps.</li>
+            <li><strong>Global Performance:</strong> The website is deployed directly to Cloudflare's global edge network, which spans hundreds of cities worldwide. This ensures that content is served from a location physically close to the user, resulting in exceptionally fast load times.</li>
+            <li><strong>Built-in Security:</strong> Every deployment is protected by Cloudflare's enterprise-grade security, including free, automatically renewing SSL certificates and robust DDoS mitigation.</li>
+            <li><strong>Collaborative Previews:</strong> The platform automatically generates unique, shareable preview URLs for every pull request. This allows stakeholders to review and validate changes in a production-like environment before they are merged.</li>
+            <li><strong>Simplified Toolchain:</strong> By connecting directly to a GitHub repository, Cloudflare Pages handles the building, deployment, and hosting, allowing developers to focus purely on the code.</li>
+        </ul>
+    </section>
+    <section>
+<h2>Build & Deployment Settings</h2>
+<p>The following settings are applied globally to all deployments, including both production and staging environments.</p>
+<ul>
+<li><strong>Build Command:</strong> <code>npm install && npm run build</code></li>
+<li><strong>Build Output Directory:</strong> <code>public</code></li>
+</ul>
+</section>
+<section>
+<h2>Branch Control & Source Repository</h2>
+<p>The website's source code is hosted in the <strong><code>website</code></strong> GitHub repository. Cloudflare Pages is configured to deploy specific branches to their corresponding environments.</p>
+<ul>
+<li><strong>Production Branch:</strong> The <code>main</code> branch is deployed to the production environment.</li>
+<li><strong>Staging Branch:</strong> The <code>staging</code> branch is deployed to the staging (preview) environment.</li>
+<li><strong>Pull Request Previews:</strong> Automatically generating preview deployments for pull requests is <strong>Enabled</strong>.</li>
+</ul>
+</section>
+<section>
+<h2>Promotion Path</h2>
+<p>The process for promoting changes from a feature branch to the live production site is as follows:</p>
+
+        <ol>
+            <li>A developer creates a new feature branch from the local <code>staging</code> branch.</li>
+            <li>Once work is complete, a pull request is opened on GitHub to merge the feature branch back into <code>staging</code>.</li>
+            <li>After the PR is merged, the changes are automatically deployed to the staging environment for final review.</li>
+            <li>To promote the changes to production, a new pull request is opened from <code>staging</code> to <code>main</code>.</li>
+            <li>Once this final PR is approved and merged by an authorized user, the changes are automatically deployed to the production site.</li>
+        </ol>
+    </section>
+    
