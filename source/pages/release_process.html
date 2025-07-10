@@ -1,0 +1,45 @@
+<h1>Website Release Process</h1>
+<p class='lead'>This document outlines the automated release train for the sddc.info website, powered by Cloudflare Pages and GitHub.</p>
+
+    <section>
+        <h2>Overview</h2>
+        <p>The website employs a Git-flow methodology using two primary, long-lived branches within the <code>sddcinfo/website</code> repository. Each branch is linked to a distinct environment on Cloudflare Pages, enabling a safe and efficient promotion path from development to the live production site.</p>
+        <ul>
+            <li><strong>Staging Environment:</strong> Deployed from the <code>staging</code> branch to <a href="https://dev.sddc.info" target="_blank">dev.sddc.info</a>. This environment is used for testing and validating changes.</li>
+            <li><strong>Production Environment:</strong> Deployed from the <code>main</code> branch to <a href="https://sddc.info" target="_blank">sddc.info</a>. This is the live, public-facing website.</li>
+        </ul>
+    </section>
+    <section>
+<h2>Production Environment (sddc.info)</h2>
+<p>The production environment is automatically deployed when changes are merged into the <strong><code>main</code></strong> branch. This branch is protected, requiring pull request reviews before any code can be merged.</p>
+<h3>Build & Deployment Settings (Production)</h3>
+<ul>
+<li><strong>Build Command:</strong> <code>N/A</code></li>
+<li><strong>Build Output Directory:</strong> <code>N/A</code></li>
+<li><strong>Root Directory:</strong> <code>N/A</code></li>
+<li><strong>Environment Variables:</strong> <code>0</code> defined.</li>
+</ul>
+</section>
+<section>
+<h2>Staging Environment (dev.sddc.info)</h2>
+<p>The staging environment provides a preview of changes before they go live. It is automatically deployed from the <strong><code>staging</code></strong> branch. All feature branches must be merged here for testing.</p>
+<h3>Build & Deployment Settings (Preview)</h3>
+<ul>
+<li><strong>Build Command:</strong> <code>N/A</code></li>
+<li><strong>Build Output Directory:</strong> <code>N/A</code></li>
+<li><strong>Root Directory:</strong> <code>N/A</code></li>
+<li><strong>Environment Variables:</strong> <code>0</code> defined.</li>
+</section>
+<section>
+<h2>Source Control & Promotion Path</h2>
+<p>The website's source code is hosted in the <strong><code>website</code></strong> GitHub repository. The promotion process is as follows:</p>
+
+        <ol>
+            <li>A developer creates a new feature branch from <code>staging</code>.</li>
+            <li>Once work is complete, a pull request is opened to merge the feature branch back into <code>staging</code>.</li>
+            <li>After the PR is merged, the changes are automatically deployed to the staging environment for review.</li>
+            <li>To promote changes to production, a new pull request is opened from <code>staging</code> to <code>main</code>.</li>
+            <li>Once approved and merged by an authorized user, the changes are deployed to the production site.</li>
+        </ol>
+    <p>Preview deployments on pull requests are <strong>Enabled</strong>.</p>
+</section>
