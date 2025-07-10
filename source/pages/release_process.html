@@ -10,37 +10,32 @@
         </ul>
     </section>
     <section>
-<h2>Production Environment (sddc.info)</h2>
-<p>The production environment is automatically deployed when changes are merged into the <strong><code>main</code></strong> branch. This branch is protected, requiring pull request reviews before any code can be merged.</p>
-<h3>Build & Deployment Settings (Production)</h3>
+<h2>Build & Deployment Settings</h2>
+<p>The following settings are applied globally to all deployments, including both production and staging environments.</p>
 <ul>
 <li><strong>Build Command:</strong> <code>npm install && npm run build</code></li>
 <li><strong>Build Output Directory:</strong> <code>public</code></li>
-<li><strong>Root Directory:</strong> <code></code></li>
-<li><strong>Environment Variables:</strong> <code>0</code> defined.</li>
 </ul>
 </section>
 <section>
-<h2>Staging Environment (dev.sddc.info)</h2>
-<p>The staging environment provides a preview of changes before they go live. It is automatically deployed from the <strong><code>staging</code></strong> branch. All feature branches must be merged here for testing.</p>
-<h3>Build & Deployment Settings (Preview)</h3>
+<h2>Branch Control & Source Repository</h2>
+<p>The website's source code is hosted in the <strong><code>website</code></strong> GitHub repository. Cloudflare Pages is configured to deploy specific branches to their corresponding environments.</p>
 <ul>
-<li><strong>Build Command:</strong> <code>npm install && npm run build</code></li>
-<li><strong>Build Output Directory:</strong> <code>public</code></li>
-<li><strong>Root Directory:</strong> <code></code></li>
-<li><strong>Environment Variables:</strong> <code>0</code> defined.</li>
+<li><strong>Production Branch:</strong> The <code>main</code> branch is deployed to the production environment.</li>
+<li><strong>Staging Branch:</strong> The <code>staging</code> branch is deployed to the staging (preview) environment.</li>
+<li><strong>Pull Request Previews:</strong> Automatically generating preview deployments for pull requests is <strong>Enabled</strong>.</li>
 </ul>
 </section>
 <section>
-<h2>Source Control & Promotion Path</h2>
-<p>The website's source code is hosted in the <strong><code>website</code></strong> GitHub repository. The promotion process is as follows:</p>
+<h2>Promotion Path</h2>
+<p>The process for promoting changes from a feature branch to the live production site is as follows:</p>
 
         <ol>
-            <li>A developer creates a new feature branch from <code>staging</code>.</li>
-            <li>Once work is complete, a pull request is opened to merge the feature branch back into <code>staging</code>.</li>
-            <li>After the PR is merged, the changes are automatically deployed to the staging environment for review.</li>
-            <li>To promote changes to production, a new pull request is opened from <code>staging</code> to <code>main</code>.</li>
-            <li>Once approved and merged by an authorized user, the changes are deployed to the production site.</li>
+            <li>A developer creates a new feature branch from the local <code>staging</code> branch.</li>
+            <li>Once work is complete, a pull request is opened on GitHub to merge the feature branch back into <code>staging</code>.</li>
+            <li>After the PR is merged, the changes are automatically deployed to the staging environment for final review.</li>
+            <li>To promote the changes to production, a new pull request is opened from <code>staging</code> to <code>main</code>.</li>
+            <li>Once this final PR is approved and merged by an authorized user, the changes are automatically deployed to the production site.</li>
         </ol>
-    <p>Preview deployments on pull requests are <strong>Enabled</strong>.</p>
-</section>
+    </section>
+    
