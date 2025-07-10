@@ -1,17 +1,42 @@
 <h1>The Provisioning Server</h1>
-<p class="lead">The foundation of the automated ecosystem.</p>
+<p class="lead">The foundation of the automated ecosystem, starting with a repeatable VM build.</p>
 
-<h2>Architecture and Roles</h2>
-<p>The Provisioning Server is a standard Ubuntu server configured by the <a href="https://github.com/sddcinfo/ansible-provisioning-server" target="_blank">ansible-provisioning-server</a> project. It runs a suite of services that work in concert to guide a new, bare-metal machine through an automated installation of Ubuntu.</p>
+<section>
+    <h2>Phase 1: Creating the Ubuntu 24.04 Template VM</h2>
+    <p>Before any automation can run, a standardized template virtual machine must be created in VMware Workstation. This template serves as the "golden image" that will be cloned to create the provisioning server itself. The process is designed to be automated via a set of Python scripts, which require this specific template configuration.</p>
+    <p>Follow these steps carefully to create the required blank template:</p>
+    <ol>
+        <li><strong>Open VMware Workstation</strong> and select <strong>File > New Virtual Machine</strong>.</li>
+        <li>Choose <strong>Typical (recommended)</strong> and click Next.</li>
+        <li>Select the option <strong>I will install the operating system later.</strong> This is a critical step to ensure the VM remains a blank template.</li>
+        <li>For the guest OS, choose <strong>Linux</strong> and set the version to <strong>Ubuntu 64-bit</strong>.</li>
+        <li>Name the virtual machine <strong>ubuntu-template</strong> and store it in your preferred directory.</li>
+        <li>Specify a disk size of at least <strong>25 GB</strong> and select <strong>Store virtual disk as a single file</strong> for better performance.</li>
+        <li>Click <strong>Customize Hardware...</strong> and configure the following:
+            <ul>
+                <li><strong>Memory:</strong> Assign at least <strong>4 GB</strong>.</li>
+                <li><strong>Processors:</strong> Assign at least <strong>2 processor cores</strong>.</li>
+                <li><strong>Network Adapter:</strong> Ensure it is set to <strong>NAT</strong> or <strong>Bridged</strong> to allow internet access during the automated installation.</li>
+            </ul>
+        </li>
+        <li>Click <strong>Close</strong>, then <strong>Finish</strong>. <strong>Do not power on the VM.</strong></li>
+    </ol>
+    <p>With the template created, the <a href="https://github.com/sddcinfo/vmware-automation" target="_blank">vmware-automation</a> scripts can now be used to clone and automatically install Ubuntu 24.04 onto a new VM, which will become the provisioning server.</p>
+</section>
 
-<h3>DHCP Server (dnsmasq)</h3>
-<p>This is the first point of contact for a new node. When a machine is powered on and set to PXE boot, it sends out a DHCP request. Dnsmasq is configured to listen for these requests, assign a specific IP address based on the node's MAC address (defined in <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/roles/netboot/vars/main.yml" target="_blank"><code>roles/netboot/vars/main.yml</code></a>), and tell the node where to find the TFTP server.</p>
+<section>
+    <h2>Phase 2: Ansible-Driven Configuration</h2>
+    <p>Once the base Ubuntu VM is running, the <a href="https://github.com/sddcinfo/ansible-provisioning-server" target="_blank">ansible-provisioning-server</a> project takes over. It runs a suite of services that work in concert to guide a new, bare-metal machine through an automated installation of Ubuntu.</p>
 
-<h3>TFTP Server (tftpd-hpa)</h3>
-<p>The TFTP server has one simple job: to serve the iPXE bootloader (<code>undionly.kpxe</code> or <code>ipxe.efi</code>) to the node. This bootloader is more powerful than a standard PXE ROM and allows for booting from an HTTP source.</p>
+    <h3>DHCP Server (dnsmasq)</h3>
+    <p>This is the first point of contact for a new node. When a machine is powered on and set to PXE boot, it sends out a DHCP request. Dnsmasq is configured to listen for these requests, assign a specific IP address based on the node's MAC address (defined in <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/roles/netboot/vars/main.yml" target="_blank"><code>roles/netboot/vars/main.yml</code></a>), and tell the node where to find the TFTP server.</p>
 
-<h3>HTTP Server (Nginx & PHP)</h3>
-<p>The HTTP server is the main engine of the provisioning process, responsible for serving the iPXE boot script, the Ubuntu ISO files, and the cloud-init autoinstall configurations. It also hosts the live status page. All of this is managed by the <code>web</code> and <code>iso_preparation</code> roles.</p>
+    <h3>TFTP Server (tftpd-hpa)</h3>
+    <p>The TFTP server has one simple job: to serve the iPXE bootloader (<code>undionly.kpxe</code> or <code>ipxe.efi</code>) to the node. This bootloader is more powerful than a standard PXE ROM and allows for booting from an HTTP source.</p>
 
-<h3>NAT Gateway (iptables)</h3>
-<p>To allow the newly provisioned nodes to access the internet, the provisioning server is also configured to act as a NAT gateway, masquerading traffic from the internal network out to the internet. This is configured in the <code>common</code> role.</p>
+    <h3>HTTP Server (Nginx & PHP)</h3>
+    <p>The HTTP server is the main engine of the provisioning process, responsible for serving the iPXE boot script, the Ubuntu ISO files, and the cloud-init autoinstall configurations. It also hosts the live status page. All of this is managed by the <code>web</code> and <code>iso_preparation</code> roles.</p>
+
+    <h3>NAT Gateway (iptables)</h3>
+    <p>To allow the newly provisioned nodes to access the internet, the provisioning server is also configured to act as a NAT gateway, masquerading traffic from the internal network out to the internet. This is configured in the <code>common</code> role.</p>
+</section>
