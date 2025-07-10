@@ -14,9 +14,9 @@
 <p>The production environment is automatically deployed when changes are merged into the <strong><code>main</code></strong> branch. This branch is protected, requiring pull request reviews before any code can be merged.</p>
 <h3>Build & Deployment Settings (Production)</h3>
 <ul>
-<li><strong>Build Command:</strong> <code>N/A</code></li>
-<li><strong>Build Output Directory:</strong> <code>N/A</code></li>
-<li><strong>Root Directory:</strong> <code>N/A</code></li>
+<li><strong>Build Command:</strong> <code>npm install && npm run build</code></li>
+<li><strong>Build Output Directory:</strong> <code>public</code></li>
+<li><strong>Root Directory:</strong> <code></code></li>
 <li><strong>Environment Variables:</strong> <code>0</code> defined.</li>
 </ul>
 </section>
@@ -25,10 +25,11 @@
 <p>The staging environment provides a preview of changes before they go live. It is automatically deployed from the <strong><code>staging</code></strong> branch. All feature branches must be merged here for testing.</p>
 <h3>Build & Deployment Settings (Preview)</h3>
 <ul>
-<li><strong>Build Command:</strong> <code>N/A</code></li>
-<li><strong>Build Output Directory:</strong> <code>N/A</code></li>
-<li><strong>Root Directory:</strong> <code>N/A</code></li>
+<li><strong>Build Command:</strong> <code>npm install && npm run build</code></li>
+<li><strong>Build Output Directory:</strong> <code>public</code></li>
+<li><strong>Root Directory:</strong> <code></code></li>
 <li><strong>Environment Variables:</strong> <code>0</code> defined.</li>
+</ul>
 </section>
 <section>
 <h2>Source Control & Promotion Path</h2>
