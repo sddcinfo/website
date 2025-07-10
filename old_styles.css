@@ -1,0 +1,335 @@
+/* --- Modern Tech-Docs Theme --- */
+
+/* 1. Global Resets & Typography */
+:root {
+    --bg-color: #f8f9fa;
+    --text-color: #343a40;
+    --primary-color: #007bff;
+    --primary-hover: #0056b3;
+    --header-bg: #2c3e50;
+    --header-text: #ffffff;
+    --card-bg: #ffffff;
+    --card-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    --code-bg: #212529;
+    --code-text: #e9ecef;
+    --border-color: #dee2e6;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.7;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    margin: 0;
+}
+
+/* 2. Main Layout & Containers */
+.main-container {
+    display: flex;
+}
+
+.sidebar {
+    width: 260px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: var(--header-bg);
+    color: var(--header-text);
+    padding: 20px;
+    overflow-y: auto;
+    transition: transform 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+.main-content {
+    margin-left: 260px;
+    padding: 20px;
+    width: calc(100% - 260px);
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.content-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    background-color: var(--card-bg);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+}
+
+/* 3. Sidebar & Navigation */
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.sidebar-header a {
+    color: var(--header-text);
+    text-decoration: none;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+.sidebar-nav h3 {
+    color: #adb5bd;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    padding: 0 15px;
+}
+
+.sidebar-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li a {
+    display: block;
+    color: #ced4da;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.sidebar-nav li a:hover, .sidebar-nav li a.active {
+    background-color: var(--primary-color);
+    color: var(--header-text);
+}
+
+/* 4. Mobile Navigation (Hamburger Menu) */
+.mobile-nav-toggle {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1001;
+    background: var(--header-bg);
+    color: white;
+    border: none;
+    padding: 10px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* 5. Content Typography & Elements */
+h1, h2, h3 {
+    color: #212529;
+    font-weight: 700;
+}
+
+h1 { font-size: 2.5em; margin-bottom: 20px; }
+h2 { font-size: 2em; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-top: 40px; margin-bottom: 20px; }
+h3 { font-size: 1.5em; }
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+a:hover {
+    color: var(--primary-hover);
+    text-decoration: underline;
+}
+
+pre {
+    background-color: var(--code-bg);
+    color: var(--code-text);
+    padding: 20px;
+    border-radius: 5px;
+    overflow-x: auto;
+    font-size: 0.9em;
+}
+code {
+    background-color: #e9ecef;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+pre code {
+    background: none;
+    padding: 0;
+}
+
+/* 6. Homepage Specific Styles */
+.hero {
+    text-align: center;
+    padding: 60px 20px;
+}
+.card-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+.card {
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    padding: 30px;
+    width: 280px;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid var(--border-color);
+}
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.1);
+    text-decoration: none;
+}
+.card h2 {
+    font-size: 1.5em;
+    color: var(--primary-color);
+    margin-top: 0;
+    border-bottom: none;
+}
+.card p {
+    font-size: 1em;
+    color: #495057;
+}
+
+.card img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.icon-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.icon-card .icon {
+    font-size: 2.5em;
+}
+
+/* 7. Inventory Page DL Styles */
+dl {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background: #f8f9fa;
+}
+dt {
+    font-weight: 600;
+    color: #495057;
+    width: 150px;
+    float: left;
+    clear: left;
+}
+dd {
+    margin-left: 170px;
+    margin-bottom: 10px;
+}
+
+/* 8. Media Query for Mobile Devices */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+    }
+    .sidebar.is-open {
+        transform: translateX(0);
+    }
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+        padding: 10px;
+    }
+    .mobile-nav-toggle {
+        display: block;
+    }
+    dl {
+        padding: 15px;
+    }
+    dt {
+        width: 100%;
+        float: none;
+        margin-bottom: 5px;
+    }
+    dd {
+        margin-left: 0;
+        margin-bottom: 15px;
+    }
+}
+
+/* 9. Grid System */
+.grid-container {
+    display: grid;
+    gap: 30px;
+}
+
+.grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.grid-cols-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.perf-conclusion-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Default for mobile */
+    gap: 30px;
+    align-items: start;
+}
+
+@media (min-width: 768px) {
+    .perf-conclusion-grid {
+        grid-template-columns: 3fr 2fr; /* 3/5 and 2/5 width on desktop */
+    }
+}
+
+/* 10. Special Component Styles */
+.recommendation-box {
+    background-color: #e7f3ff;
+    border: 1px solid #b3d7ff;
+    border-radius: 5px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.recommendation-box p:first-child {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-top: 0;
+}
+
+.replication-diagram {
+    background-color: #f8f9fa;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.replication-diagram div {
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ced4da;
+}
+
+.replication-diagram .arrow {
+    border: none;
+    background: none;
+    font-size: 1.5em;
+    color: #6c757d;
+    margin: 0;
+    padding: 0;
+}
+
+.replication-diagram .replicas {
+    display: flex;
+    justify-content: space-around;
+    gap: 10px;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
