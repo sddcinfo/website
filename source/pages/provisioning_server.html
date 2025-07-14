@@ -29,7 +29,7 @@
     <p>Once the base Ubuntu VM is running, the <a href="https://github.com/sddcinfo/ansible-provisioning-server" target="_blank">ansible-provisioning-server</a> project takes over. It runs a suite of services that work in concert to guide a new, bare-metal machine through an automated installation of Ubuntu.</p>
 
     <h3>DHCP Server (dnsmasq)</h3>
-    <p>This is the first point of contact for a new node. When a machine is powered on and set to PXE boot, it sends out a DHCP request. Dnsmasq is configured to listen for these requests, assign a specific IP address based on the node's MAC address (defined in <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/roles/netboot/vars/main.yml" target="_blank"><code>roles/netboot/vars/main.yml</code></a>), and tell the node where to find the TFTP server.</p>
+    <p>This is the first point of contact for a new node. When a machine is powered on and set to PXE boot, it sends out a DHCP request. Dnsmasq is configured to listen for these requests, assign a specific IP address based on the node's MAC address (defined in <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/nodes.json" target="_blank"><code>nodes.json</code></a>), and tell the node where to find the TFTP server.</p>
 
     <h3>TFTP Server (tftpd-hpa)</h3>
     <p>The TFTP server has one simple job: to serve the iPXE bootloader (<code>undionly.kpxe</code> or <code>ipxe.efi</code>) to the node. This bootloader is more powerful than a standard PXE ROM and allows for booting from an HTTP source.</p>
