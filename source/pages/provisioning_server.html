@@ -1,42 +1,35 @@
 <h1>The Provisioning Server</h1>
-<p class="lead">The foundation of the automated ecosystem, starting with a repeatable VM build.</p>
+<p class="lead">The automated provisioning process is a two-phase system. First, a virtual machine is created to act as the central provisioning server. Second, this server is used to deploy Ubuntu onto bare-metal hardware automatically.</p>
 
 <section>
-    <h2>Phase 1: Creating the Ubuntu 24.04 Template VM</h2>
-    <p>Before any automation can run, a standardized template virtual machine must be created in VMware Workstation. This template serves as the "golden image" that will be cloned to create the provisioning server itself. The process is designed to be automated via a set of Python scripts, which require this specific template configuration.</p>
-    <p>Follow these steps carefully to create the required blank template:</p>
+    <h2>Phase 1: Creating the Provisioning Server VM</h2>
+    <p>The process begins by creating a dedicated virtual machine that will orchestrate the entire bare-metal deployment. This is handled by the <a href="https://github.com/sddcinfo/vmware-automation" target="_blank">vmware-automation</a> project, which contains a set of Python scripts designed to run on a machine with VMware Workstation installed.</p>
+    <p>The workflow is as follows:</p>
     <ol>
-        <li><strong>Open VMware Workstation</strong> and select <strong>File > New Virtual Machine</strong>.</li>
-        <li>Choose <strong>Typical (recommended)</strong> and click Next.</li>
-        <li>Select the option <strong>I will install the operating system later.</strong> This is a critical step to ensure the VM remains a blank template.</li>
-        <li>For the guest OS, choose <strong>Linux</strong> and set the version to <strong>Ubuntu 64-bit</strong>.</li>
-        <li>Name the virtual machine <strong>ubuntu-template</strong> and store it in your preferred directory.</li>
-        <li>Specify a disk size of at least <strong>25 GB</strong> and select <strong>Store virtual disk as a single file</strong> for better performance.</li>
-        <li>Click <strong>Customize Hardware...</strong> and configure the following:
-            <ul>
-                <li><strong>Memory:</strong> Assign at least <strong>4 GB</strong>.</li>
-                <li><strong>Processors:</strong> Assign at least <strong>2 processor cores</strong>.</li>
-                <li><strong>Network Adapter:</strong> Ensure it is set to <strong>NAT</strong> or <strong>Bridged</strong> to allow internet access during the automated installation.</li>
-            </ul>
-        </li>
-        <li>Click <strong>Close</strong>, then <strong>Finish</strong>. <strong>Do not power on the VM.</strong></li>
+        <li>A blank "template" VM is first created in VMware Workstation with a predefined hardware configuration (4GB RAM, 2 CPUs, 25GB disk).</li>
+        <li>The <code>create-vm.py</code> script is executed, which clones this template to create a new VM, named <code>provisioning-server</code> by default.</li>
+        <li>The script then generates a custom cloud-init ISO using <code>create-cidata-iso.py</code>. This ISO contains the autoinstall configuration needed for an unattended Ubuntu 24.04 installation.</li>
+        <li>The script attaches the Ubuntu 24.04 installation ISO and the newly created cloud-init ISO to the VM and powers it on.</li>
+        <li>Ubuntu's autoinstall process reads the configuration from the cloud-init ISO and installs the operating system without any user interaction.</li>
     </ol>
-    <p>With the template created, the <a href="https://github.com/sddcinfo/vmware-automation" target="_blank">vmware-automation</a> scripts can now be used to clone and automatically install Ubuntu 24.04 onto a new VM, which will become the provisioning server.</p>
+    <p>At the end of this phase, a fully installed Ubuntu 24.04 VM is running and ready to be configured by Ansible.</p>
 </section>
 
 <section>
-    <h2>Phase 2: Ansible-Driven Configuration</h2>
-    <p>Once the base Ubuntu VM is running, the <a href="https://github.com/sddcinfo/ansible-provisioning-server" target="_blank">ansible-provisioning-server</a> project takes over. It runs a suite of services that work in concert to guide a new, bare-metal machine through an automated installation of Ubuntu.</p>
+    <h2>Phase 2: Configuring the Server with Ansible</h2>
+    <p>With the base VM running, the <a href="https://github.com/sddcinfo/ansible-provisioning-server" target="_blank">ansible-provisioning-server</a> project takes over. This Ansible playbook, run directly on the provisioning server VM, installs and configures a suite of services that work in concert to guide a new, bare-metal machine through its own automated installation of Ubuntu.</p>
 
-    <h3>DHCP Server (dnsmasq)</h3>
-    <p>This is the first point of contact for a new node. When a machine is powered on and set to PXE boot, it sends out a DHCP request. Dnsmasq is configured to listen for these requests, assign a specific IP address based on the node's MAC address (defined in <a href="https://github.com/sddcinfo/ansible-provisioning-server/blob/main/nodes.json" target="_blank"><code>nodes.json</code></a>), and tell the node where to find the TFTP server.</p>
+    <h3>Core Provisioning Services</h3>
+    <ul>
+        <li><strong>dnsmasq (DHCP/TFTP/DNS):</strong> This is the first point of contact for a new node. When a bare-metal machine is powered on and set to PXE boot, it sends out a DHCP request. Dnsmasq is configured to listen for these requests, assign a specific IP address based on the node's MAC address (defined in <code>nodes.json</code>), and provide the iPXE bootloader via its built-in TFTP server. It also acts as a local DNS resolver for the provisioning network.</li>
+        <li><strong>Nginx & PHP (Web Server):</strong> The web server is the main engine of the provisioning process. It hosts the iPXE boot script, the unpacked Ubuntu ISO files, and the cloud-init autoinstall configurations. It also serves a simple PHP-based web interface to monitor the status of each node.</li>
+        <li><strong>iptables (NAT Gateway):</strong> To allow the newly provisioned nodes to access the internet for package downloads, the provisioning server is also configured to act as a NAT gateway, masquerading traffic from the internal network.</li>
+    </ul>
 
-    <h3>TFTP Server (tftpd-hpa)</h3>
-    <p>The TFTP server has one simple job: to serve the iPXE bootloader (<code>undionly.kpxe</code> or <code>ipxe.efi</code>) to the node. This bootloader is more powerful than a standard PXE ROM and allows for booting from an HTTP source.</p>
-
-    <h3>HTTP Server (Nginx & PHP)</h3>
-    <p>The HTTP server is the main engine of the provisioning process, responsible for serving the iPXE boot script, the Ubuntu ISO files, and the cloud-init autoinstall configurations. It also hosts the live status page. All of this is managed by the <code>web</code> and <code>iso_preparation</code> roles.</p>
-
-    <h3>NAT Gateway (iptables)</h3>
-    <p>To allow the newly provisioned nodes to access the internet, the provisioning server is also configured to act as a NAT gateway, masquerading traffic from the internal network out to the internet. This is configured in the <code>common</code> role.</p>
+    <h3>Server Management & Control</h3>
+    <p>A key part of the automation is the ability to control the bare-metal servers themselves. This is accomplished through Redfish, a standard API for server management.</p>
+    <ul>
+        <li><strong>Supermicro Update Manager (SUM):</strong> For advanced BIOS configuration, such as setting the boot order, the playbook uses Supermicro's official <code>sum</code> utility. The <code>set_boot_order.yml</code> playbook automates the process of setting the boot order to PXE first, which is essential for the provisioning process to begin.</li>
+        <li><strong>Redfish Python Script (<code>redfish.py</code>):</strong> A custom Python script is included to send Redfish commands to the servers. This is used by the playbooks to perform actions like setting the one-time boot device to the BIOS, allowing for configuration changes before the OS installation.</li>
+    </ul>
 </section>
