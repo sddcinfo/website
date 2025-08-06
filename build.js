@@ -43,6 +43,38 @@ function generatePageDescription(fileName, pageContent) {
     return descriptions[fileName] || 'Technical documentation and guides for automated infrastructure provisioning and Kubernetes deployment.';
 }
 
+async function generateSitemap(htmlFiles) {
+    const baseUrl = 'https://sddc.info';
+    const currentDate = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
+    
+    let sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n';
+    sitemap += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+    
+    for (const file of htmlFiles) {
+        const relativePath = path.relative(PAGES_DIR, file);
+        const fileName = path.basename(relativePath);
+        
+        // Skip 404 page from sitemap
+        if (fileName === '404.html') continue;
+        
+        // Generate proper URL
+        const url = fileName === 'index.html' ? baseUrl : `${baseUrl}/${fileName}`;
+        const priority = fileName === 'index.html' ? '1.0' : '0.8';
+        
+        sitemap += `  <url>\n`;
+        sitemap += `    <loc>${url}</loc>\n`;
+        sitemap += `    <lastmod>${currentDate}</lastmod>\n`;
+        sitemap += `    <changefreq>weekly</changefreq>\n`;
+        sitemap += `    <priority>${priority}</priority>\n`;
+        sitemap += `  </url>\n`;
+    }
+    
+    sitemap += '</urlset>';
+    
+    await fs.writeFile(path.join(PUBLIC_DIR, 'sitemap.xml'), sitemap, 'utf8');
+    console.log('Generated sitemap.xml');
+}
+
 async function build() {
     console.log('Starting build...');
 
@@ -88,6 +120,24 @@ async function build() {
         finalHtml = finalHtml.replace('<div id="sidebar-placeholder"></div>', sidebarContent);
 
         await fs.writeFile(destPath, finalHtml, 'utf8');
+    }
+
+    // Generate sitemap.xml
+    await generateSitemap(htmlFiles);
+
+    // Copy SEO and server configuration files
+    const seoFiles = ['robots.txt', '.htaccess'];
+    for (const file of seoFiles) {
+        const sourcePath = path.join(SOURCE_DIR, file);
+        const destPath = path.join(PUBLIC_DIR, file);
+        
+        try {
+            await fs.access(sourcePath);
+            await fs.copyFile(sourcePath, destPath);
+            console.log(`Copied ${file}`);
+        } catch (error) {
+            console.log(`${file} not found, skipping...`);
+        }
     }
 
     console.log('Build finished successfully!');

@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://sddc.info/sitemap.xml
+
+# Crawl-delay for polite crawling
+User-agent: Googlebot
+Crawl-delay: 1
+
+User-agent: Bingbot
+Crawl-delay: 1
+
+# Disallow crawling of build artifacts and internal files
+Disallow: /source/
+Disallow: /*.js$
+Disallow: /*.css$
