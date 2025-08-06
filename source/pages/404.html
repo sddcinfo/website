@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Page not found - The requested page could not be found on SDDC.info">
+    <meta name="author" content="SDDC.info">
+    <meta name="robots" content="noindex, nofollow">
+    
+    <title>404 - Page Not Found | SDDC.info</title>
+    
+    <!-- Optimized font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="site.js" defer></script>
+</head>
+<body>
+    <button class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
+    <div class="main-container">
+        <div id="sidebar-placeholder"></div>
+        <main class="main-content">
+            <div class="content-wrapper">
+                <div class="hero-gradient">
+                    <h1>404 - Page Not Found</h1>
+                    <p>Sorry, the page you're looking for doesn't exist or has been moved.</p>
+                    <div style="margin-top: 40px;">
+                        <a href="index.html" class="btn btn-primary">Return Home</a>
+                        <a href="documentation_index.html" class="btn" style="background: var(--bg-alt-color); color: var(--text-color); margin-left: 15px;">View Documentation</a>
+                    </div>
+                </div>
+                
+                <div class="card-container">
+                    <div class="card">
+                        <div class="card-icon">🏠</div>
+                        <h2>Home</h2>
+                        <p>Return to the main page to explore our infrastructure documentation.</p>
+                        <a href="index.html">Go to Home →</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">📖</div>
+                        <h2>Documentation</h2>
+                        <p>Browse our comprehensive guides for Kubernetes and bare-metal provisioning.</p>
+                        <a href="documentation_index.html">View Docs →</a>
+                    </div>
+                    <div class="card">
+                        <div class="card-icon">🛠️</div>
+                        <h2>Hardware</h2>
+                        <p>Check out our hardware specifications and infrastructure setup.</p>
+                        <a href="hardware.html">View Hardware →</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <script>
+        // Load sidebar
+        fetch('sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('sidebar-placeholder').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error loading sidebar:', error);
+            });
+    </script>
+</body>
+</html>
