@@ -82,6 +82,7 @@ body {
 .sidebar-nav ul { list-style: none; padding: 0; margin: 0; }
 .sidebar-nav li a { display: block; color: var(--sidebar-text-color); text-decoration: none; padding: 10px 15px; border-radius: 8px; transition: background-color 0.2s, color 0.2s; }
 .sidebar-nav li a:hover, .sidebar-nav li a.active { background-color: var(--sidebar-link-hover-bg); color: var(--primary-color); }
+.sidebar-nav li a:focus { outline: 2px solid var(--primary-color); outline-offset: 2px; background-color: var(--sidebar-link-hover-bg); }
 
 /* 4. Theme Toggle */
 .theme-toggle {
@@ -93,6 +94,20 @@ body {
     cursor: pointer;
     text-align: center;
     margin-top: 30px;
+    width: 100%;
+    transition: background-color 0.2s, transform 0.2s;
+    font-size: 0.9em;
+    font-family: inherit;
+}
+
+.theme-toggle:hover {
+    background: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+.theme-toggle:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
 }
 
 /* 5. Content Typography & Elements */
@@ -139,7 +154,9 @@ dd { margin-left: 170px; margin-bottom: 10px; }
     .sidebar { transform: translateX(-100%); }
     .sidebar.is-open { transform: translateX(0); }
     .main-content { width: 100%; margin-left: 0; padding: 20px; }
-    .mobile-nav-toggle { display: block; position: fixed; top: 15px; left: 15px; z-index: 1001; background: var(--bg-alt-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; cursor: pointer; }
+    .mobile-nav-toggle { display: block; position: fixed; top: 15px; left: 15px; z-index: 1001; background: var(--bg-alt-color); color: var(--text-color); border: 1px solid var(--border-color); padding: 10px 12px; border-radius: 8px; cursor: pointer; font-family: inherit; transition: background-color 0.2s; }
+    .mobile-nav-toggle:hover { background: var(--primary-color); color: white; }
+    .mobile-nav-toggle:focus { outline: 2px solid var(--primary-color); outline-offset: 2px; }
     dt { width: 100%; float: none; margin-bottom: 5px; }
     dd { margin-left: 0; margin-bottom: 15px; }
 }

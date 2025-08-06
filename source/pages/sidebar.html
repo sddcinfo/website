@@ -1,17 +1,17 @@
-<div class="sidebar">
+<nav class="sidebar" role="navigation" aria-label="Main navigation">
     <div class="sidebar-header">
-        <a href="index.html">sddc.info</a>
+        <a href="index.html" aria-label="SDDC.info homepage">sddc.info</a>
     </div>
-    <nav class="sidebar-nav">
-        <h3>Main</h3>
-        <ul>
+    <div class="sidebar-nav">
+        <h3 id="main-nav">Main</h3>
+        <ul role="list" aria-labelledby="main-nav">
             <li><a href="index.html">Home</a></li>
             <li><a href="hardware.html">Hardware</a></li>
             <li><a href="performance.html">Performance</a></li>
             <li><a href="inventory.html">Inventory</a></li>
         </ul>
-        <h3>Documentation</h3>
-        <ul>
+        <h3 id="docs-nav">Documentation</h3>
+        <ul role="list" aria-labelledby="docs-nav">
             <li><a href="documentation_index.html">Overview</a></li>
             <li><a href="provisioning_server.html">Provisioning Server</a></li>
             <li><a href="kubernetes_cluster.html">Kubernetes Cluster</a></li>
@@ -19,8 +19,8 @@
             <li><a href="release_process.html">Release Process</a></li>
             <li><a href="journey.html">The Journey</a></li>
         </ul>
-    </nav>
-    <div class="theme-toggle" id="theme-toggle">
-        Toggle Dark Mode
     </div>
-</div>
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Switch between light and dark themes">
+        <span aria-hidden="true">🌙</span> Toggle Dark Mode
+    </button>
+</nav>
