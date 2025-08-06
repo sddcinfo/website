@@ -1,24 +1,43 @@
 {
-  "name": "website",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "sddc-info-website",
+  "version": "2.0.0",
+  "description": "Comprehensive documentation website for fully automated bare-metal Kubernetes platform provisioning using modern DevOps practices",
+  "main": "build.js",
   "scripts": {
     "build": "node build.js",
     "build:css": "tailwindcss -i ./source/input.css -o ./public/styles.css --minify",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "npm run build && npx serve public",
+    "serve": "npx serve public",
+    "clean": "rm -rf public/*",
+    "test": "node build.js && echo \"Build successful - ready for deployment\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/sddcinfo/website.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "kubernetes",
+    "bare-metal",
+    "infrastructure",
+    "automation",
+    "devops",
+    "ansible",
+    "documentation",
+    "static-site",
+    "tailwind",
+    "accessibility",
+    "seo"
+  ],
+  "author": "SDDC.info Team",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/sddcinfo/website/issues"
   },
-  "homepage": "https://github.com/sddcinfo/website#readme",
+  "homepage": "https://sddc.info",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
   "devDependencies": {
     "tailwindcss": "^4.1.11"
   }
