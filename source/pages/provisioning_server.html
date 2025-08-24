@@ -1,24 +1,84 @@
-<h1>The Provisioning Server</h1>
-<p class="lead">The automated provisioning process is a two-phase system. First, a virtual machine is created to act as the central provisioning server. Second, this server is used to deploy Ubuntu onto bare-metal hardware automatically.</p>
+<h1>Bare-Metal Provisioning Server</h1>
+<p class="lead">An enterprise-grade bare-metal provisioning infrastructure for Ubuntu servers and Proxmox VE 9 clusters. This is a comprehensive automation solution that deploys and manages a provisioning infrastructure for zero-touch deployment of Ubuntu servers and Proxmox VE 9 clusters on bare-metal hardware using iPXE, cloud-init, and automated cluster formation via the Proxmox API.</p>
 
 <section>
-    <h2>Phase 1: Creating the Provisioning Server VM</h2>
-    <p>The process begins by creating a dedicated virtual machine that will orchestrate the entire bare-metal deployment. This is handled by the <a href="https://github.com/sddcinfo/vmware-automation" target="_blank">vmware-automation</a> project, which contains a set of Python scripts designed to run on a machine with VMware Workstation installed.</p>
-    <p>The workflow is as follows:</p>
-    <ol>
-        <li>A blank "template" VM is first created in VMware Workstation with a predefined hardware configuration (4GB RAM, 2 CPUs, 25GB disk).</li>
-        <li>The <code>create-vm.py</code> script is executed, which clones this template to create a new VM, named <code>provisioning-server</code> by default.</li>
-        <li>The script then generates a custom cloud-init ISO using <code>create-cidata-iso.py</code>. This ISO contains the autoinstall configuration needed for an unattended Ubuntu 24.04 installation.</li>
-        <li>The script attaches the Ubuntu 24.04 installation ISO and the newly created cloud-init ISO to the VM and powers it on.</li>
-        <li>Ubuntu's autoinstall process reads the configuration from the cloud-init ISO and installs the operating system without any user interaction.</li>
-    </ol>
-    <p>At the end of this phase, a fully installed Ubuntu 24.04 VM is running and ready to be configured by Ansible.</p>
+    <h2>Features</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <h3>Core Infrastructure Services</h3>
+            <ul>
+                <li><strong>Network Services:</strong> Integrated DHCP, DNS, and TFTP server using dnsmasq</li>
+                <li><strong>Boot Management:</strong> iPXE-based network booting with EFI support</li>
+                <li><strong>Cloud-Init Integration:</strong> Automated Ubuntu server configuration via autoinstall</li>
+                <li><strong>Web Dashboard:</strong> Real-time provisioning status monitoring and management</li>
+                <li><strong>Hardware Management:</strong> Redfish API integration for server power and boot control</li>
+                <li><strong>Multi-OS Support:</strong> Ubuntu 24.04 and Proxmox VE 9 automated installation</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <h3>Enterprise Capabilities</h3>
+            <ul>
+                <li><strong>Security:</strong> Hardened input validation, path sanitization, and encrypted credential management</li>
+                <li><strong>Scalability:</strong> Multi-node provisioning with dynamic network interface detection</li>
+                <li><strong>Flexibility:</strong> Support for multiple Ubuntu versions and hardware platforms</li>
+                <li><strong>Observability:</strong> Comprehensive logging, health monitoring, and status tracking</li>
+            </ul>
+        </div>
+    </div>
 </section>
 
 <section>
-    <h2>Phase 2: Configuring the Server with Ansible</h2>
-    <p>With the base VM running, the <a href="https://github.com/sddcinfo/ansible-provisioning-server" target="_blank">ansible-provisioning-server</a> project takes over. This Ansible playbook, run directly on the provisioning server VM, installs and configures a suite of services that work in concert to guide a new, bare-metal machine through its own automated installation of Ubuntu.</p>
+    <h2>Architecture</h2>
+    <h3>Network Design</h3>
+    <pre><code>
+Internet -> WAN (enp1s0) -> NAT -> Provisioning Network (10.10.1.0/24)
+                                  |
+                                  +-- Management Server (10.10.1.1)
+                                  +-- Node1 (10.10.1.21) &lt;-> Ceph Network (10.10.2.21)
+                                  +-- Node2 (10.10.1.22) &lt;-> Ceph Network (10.10.2.22) 
+                                  +-- Node3 (10.10.1.23) &lt;-> Ceph Network (10.10.2.23)
+                                  +-- Node4 (10.10.1.24) &lt;-> Ceph Network (10.10.2.24)
+    </code></pre>
+    <h3>Service Stack</h3>
+    <ul>
+        <li><strong>Base OS:</strong> Ubuntu 24.04 LTS</li>
+        <li><strong>Web Server:</strong> Nginx + PHP-FPM</li>
+        <li><strong>Network Services:</strong> dnsmasq (DHCP/DNS/TFTP)</li>
+        <li><strong>Boot Loader:</strong> iPXE with EFI support</li>
+        <li><strong>Configuration Management:</strong> cloud-init/autoinstall</li>
+        <li><strong>Monitoring:</strong> Node Exporter + Health checks</li>
+    </ul>
+</section>
 
+<section>
+    <h2>End-to-End Workflow</h2>
+    <p>The complete, zero-touch process for provisioning a new bare-metal node is as follows:</p>
+    <ol>
+        <li>The Ansible playbook on the provisioning server uses Redfish to set the target node's boot order to PXE.</li>
+        <li>The node is powered on.</li>
+        <li>The node's network card performs a PXE boot and sends a DHCP request.</li>
+        <li>Dnsmasq on the provisioning server responds, assigning an IP and providing the iPXE bootloader.</li>
+        <li>iPXE starts and fetches its configuration script from the Nginx web server.</li>
+        <li>The iPXE script instructs the node to download and boot the Ubuntu or Proxmox installer from the web server.</li>
+        <li>The installer starts and fetches its autoinstall configuration from the web server. This configuration is dynamically generated based on the node's MAC address, providing a unique hostname, IP address, and other settings.</li>
+        <li>The OS installs automatically. As part of the installation, it runs a post-install script that reports back to the provisioning server's web interface, marking the installation as complete.</li>
+        <li>The Ansible playbook, having monitored the status, uses Redfish to reset the boot order back to the local disk.</li>
+        <li>The node is rebooted and starts up from its newly installed OS.</li>
+    </ol>
+
+    <h3>Proxmox VE Cluster Provisioning</h3>
+    <p>The system uses a comprehensive approach that handles both node preparation and intelligent cluster formation automatically. The cluster formation process is handled by a Python script that runs on the management server and uses the Proxmox API. This method is reliable and ensures that nodes are joined to the cluster sequentially and with verification at each step.</p>
+    <p>To form the cluster, an operator runs <code>./scripts/proxmox-form-cluster.py</code> from the provisioning server, which will:</p>
+    <ol>
+        <li>Check the status of all nodes.</li>
+        <li>Create the cluster on the primary node (<code>node1</code>).</li>
+        <li>Join the remaining nodes to the cluster one by one.</li>
+        <li>Verify that each node has successfully joined the cluster.</li>
+    </ol>
+</section>
+
+<section>
+    <h2>Core Components</h2>
     <h3>Core Provisioning Services</h3>
     <ul>
         <li><strong>dnsmasq (DHCP/TFTP/DNS):</strong> This is the first point of contact for a new node. When a bare-metal machine is powered on and set to PXE boot, it sends out a DHCP request. Dnsmasq is configured to listen for these requests, assign a specific IP address based on the node's MAC address (defined in <code>nodes.json</code>), and provide the iPXE bootloader via its built-in TFTP server. It also acts as a local DNS resolver for the provisioning network.</li>
@@ -29,7 +89,10 @@
     <h3>Server Management & Control</h3>
     <p>A key part of the automation is the ability to control the bare-metal servers themselves. This is accomplished through Redfish, a standard API for server management.</p>
     <ul>
-        <li><strong>Supermicro Update Manager (SUM):</strong> For advanced BIOS configuration, such as setting the boot order, the playbook uses Supermicro's official <code>sum</code> utility. The <code>set_boot_order.yml</code> playbook automates the process of setting the boot order to PXE first, which is essential for the provisioning process to begin.</li>
         <li><strong>Redfish Python Script (<code>redfish.py</code>):</strong> A custom Python script is included to send Redfish commands to the servers. This is used by the playbooks to perform actions like setting the one-time boot device to the BIOS, allowing for configuration changes before the OS installation.</li>
     </ul>
 </section>
+<p>This entire sequence, from a powered-off bare-metal machine to a fully installed and configured Ubuntu or Proxmox server, is orchestrated automatically by the provisioning server, requiring no manual intervention.</p>
+<div class="text-center">
+    <img src="../assets/5D6A82F0-A483-4F3E-B1EE-0C1EB9AEE22C_1_105_c.jpeg" alt="A photo of a rack of servers with network cables" class="img-fluid rounded" />
+</div>
