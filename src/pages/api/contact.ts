@@ -1,3 +1,5 @@
+import { Resend } from 'resend';
+
 export async function POST({ request, env }) {
   try {
     const { name, email, subject, message } = await request.json();
@@ -27,7 +29,16 @@ export async function POST({ request, env }) {
       );
     }
 
-    const contactEmail = env.CONTACT_EMAIL || 'bradlay@gmail.com';
+    const contactEmail = env.CONTACT_EMAIL;
+    const resendApiKey = env.RESEND_API_KEY;
+
+    if (!contactEmail || !resendApiKey) {
+      console.error('Missing required environment variables: CONTACT_EMAIL or RESEND_API_KEY');
+      return new Response(
+        JSON.stringify({ error: 'Email service not configured' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Prepare email content with metadata
     const emailContent = `
@@ -47,7 +58,7 @@ IP: ${request.headers.get('CF-Connecting-IP') || 'unknown'}
 Country: ${request.cf?.country || 'unknown'}
     `.trim();
 
-    // Log contact attempt for now (MailChannels requires DNS verification)
+    // Log contact attempt
     console.log('Contact form submission:', {
       from: `${name} <${email}>`,
       subject,
@@ -56,52 +67,27 @@ Country: ${request.cf?.country || 'unknown'}
       country: request.cf?.country
     });
 
-    // Send email via MailChannels with proper headers
-    const emailResponse = await fetch('https://api.mailchannels.net/tx/v1/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Source': 'Cloudflare Worker'
-      },
-      body: JSON.stringify({
-        personalizations: [
-          {
-            to: [{ email: contactEmail, name: 'Brad Lay' }],
-            dkim_domain: 'sddc.info',
-            dkim_selector: 'mailchannels',
-          },
-        ],
-        from: {
-          email: `contact@sddc.info`,
-          name: 'SDDC.info Contact Form',
-        },
-        reply_to: {
-          email: email.trim().toLowerCase(),
-          name: name.trim()
-        },
-        subject: `[SDDC.info Contact] ${subject}`,
-        content: [
-          {
-            type: 'text/plain',
-            value: emailContent,
-          },
-        ],
-      }),
+    // Initialize Resend client
+    const resend = new Resend(resendApiKey);
+
+    // Send email via Resend
+    const { data, error } = await resend.emails.send({
+      from: 'SDDC.info Contact <contact@sddc.info>',
+      to: contactEmail,
+      replyTo: email.trim().toLowerCase(),
+      subject: `[SDDC.info Contact] ${subject}`,
+      text: emailContent,
     });
 
-    if (!emailResponse.ok) {
-      const errorData = await emailResponse.text();
-      console.error('MailChannels error:', errorData);
-
-      // Still return success to user - we logged it
+    if (error) {
+      console.error('Resend error:', error);
       return new Response(
-        JSON.stringify({
-          success: true,
-          message: 'Thank you for your message! I\'ve received your contact request and will respond to ' + email + ' soon.'
-        }),
-        { status: 200, headers: { 'Content-Type': 'application/json' } }
+        JSON.stringify({ error: 'Failed to send email. Please try again later.' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
     }
+
+    console.log('Email sent successfully via Resend:', data);
 
     return new Response(
       JSON.stringify({
@@ -113,13 +99,11 @@ Country: ${request.cf?.country || 'unknown'}
 
   } catch (error) {
     console.error('Contact form error:', error);
-    // Return success anyway - contact attempts are logged
     return new Response(
       JSON.stringify({
-        success: true,
-        message: 'Thank you for reaching out! Your message has been received and I\'ll respond via email soon.'
+        error: 'An unexpected error occurred. Please try again later.'
       }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
   }
 }
