@@ -1,0 +1,20 @@
+name = "sddc-info-website"
+main = "dist/_worker.js/index.js"
+compatibility_date = "2024-11-14"
+compatibility_flags = ["nodejs_compat"]
+
+[build]
+command = "npm run build"
+
+# Static assets configuration for pure Workers
+# Assets directory is dist so paths are preserved (_astro/*)
+[assets]
+directory = "dist"
+binding = "ASSETS"
+
+# Pure Workers deployment (not Pages)
+# Worker handles dynamic routes, assets served by Cloudflare
+
+# Secrets to set via CLI:
+# wrangler secret put RESEND_API_KEY
+# wrangler secret put CONTACT_EMAIL

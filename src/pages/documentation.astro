@@ -1,0 +1,31 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Ansible Automation Ecosystem | sddc.info';
+const description = 'A complete solution for bare-metal provisioning and Kubernetes cluster deployment.';
+const canonicalURL = '/documentation';
+---
+
+<Layout title={title} description={description} canonicalURL={canonicalURL}>
+  <div class="glass-card p-8 mb-8">
+    <h1 class="text-4xl font-bold text-gradient mb-4">Ansible Automation Ecosystem</h1>
+    <p class="text-xl text-gray-600 dark:text-gray-300 mb-6">A complete solution for bare-metal provisioning and Kubernetes cluster deployment.</p>
+  </div>
+
+  <div class="glass-card p-8">
+    <h2 class="text-2xl font-semibold mb-4">Welcome to the Documentation Hub</h2>
+    <p class="mb-4">This documentation provides a comprehensive overview of a fully automated infrastructure ecosystem built with Ansible. The system is designed to take bare-metal servers from power-on to fully configured, production-ready Kubernetes nodes with zero manual intervention.</p>
+    
+    <p class="mb-6">The entire process is broken down into two main Ansible projects:</p>
+    
+    <ul class="list-disc list-inside space-y-2 mb-6 ml-4">
+      <li><strong class="text-primary-600 dark:text-primary-400">The Provisioning Server:</strong> A dedicated server that provides all the necessary network services (DHCP, TFTP, HTTP) to automate the installation of the Ubuntu operating system on new machines.</li>
+      <li><strong class="text-primary-600 dark:text-primary-400">The Kubernetes Cluster:</strong> A set of Ansible roles that configure the newly provisioned servers into a complete Kubernetes cluster, ready to deploy applications.</li>
+    </ul>
+    
+    <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700">
+      <h3 class="text-xl font-semibold mb-3 text-primary-700 dark:text-primary-400">How to Use This Documentation</h3>
+      <p class="text-gray-700 dark:text-gray-300">Use the sidebar navigation to explore the different components of the system. Each section provides detailed explanations of the architecture, configuration, and execution steps involved.</p>
+    </div>
+  </div>
+</Layout>

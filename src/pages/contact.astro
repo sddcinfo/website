@@ -1,0 +1,107 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Contact | sddc.info';
+const description = 'Get in touch with the SDDC.info team for questions about our automated Kubernetes infrastructure projects.';
+const canonicalURL = '/contact';
+---
+
+<Layout title={title} description={description} canonicalURL={canonicalURL}>
+  <div class="max-w-2xl mx-auto">
+    <div class="glass-card p-8 mb-8">
+      <h1 class="text-4xl font-bold text-gradient mb-4">Get In Touch</h1>
+      <p class="text-lg text-gray-600 dark:text-gray-300">Have questions about our infrastructure automation projects? We'd love to hear from you.</p>
+    </div>
+
+    <div class="glass-card p-8">
+      <form id="contact-form" class="space-y-6">
+        <div>
+          <label for="name" class="block text-sm font-medium mb-2">Name *</label>
+          <input type="text" id="name" name="name" required class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-medium mb-2">Email *</label>
+          <input type="email" id="email" name="email" required class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+        </div>
+
+        <div>
+          <label for="subject" class="block text-sm font-medium mb-2">Subject *</label>
+          <select id="subject" name="subject" required class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+            <option value="">Select a topic</option>
+            <option value="general">General Inquiry</option>
+            <option value="kubernetes">Kubernetes Cluster</option>
+            <option value="provisioning">Provisioning Server</option>
+            <option value="hardware">Hardware Questions</option>
+            <option value="collaboration">Collaboration</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="message" class="block text-sm font-medium mb-2">Message *</label>
+          <textarea id="message" name="message" rows="6" required class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-vertical"></textarea>
+        </div>
+
+        <div class="hidden">
+          <label for="honeypot">Leave this field empty</label>
+          <input type="text" id="honeypot" name="honeypot" />
+        </div>
+
+        <div id="form-message" class="hidden p-4 rounded-lg"></div>
+
+        <button type="submit" class="w-full btn btn-primary py-4 text-lg">
+          Send Message
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('contact-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const form = e.target;
+      const formData = new FormData(form);
+      const messageDiv = document.getElementById('form-message');
+      
+      if (formData.get('honeypot')) {
+        return;
+      }
+      
+      try {
+        const response = await fetch('/api/contact', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.get('name'),
+            email: formData.get('email'),
+            subject: formData.get('subject'),
+            message: formData.get('message'),
+          }),
+        });
+        
+        const result = await response.json();
+        
+        if (response.ok) {
+          messageDiv.className = 'p-4 rounded-lg bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
+          messageDiv.textContent = 'Thank you! Your message has been sent successfully.';
+          form.reset();
+        } else {
+          messageDiv.className = 'p-4 rounded-lg bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
+          messageDiv.textContent = result.error || 'An error occurred. Please try again.';
+        }
+        
+        messageDiv.classList.remove('hidden');
+        setTimeout(() => {
+          messageDiv.classList.add('hidden');
+        }, 5000);
+      } catch (error) {
+        messageDiv.className = 'p-4 rounded-lg bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
+        messageDiv.textContent = 'An error occurred. Please try again.';
+        messageDiv.classList.remove('hidden');
+      }
+    });
+  </script>
+</Layout>

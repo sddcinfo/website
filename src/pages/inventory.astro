@@ -1,0 +1,158 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout
+  title="Hardware Inventory: Node 1 | sddc.info"
+  description="Detailed hardware inventory for the Supermicro X10SDV-6C-TLN4F server node with Intel Xeon D-1528 processor."
+  canonicalURL="/inventory"
+>
+  <div class="glass-card overflow-hidden mb-5">
+    <div class="section-header">
+      Hardware Inventory: Node 1
+    </div>
+    <div class="p-6">
+      <p class="text-lg text-gray-600 dark:text-gray-300">Detailed inventory for node <code class="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded font-mono text-sm">10.10.1.21</code></p>
+    </div>
+  </div>
+
+  <div class="glass-card p-6">
+    <div id="inventory-content" class="space-y-6">
+
+          <section>
+            <h2 class="text-xl font-bold mb-3 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">System & Motherboard</h2>
+            <dl class="info-grid gap-3">
+              <div class="accent-border-card">
+                <dt class="font-semibold text-gray-900 dark:text-white text-sm">Motherboard</dt>
+                <dd class="text-gray-600 dark:text-gray-400 mt-1 text-sm">X10SDV-6C-TLN4F v2.00</dd>
+              </div>
+              <div class="accent-border-card">
+                <dt class="font-semibold text-gray-900 dark:text-white text-sm">Firmware</dt>
+                <dd class="text-gray-600 dark:text-gray-400 mt-1 text-sm">AMI v2.6 (02/05/2024)</dd>
+              </div>
+              <div class="accent-border-card">
+                <dt class="font-semibold text-gray-900 dark:text-white text-sm">IPMI</dt>
+                <dd class="text-gray-600 dark:text-gray-400 mt-1 text-sm">v4.00</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section>
+            <h2 class="text-xl font-bold mb-3 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">Processor</h2>
+            <div class="stat-card">
+              <div class="flex items-center justify-between">
+                <div>
+                  <dt class="font-semibold text-gray-900 dark:text-white">Intel Xeon D-1528</dt>
+                  <dd class="text-gray-600 dark:text-gray-400 mt-1 text-sm">6 cores @ 1.90GHz</dd>
+                </div>
+                <div class="text-4xl font-bold text-primary-600 dark:text-primary-400">6C</div>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 class="text-xl font-bold mb-3 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">Memory</h2>
+            <div class="stat-card mb-3">
+              <div class="text-center">
+                <dt class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Total Installed</dt>
+                <dd class="text-4xl font-bold text-primary-600 dark:text-primary-400">128 GB</dd>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">ECC DDR4</p>
+              </div>
+            </div>
+            <dl class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <div class="accent-border-card">
+                <dt class="font-semibold text-gray-900 dark:text-white text-sm">DIMM A1</dt>
+                <dd class="text-gray-600 dark:text-gray-400 mt-1 text-xs">Samsung 32 GB</dd>
+              </div>
+              <div class="accent-border-card">
+                <dt class="font-semibold text-gray-900 dark:text-white text-sm">DIMM A2</dt>
+                <dd class="text-gray-600 dark:text-gray-400 mt-1 text-xs">Samsung 32 GB</dd>
+              </div>
+              <div class="accent-border-card">
+                <dt class="font-semibold text-gray-900 dark:text-white text-sm">DIMM B1</dt>
+                <dd class="text-gray-600 dark:text-gray-400 mt-1 text-xs">Samsung 32 GB</dd>
+              </div>
+              <div class="accent-border-card">
+                <dt class="font-semibold text-gray-900 dark:text-white text-sm">DIMM B2</dt>
+                <dd class="text-gray-600 dark:text-gray-400 mt-1 text-xs">Samsung 32 GB</dd>
+              </div>
+            </dl>
+          </section>
+
+          <section>
+            <h2 class="text-xl font-bold mb-3 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">Network Interfaces</h2>
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              <div class="accent-border-card">
+                <dt class="font-semibold text-gray-900 dark:text-white text-sm">Port 1</dt>
+                <dd class="text-gray-600 dark:text-gray-400 mt-1 text-xs">Intel X552 10GbE</dd>
+              </div>
+              <div class="accent-border-card">
+                <dt class="font-semibold text-gray-900 dark:text-white text-sm">Port 2</dt>
+                <dd class="text-gray-600 dark:text-gray-400 mt-1 text-xs">Intel X552 10GbE</dd>
+              </div>
+              <div class="accent-border-card">
+                <dt class="font-semibold text-gray-900 dark:text-white text-sm">Port 3</dt>
+                <dd class="text-gray-600 dark:text-gray-400 mt-1 text-xs">Intel I350 1GbE</dd>
+              </div>
+              <div class="accent-border-card">
+                <dt class="font-semibold text-gray-900 dark:text-white text-sm">Port 4</dt>
+                <dd class="text-gray-600 dark:text-gray-400 mt-1 text-xs">Intel I350 1GbE</dd>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2 class="text-xl font-bold mb-3 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">Storage Devices</h2>
+            <div class="info-grid gap-3">
+              <div class="stat-card">
+                <dt class="font-bold text-gray-900 dark:text-white mb-2">Samsung 980 NVMe</dt>
+                <dd class="text-sm space-y-1">
+                  <div class="flex justify-between">
+                    <span class="text-gray-600 dark:text-gray-400">Size:</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">931.51 GB</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-600 dark:text-gray-400">FW:</span>
+                    <span class="font-mono text-xs text-gray-700 dark:text-gray-300">3B4QFXO7</span>
+                  </div>
+                </dd>
+              </div>
+              <div class="stat-card">
+                <dt class="font-bold text-gray-900 dark:text-white mb-2">Samsung 980 NVMe</dt>
+                <dd class="text-sm space-y-1">
+                  <div class="flex justify-between">
+                    <span class="text-gray-600 dark:text-gray-400">Size:</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">931.51 GB</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-600 dark:text-gray-400">FW:</span>
+                    <span class="font-mono text-xs text-gray-700 dark:text-gray-300">3B4QFXO7</span>
+                  </div>
+                </dd>
+              </div>
+              <div class="stat-card">
+                <dt class="font-bold text-gray-900 dark:text-white mb-2">SuperMicro SSD</dt>
+                <dd class="text-sm space-y-1">
+                  <div class="flex justify-between">
+                    <span class="text-gray-600 dark:text-gray-400">Size:</span>
+                    <span class="font-semibold text-gray-900 dark:text-white">59 GB</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-gray-600 dark:text-gray-400">FW:</span>
+                    <span class="font-mono text-xs text-gray-700 dark:text-gray-300">0R</span>
+                  </div>
+                </dd>
+              </div>
+            </div>
+          </section>
+
+          <div class="mt-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 border-l-4 border-green-500 dark:border-green-400 rounded-r-lg shadow-sm">
+            <p class="text-sm text-gray-700 dark:text-gray-300 flex items-start gap-2">
+              <span class="text-green-600 dark:text-green-400 text-lg">✓</span>
+              <span><strong>Auto-generated:</strong> This inventory reflects actual hardware from system introspection tools on node 10.10.1.21.</span>
+            </p>
+          </div>
+
+    </div>
+  </div>
+</Layout>
