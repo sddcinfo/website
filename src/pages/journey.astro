@@ -1,0 +1,245 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'The Journey | sddc.info';
+const description = 'The story behind building an automated bare-metal Kubernetes infrastructure from concept to production.';
+const canonicalURL = '/journey';
+---
+
+<Layout title={title} description={description} canonicalURL={canonicalURL}>
+  <div class="glass-card p-8 mb-8">
+    <h1 class="text-4xl font-bold text-gradient mb-4">The Journey</h1>
+    <p class="text-lg text-gray-600 dark:text-gray-300">From concept to production: The evolution of an automated bare-metal Kubernetes infrastructure.</p>
+  </div>
+
+  <div class="glass-card p-8 mb-8">
+    <h2 class="text-2xl font-semibold mb-4">The Beginning</h2>
+    <p class="mb-4 text-gray-700 dark:text-gray-300">Every great infrastructure starts with a vision. The goal was clear: create a fully automated system that could transform bare-metal servers into production-ready Kubernetes clusters with zero manual intervention. What began as an experiment in automation evolved into a comprehensive infrastructure ecosystem.</p>
+
+    <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700">
+      <h3 class="text-xl font-semibold mb-3 text-primary-700 dark:text-primary-400">The Initial Vision</h3>
+      <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+        <li class="flex items-start">
+          <span class="text-primary-600 dark:text-primary-400 mr-2">•</span>
+          <span>Build a home lab that rivals enterprise infrastructure</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-primary-600 dark:text-primary-400 mr-2">•</span>
+          <span>Automate everything from power-on to application deployment</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-primary-600 dark:text-primary-400 mr-2">•</span>
+          <span>Learn by doing: hands-on experience with cutting-edge technologies</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-primary-600 dark:text-primary-400 mr-2">•</span>
+          <span>Create documentation to help others on the same journey</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="glass-card p-8 mb-8">
+    <h2 class="text-2xl font-semibold mb-6">Key Milestones</h2>
+
+    <div class="space-y-6">
+      <div class="border-l-4 border-blue-500 pl-6 py-4 bg-blue-50 dark:bg-gray-800 rounded-r-lg">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-semibold text-blue-700 dark:text-blue-400">Phase 1: Research & Planning</h3>
+          <span class="text-sm text-gray-500 dark:text-gray-500">Months 1-2</span>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Deep dive into technologies, architecture decisions, and hardware selection. Countless hours reading documentation, watching tutorials, and designing the infrastructure blueprint.</p>
+        <ul class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Evaluated Kubernetes distributions and deployment methods</li>
+          <li>• Researched storage solutions: Ceph, GlusterFS, NFS</li>
+          <li>• Compared networking solutions: Calico, Flannel, Cilium</li>
+          <li>• Selected hardware components for optimal price-performance</li>
+        </ul>
+      </div>
+
+      <div class="border-l-4 border-green-500 pl-6 py-4 bg-green-50 dark:bg-gray-800 rounded-r-lg">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-semibold text-green-700 dark:text-green-400">Phase 2: Hardware Assembly</h3>
+          <span class="text-sm text-gray-500 dark:text-gray-500">Month 3</span>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Unboxing, building, and racking the servers. The excitement of physical infrastructure coming together, cable management challenges, and the first successful power-on.</p>
+        <ul class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Assembled 4 high-performance server nodes</li>
+          <li>• Configured 10GbE network with MikroTik switch</li>
+          <li>• Installed NVMe drives for storage performance</li>
+          <li>• Set up management network and remote access</li>
+        </ul>
+      </div>
+
+      <div class="border-l-4 border-purple-500 pl-6 py-4 bg-purple-50 dark:bg-gray-800 rounded-r-lg">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-semibold text-purple-700 dark:text-purple-400">Phase 3: Provisioning Automation</h3>
+          <span class="text-sm text-gray-500 dark:text-gray-500">Months 4-5</span>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Building the foundation: PXE boot infrastructure, DHCP/TFTP/HTTP services, and cloud-init configurations. The first successful automated OS installation was a magical moment.</p>
+        <ul class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Developed Ansible roles for provisioning server</li>
+          <li>• Configured network boot and autoinstall</li>
+          <li>• Created cloud-init templates for Ubuntu</li>
+          <li>• Achieved zero-touch server provisioning</li>
+        </ul>
+      </div>
+
+      <div class="border-l-4 border-yellow-500 pl-6 py-4 bg-yellow-50 dark:bg-gray-800 rounded-r-lg">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-semibold text-yellow-700 dark:text-yellow-400">Phase 4: Kubernetes Deployment</h3>
+          <span class="text-sm text-gray-500 dark:text-gray-500">Months 6-8</span>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">The heart of the project: automated Kubernetes cluster creation. Learning kubeadm, wrestling with networking, and celebrating when the first pod successfully started.</p>
+        <ul class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Built Ansible playbooks for Kubernetes installation</li>
+          <li>• Configured high-availability control plane</li>
+          <li>• Deployed Calico for pod networking</li>
+          <li>• Implemented automated cluster initialization</li>
+        </ul>
+      </div>
+
+      <div class="border-l-4 border-red-500 pl-6 py-4 bg-red-50 dark:bg-gray-800 rounded-r-lg">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-semibold text-red-700 dark:text-red-400">Phase 5: Storage Layer</h3>
+          <span class="text-sm text-gray-500 dark:text-gray-500">Months 9-10</span>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">The most challenging part: deploying Rook Ceph for distributed storage. Debugging OSD initialization, learning Ceph internals, and achieving stable 3x replication.</p>
+        <ul class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Deployed Rook operator and Ceph cluster</li>
+          <li>• Configured storage pools and replication rules</li>
+          <li>• Created storage classes for dynamic provisioning</li>
+          <li>• Ran performance benchmarks and optimizations</li>
+        </ul>
+      </div>
+
+      <div class="border-l-4 border-indigo-500 pl-6 py-4 bg-indigo-50 dark:bg-gray-800 rounded-r-lg">
+        <div class="flex justify-between items-start mb-2">
+          <h3 class="text-xl font-semibold text-indigo-700 dark:text-indigo-400">Phase 6: Production Hardening</h3>
+          <span class="text-sm text-gray-500 dark:text-gray-500">Months 11-12</span>
+        </div>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Making it production-ready: monitoring, logging, backups, and disaster recovery. Adding the operational excellence layer that separates a hobby project from enterprise infrastructure.</p>
+        <ul class="space-y-1 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Implemented monitoring with Prometheus and Grafana</li>
+          <li>• Set up centralized logging with ELK stack</li>
+          <li>• Configured automated backups and restore procedures</li>
+          <li>• Documented runbooks and troubleshooting guides</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card p-8 mb-8">
+    <h2 class="text-2xl font-semibold mb-6">Lessons Learned</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-green-50 dark:bg-gray-800 p-6 rounded-lg border border-green-200 dark:border-green-700">
+        <h3 class="text-xl font-semibold mb-3 text-green-700 dark:text-green-400">What Worked Well</h3>
+        <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+          <li class="flex items-start">
+            <span class="text-green-600 dark:text-green-400 mr-2">✓</span>
+            <span><strong>Infrastructure as Code:</strong> Ansible made everything repeatable and version-controlled</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-green-600 dark:text-green-400 mr-2">✓</span>
+            <span><strong>Incremental approach:</strong> Building in phases allowed for focused learning</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-green-600 dark:text-green-400 mr-2">✓</span>
+            <span><strong>Documentation:</strong> Writing everything down helped solidify understanding</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-green-600 dark:text-green-400 mr-2">✓</span>
+            <span><strong>Community:</strong> Open source communities provided invaluable support</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="bg-yellow-50 dark:bg-gray-800 p-6 rounded-lg border border-yellow-200 dark:border-yellow-700">
+        <h3 class="text-xl font-semibold mb-3 text-yellow-700 dark:text-yellow-400">Challenges Overcome</h3>
+        <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+          <li class="flex items-start">
+            <span class="text-yellow-600 dark:text-yellow-400 mr-2">!</span>
+            <span><strong>Networking complexity:</strong> Understanding CNI plugins and network policies took time</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-yellow-600 dark:text-yellow-400 mr-2">!</span>
+            <span><strong>Storage debugging:</strong> Ceph has a steep learning curve but worth it</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-yellow-600 dark:text-yellow-400 mr-2">!</span>
+            <span><strong>Version compatibility:</strong> Keeping all components compatible required careful planning</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-yellow-600 dark:text-yellow-400 mr-2">!</span>
+            <span><strong>Performance tuning:</strong> Identifying bottlenecks required systematic testing</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card p-8 mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Current State</h2>
+    <div class="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 p-6 rounded-lg border border-primary-200 dark:border-gray-600">
+      <p class="text-gray-700 dark:text-gray-300 mb-4">Today, the infrastructure is a fully functional, production-ready Kubernetes platform. It has successfully hosted numerous applications, survived multiple hardware failures without downtime, and continues to evolve with new features and optimizations.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6 text-center">
+        <div class="bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+          <div class="text-3xl font-bold text-primary-600 dark:text-primary-400 mb-2">99.9%</div>
+          <p class="text-sm text-gray-700 dark:text-gray-300">Uptime achieved</p>
+        </div>
+        <div class="bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+          <div class="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">100+</div>
+          <p class="text-sm text-gray-700 dark:text-gray-300">Successful deployments</p>
+        </div>
+        <div class="bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+          <div class="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">0</div>
+          <p class="text-sm text-gray-700 dark:text-gray-300">Data loss incidents</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card p-8">
+    <h2 class="text-2xl font-semibold mb-4">The Future</h2>
+    <div class="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900 dark:to-pink-900 p-6 rounded-lg border border-purple-200 dark:border-purple-700">
+      <p class="text-gray-700 dark:text-gray-300 mb-4">The journey never truly ends. There are always new technologies to explore, optimizations to implement, and lessons to learn. Upcoming improvements include:</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+          <li class="flex items-start">
+            <span class="text-purple-600 dark:text-purple-400 mr-2">→</span>
+            <span>Upgrading to 25GbE networking for improved performance</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-purple-600 dark:text-purple-400 mr-2">→</span>
+            <span>Implementing GitOps with ArgoCD or Flux</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-purple-600 dark:text-purple-400 mr-2">→</span>
+            <span>Adding service mesh with Istio or Linkerd</span>
+          </li>
+        </ul>
+        <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+          <li class="flex items-start">
+            <span class="text-purple-600 dark:text-purple-400 mr-2">→</span>
+            <span>Expanding to multi-cluster federation</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-purple-600 dark:text-purple-400 mr-2">→</span>
+            <span>Implementing chaos engineering practices</span>
+          </li>
+          <li class="flex items-start">
+            <span class="text-purple-600 dark:text-purple-400 mr-2">→</span>
+            <span>Contributing improvements back to open source</span>
+          </li>
+        </ul>
+      </div>
+
+      <p class="mt-6 text-gray-700 dark:text-gray-300 italic">
+        This project stands as a testament to what's possible when passion meets persistence. May it inspire others to embark on their own infrastructure journey.
+      </p>
+    </div>
+  </div>
+</Layout>

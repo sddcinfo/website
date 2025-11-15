@@ -1,0 +1,123 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Performance Benchmark Report | sddc.info';
+const description = 'Performance benchmarks and metrics for our Kubernetes infrastructure and bare-metal server configuration.';
+const canonicalURL = '/performance';
+---
+
+<Layout title={title} description={description} canonicalURL={canonicalURL}>
+  <div class="glass-card overflow-hidden mb-5">
+    <div class="section-header">
+      Performance Benchmark Report
+    </div>
+    <div class="p-6">
+      <p class="text-lg text-gray-600 dark:text-gray-300">K8s-Ceph Production Cluster Analysis • June 2025</p>
+    </div>
+  </div>
+
+  <div class="glass-card p-6 mb-5">
+    <h2 class="text-xl font-bold mb-3 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">Executive Summary</h2>
+    <p class="text-gray-700 dark:text-gray-300 text-sm leading-relaxed">4-node Kubernetes cluster with Rook Ceph storage. Healthy, stable, resilient with 3x replication over 10GbE. Network-bound performance (not storage). Production-ready for HA workloads.</p>
+  </div>
+
+  <div class="glass-card p-6 mb-5">
+    <h2 class="text-xl font-bold mb-4 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">Test Environment</h2>
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="stat-card text-center">
+        <div class="text-3xl mb-2">💻</div>
+        <h3 class="font-bold mb-1 text-sm">Compute</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-xs">4× Xeon D-1528</p>
+      </div>
+      <div class="stat-card text-center">
+        <div class="text-3xl mb-2">🧠</div>
+        <h3 class="font-bold mb-1 text-sm">Memory</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-xs">128 GB/node</p>
+      </div>
+      <div class="stat-card text-center">
+        <div class="text-3xl mb-2">💾</div>
+        <h3 class="font-bold mb-1 text-sm">Storage</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-xs">8× Samsung 980</p>
+      </div>
+      <div class="stat-card text-center">
+        <div class="text-3xl mb-2">🌐</div>
+        <h3 class="font-bold mb-1 text-sm">Network</h3>
+        <p class="text-gray-700 dark:text-gray-300 text-xs">10GbE / 3× Rep</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card p-6 mb-5">
+    <h2 class="text-xl font-bold mb-4 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">Performance Metrics</h2>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div class="stat-card">
+        <h3 class="text-lg font-bold mb-3 text-primary-700 dark:text-primary-400 flex items-center gap-2">
+          <span class="w-1 h-5 bg-primary-600 rounded-full"></span>
+          Random I/O
+        </h3>
+        <div class="space-y-2 mb-3">
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-gray-600 dark:text-gray-400">Total IOPS:</span>
+            <span class="text-xl font-bold text-primary-600">22.3K</span>
+          </div>
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-gray-600 dark:text-gray-400">Read:</span>
+            <span class="font-semibold">16.7K</span>
+          </div>
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-gray-600 dark:text-gray-400">Write:</span>
+            <span class="font-semibold">5.6K</span>
+          </div>
+        </div>
+        <p class="text-xs text-gray-600 dark:text-gray-400">Strong distributed performance. Write impacted by 3× replication.</p>
+      </div>
+
+      <div class="stat-card">
+        <h3 class="text-lg font-bold mb-3 text-primary-700 dark:text-primary-400 flex items-center gap-2">
+          <span class="w-1 h-5 bg-primary-600 rounded-full"></span>
+          Sequential I/O
+        </h3>
+        <div class="space-y-2 mb-3">
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-gray-600 dark:text-gray-400">Read:</span>
+            <span class="text-xl font-bold text-primary-600">1,150 MB/s</span>
+          </div>
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-gray-600 dark:text-gray-400">Write:</span>
+            <span class="font-semibold">380 MB/s</span>
+          </div>
+          <div class="flex justify-between items-center text-sm">
+            <span class="text-gray-600 dark:text-gray-400">Network Cap:</span>
+            <span class="font-semibold">1,250 MB/s</span>
+          </div>
+        </div>
+        <p class="text-xs text-gray-600 dark:text-gray-400">Network-bound. NVMe drives underutilized.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card p-6">
+    <h2 class="text-xl font-bold mb-4 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">Key Findings</h2>
+    <div class="bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/30 dark:to-emerald-900/30 p-5 rounded-lg border-l-4 border-green-500 dark:border-green-400">
+      <ul class="space-y-2 text-gray-700 dark:text-gray-300 text-sm">
+        <li class="flex items-start gap-2">
+          <span class="text-green-600 dark:text-green-400 font-bold">✓</span>
+          <span><strong>Network bottleneck:</strong> 10GbE caps performance, not NVMe</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-green-600 dark:text-green-400 font-bold">✓</span>
+          <span><strong>Healthy cluster:</strong> Consistent, reliable node performance</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-green-600 dark:text-green-400 font-bold">✓</span>
+          <span><strong>Production ready:</strong> HA workload capable</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <span class="text-blue-600 dark:text-blue-400 font-bold">→</span>
+          <span><strong>Upgrade path:</strong> 25GbE+ would unlock NVMe potential</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,123 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Provisioning Server | sddc.info';
+const description = 'Automated bare-metal server provisioning using PXE boot, DHCP, TFTP, and HTTP services for Ubuntu installation.';
+const canonicalURL = '/provisioning-server';
+---
+
+<Layout title={title} description={description} canonicalURL={canonicalURL}>
+  <div class="glass-card p-8 mb-8">
+    <h1 class="text-4xl font-bold text-gradient mb-4">Provisioning Server</h1>
+    <p class="text-lg text-gray-600 dark:text-gray-300">Automated bare-metal server provisioning from power-on to OS installation with zero manual intervention.</p>
+  </div>
+
+  <div class="glass-card p-8 mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Overview</h2>
+    <p class="mb-6 text-gray-700 dark:text-gray-300">The provisioning server is the foundation of our automated infrastructure deployment. It provides all necessary network services to enable bare-metal servers to boot over the network, download an operating system image, and complete a fully automated installation of Ubuntu Server.</p>
+
+    <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700">
+      <h3 class="text-xl font-semibold mb-3 text-primary-700 dark:text-primary-400">Key Capabilities</h3>
+      <ul class="space-y-2 text-gray-700 dark:text-gray-300">
+        <li class="flex items-start">
+          <span class="text-primary-600 dark:text-primary-400 mr-2">•</span>
+          <span>Network-based OS installation via PXE boot</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-primary-600 dark:text-primary-400 mr-2">•</span>
+          <span>Automated Ubuntu Server deployment with cloud-init</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-primary-600 dark:text-primary-400 mr-2">•</span>
+          <span>Zero-touch provisioning for multiple servers simultaneously</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-primary-600 dark:text-primary-400 mr-2">•</span>
+          <span>Custom network boot configurations per MAC address</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="glass-card p-8 mb-8">
+    <h2 class="text-2xl font-semibold mb-6">Network Services Architecture</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700">
+        <h3 class="text-xl font-semibold mb-3 text-primary-700 dark:text-primary-400">DHCP Server</h3>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Assigns IP addresses and provides network boot instructions to bare-metal servers during the PXE boot process.</p>
+        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Dynamic IP allocation for new servers</li>
+          <li>• Static IP reservations by MAC address</li>
+          <li>• Boot filename configuration</li>
+          <li>• Next-server (TFTP) configuration</li>
+        </ul>
+      </div>
+
+      <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700">
+        <h3 class="text-xl font-semibold mb-3 text-primary-700 dark:text-primary-400">TFTP Server</h3>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Provides the initial bootloader and kernel files required for network booting over the Trivial File Transfer Protocol.</p>
+        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Serves PXE bootloader (pxelinux.0)</li>
+          <li>• Delivers Linux kernel and initrd</li>
+          <li>• Provides boot menu configurations</li>
+          <li>• Optimized for network boot speed</li>
+        </ul>
+      </div>
+
+      <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700">
+        <h3 class="text-xl font-semibold mb-3 text-primary-700 dark:text-primary-400">HTTP Server</h3>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Hosts the Ubuntu installation media, cloud-init configuration files, and post-installation scripts.</p>
+        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Ubuntu ISO mirror for fast downloads</li>
+          <li>• Cloud-init user-data files</li>
+          <li>• Preseed/autoinstall configurations</li>
+          <li>• Post-installation automation scripts</li>
+        </ul>
+      </div>
+
+      <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700">
+        <h3 class="text-xl font-semibold mb-3 text-primary-700 dark:text-primary-400">Ansible Automation</h3>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Manages the configuration and deployment of all provisioning server services using Infrastructure as Code principles.</p>
+        <ul class="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Idempotent service configuration</li>
+          <li>• Version-controlled infrastructure</li>
+          <li>• Repeatable deployments</li>
+          <li>• Role-based service management</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card p-8">
+    <h2 class="text-2xl font-semibold mb-4">Provisioning Workflow</h2>
+    <div class="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 p-6 rounded-lg border border-primary-200 dark:border-gray-600">
+      <ol class="space-y-4 text-gray-700 dark:text-gray-300">
+        <li class="flex items-start">
+          <span class="font-bold text-primary-600 dark:text-primary-400 mr-3">1.</span>
+          <span><strong>Power On:</strong> Bare-metal server powers on and initiates PXE network boot</span>
+        </li>
+        <li class="flex items-start">
+          <span class="font-bold text-primary-600 dark:text-primary-400 mr-3">2.</span>
+          <span><strong>DHCP Request:</strong> Server requests IP address and boot configuration from DHCP server</span>
+        </li>
+        <li class="flex items-start">
+          <span class="font-bold text-primary-600 dark:text-primary-400 mr-3">3.</span>
+          <span><strong>TFTP Boot:</strong> Server downloads bootloader, kernel, and initrd from TFTP server</span>
+        </li>
+        <li class="flex items-start">
+          <span class="font-bold text-primary-600 dark:text-primary-400 mr-3">4.</span>
+          <span><strong>HTTP Download:</strong> Installer downloads Ubuntu image and cloud-init configs from HTTP server</span>
+        </li>
+        <li class="flex items-start">
+          <span class="font-bold text-primary-600 dark:text-primary-400 mr-3">5.</span>
+          <span><strong>Automated Install:</strong> Ubuntu installs automatically with predefined configurations</span>
+        </li>
+        <li class="flex items-start">
+          <span class="font-bold text-primary-600 dark:text-primary-400 mr-3">6.</span>
+          <span><strong>First Boot:</strong> Server reboots into the newly installed OS, ready for Kubernetes deployment</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+</Layout>

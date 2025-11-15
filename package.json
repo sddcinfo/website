@@ -1,44 +1,25 @@
 {
   "name": "sddc-info-website",
-  "version": "2.0.0",
-  "description": "Comprehensive documentation website for fully automated bare-metal Kubernetes platform provisioning using modern DevOps practices",
-  "main": "build.js",
+  "type": "module",
+  "version": "3.0.0",
+  "description": "Comprehensive documentation website for fully automated bare-metal Kubernetes platform provisioning - Astro + Cloudflare Workers",
   "scripts": {
-    "build": "node build.js",
-    "build:css": "tailwindcss -i ./source/input.css -o ./public/styles.css --minify",
-    "dev": "npm run build && npx serve public",
-    "serve": "npx serve public",
-    "clean": "rm -rf public/*",
-    "test": "node build.js && echo \"Build successful - ready for deployment\""
+    "dev": "astro dev",
+    "build": "astro build && node fix-routes.js",
+    "preview": "astro preview",
+    "astro": "astro",
+    "deploy": "wrangler deploy"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/sddcinfo/website.git"
-  },
-  "keywords": [
-    "kubernetes",
-    "bare-metal",
-    "infrastructure",
-    "automation",
-    "devops",
-    "ansible",
-    "documentation",
-    "static-site",
-    "tailwind",
-    "accessibility",
-    "seo"
-  ],
-  "author": "SDDC.info Team",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/sddcinfo/website/issues"
-  },
-  "homepage": "https://sddc.info",
-  "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=8.0.0"
+  "dependencies": {
+    "@astrojs/cloudflare": "^12.6.10",
+    "@tailwindcss/vite": "^4.1.17",
+    "astro": "^5.15.7",
+    "tailwindcss": "^4.1.17"
   },
   "devDependencies": {
-    "tailwindcss": "^4.1.11"
+    "wrangler": "^4.48.0"
+  },
+  "engines": {
+    "node": ">=22.0.0"
   }
 }

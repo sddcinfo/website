@@ -1,0 +1,111 @@
+---
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonicalURL: string;
+}
+
+const { title, description, canonicalURL } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="author" content="SDDC.info" />
+    <meta name="robots" content="index, follow" />
+    
+    <link rel="canonical" href={`https://sddc.info${canonicalURL}`} />
+    
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={`https://sddc.info${canonicalURL}`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="SDDC.info" />
+    
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={`https://sddc.info${canonicalURL}`} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    
+    <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+    <meta http-equiv="X-Frame-Options" content="DENY" />
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block" />
+    
+    <title>{title}</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <button class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
+    <div class="main-container">
+      <nav class="sidebar" role="navigation" aria-label="Main navigation">
+        <div class="sidebar-header">
+          <a href="/" aria-label="SDDC.info homepage">sddc.info</a>
+        </div>
+        <div class="sidebar-nav">
+          <h3 id="main-nav">Main</h3>
+          <ul role="list" aria-labelledby="main-nav">
+            <li><a href="/" class={Astro.url.pathname === '/' ? 'active' : ''}>Home</a></li>
+            <li><a href="/hardware" class={Astro.url.pathname === '/hardware' ? 'active' : ''}>Hardware</a></li>
+            <li><a href="/performance" class={Astro.url.pathname === '/performance' ? 'active' : ''}>Performance</a></li>
+            <li><a href="/inventory" class={Astro.url.pathname === '/inventory' ? 'active' : ''}>Inventory</a></li>
+            <li><a href="/contact" class={Astro.url.pathname === '/contact' ? 'active' : ''}>Contact</a></li>
+          </ul>
+          <h3 id="docs-nav">Documentation</h3>
+          <ul role="list" aria-labelledby="docs-nav">
+            <li><a href="/documentation" class={Astro.url.pathname === '/documentation' ? 'active' : ''}>Overview</a></li>
+            <li><a href="/provisioning-server" class={Astro.url.pathname === '/provisioning-server' ? 'active' : ''}>Provisioning Server</a></li>
+            <li><a href="/kubernetes-cluster" class={Astro.url.pathname === '/kubernetes-cluster' ? 'active' : ''}>Kubernetes Cluster</a></li>
+            <li><a href="/workflow" class={Astro.url.pathname === '/workflow' ? 'active' : ''}>Workflow</a></li>
+            <li><a href="/release-process" class={Astro.url.pathname === '/release-process' ? 'active' : ''}>Release Process</a></li>
+            <li><a href="/journey" class={Astro.url.pathname === '/journey' ? 'active' : ''}>The Journey</a></li>
+          </ul>
+        </div>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode" title="Switch between light and dark themes">
+          <span aria-hidden="true">🌙</span> Toggle Dark Mode
+        </button>
+      </nav>
+      <main class="main-content">
+        <div class="content-wrapper">
+          <slot />
+        </div>
+      </main>
+    </div>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const sidebar = document.querySelector('.sidebar');
+        const toggleBtn = document.querySelector('.mobile-nav-toggle');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        if (toggleBtn) {
+          toggleBtn.addEventListener('click', function () {
+            sidebar.classList.toggle('is-open');
+          });
+        }
+
+        if (themeToggle) {
+          themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            if (document.body.classList.contains('dark-mode')) {
+              localStorage.setItem('theme', 'dark');
+            } else {
+              localStorage.setItem('theme', 'light');
+            }
+          });
+        }
+
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+          document.body.classList.add('dark-mode');
+        }
+      });
+    </script>
+  </body>
+</html>

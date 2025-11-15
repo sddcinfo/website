@@ -1,0 +1,38 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Automate Everything | sddc.info';
+const description = 'Comprehensive documentation for fully automated bare-metal Kubernetes platform provisioning using Ansible and modern DevOps practices.';
+const canonicalURL = '/';
+---
+
+<Layout title={title} description={description} canonicalURL={canonicalURL}>
+  <div class="hero-gradient">
+    <h1>Automate Everything</h1>
+    <p>A collection of projects and documentation for building a fully automated, bare-metal Kubernetes platform from scratch.</p>
+    <a href="/documentation" class="btn btn-primary">Get Started</a>
+  </div>
+
+  <div class="card-container">
+    <a href="/hardware" class="card">
+      <div class="card-icon">⚙️</div>
+      <h2>Hardware Build</h2>
+      <p>Explore the bill of materials and photo gallery for the custom 4U home lab server rack.</p>
+    </a>
+    <a href="/documentation" class="card">
+      <div class="card-icon">📚</div>
+      <h2>Project Documentation</h2>
+      <p>Dive into the comprehensive documentation for the bare-metal Kubernetes provisioning ecosystem.</p>
+    </a>
+    <a href="/performance" class="card">
+      <div class="card-icon">⚡️</div>
+      <h2>Performance</h2>
+      <p>View the performance metrics and benchmarks for various infrastructure components.</p>
+    </a>
+    <a href="/kubernetes-cluster" class="card">
+      <div class="card-icon">🚀</div>
+      <h2>Kubespray Deployment</h2>
+      <p>Learn how we use Kubespray to deploy a production-ready Kubernetes cluster.</p>
+    </a>
+  </div>
+</Layout>

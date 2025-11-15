@@ -1,0 +1,303 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'The Hardware Build | sddc.info';
+const description = 'A detailed look at the components and assembly of the custom 10-inch 4U home lab server rack.';
+const canonicalURL = '/hardware';
+
+const billOfMaterials = [
+  { category: "Chassis & Mounting", name: "DeskPi RackMate T0 Rackmount", description: "10 Inch 4U Server Cabinet for Network and Server Equipment.", quantity: 1, link: "https://deskpi.com/products/deskpi-rackmate-t1-rackmount-10-inch-4u-server-cabinet-for-network-servers-audio-and-video-equipment" },
+  { category: "Chassis & Mounting", name: "DeskPi Mini-ITX Shell", description: "Custom enclosure for mounting Mini-ITX boards in the Rackmate.", quantity: 4, link: "https://deskpi.com/products/deskpi-rackmate-accessory-mini-itx-shell" },
+  { category: "Cooling", name: "10-inch Fan Rack Mount", description: "Bracket for mounting 40mm fans for push/pull airflow.", quantity: 4, link: "https://hivets.au/products/10-inch-rack-mount-for-40mm-fans-5" },
+  { category: "Cooling", name: "Noctua NF-A4x20 PWM Fan", description: "Premium quiet 40x20mm fan for high-static pressure cooling.", quantity: 20, link: "https://noctua.at/en/nf-a4x20-pwm" },
+  { category: "Compute Nodes", name: "Supermicro SYS-E200-8D", description: "Compact Mini-ITX server with Intel Xeon D-1528 processor.", quantity: 4, link: "https://www.supermicro.com/en/products/system/Mini-ITX/SYS-E200-8D.cfm" },
+  { category: "Networking", name: "Gowin R86S-P2", description: "High-performance fanless router/firewall appliance.", quantity: 1, link: "https://www.gowinfanless.com/uncategorised/gw-r86s-p-series/gw-r86s-p2" },
+  { category: "Networking", name: "Netgear GS305E Switch", description: "5-Port Gigabit Plus Smart Managed Switch.", quantity: 1, link: "https://www.netgear.com/support/product/gs305e/" },
+  { category: "Networking", name: "MikroTik CRS305-1G-4S+", description: "Compact switch with 1G Ethernet and four 10G SFP+ ports.", quantity: 1, link: "https://mikrotik.com/product/crs305_1g_4s_in" },
+  { category: "Networking", name: "DeskPi 12 Port Patch Panel", description: "0.5U CAT6 Network Patch Panel for 10-inch racks.", quantity: 1, link: "https://deskpi.com/products/deskpi-rackmate-accessory-10-inch-network-switch" },
+  { category: "Power", name: "Mean Well LRS-350-12", description: "350W 12V single-output enclosed power supply.", quantity: 1, link: "https://www.meanwell.com/webapp/product/search.aspx?prod=LRS-350" },
+  { category: "Peripherals & Cables", name: "8\" Raspberry Pi Monitor", description: "1280x800 IPS HDMI portable touchscreen for system monitoring.", quantity: 1, link: "https://www.aliexpress.us/item/3256806185163801.html" },
+  { category: "Peripherals & Cables", name: "DC Power Pigtail Cables", description: "5.5mm x 2.5mm right angle connectors for custom power distribution.", quantity: 1, link: null },
+  { category: "Peripherals & Cables", name: "Ankuly Cat6A LAN Cable (0.15m)", description: "Short run 10Gbps patch cables for clean wiring.", quantity: 1, link: null },
+  { category: "Peripherals & Cables", name: "Ankuly Cat6A LAN Cable (0.3m)", description: "Short run 10Gbps patch cables for clean wiring.", quantity: 1, link: null }
+];
+
+// Sort by category
+const sortedBOM = billOfMaterials.sort((a, b) => a.category.localeCompare(b.category));
+
+// Group by category
+const groupedBOM = sortedBOM.reduce((acc, item) => {
+  if (!acc[item.category]) {
+    acc[item.category] = [];
+  }
+  acc[item.category].push(item);
+  return acc;
+}, {} as Record<string, typeof billOfMaterials>);
+
+const buildStory = {
+  vision: {
+    title: "The Vision",
+    text: "Every great infrastructure starts with a bold vision: build a compact, enterprise-grade home lab that punches above its weight class. The challenge? Cram 4 powerful Xeon servers, high-speed networking, and enterprise storage into a sleek 10-inch form factor while maintaining whisper-quiet operation and production-level performance."
+  },
+  challenge: {
+    title: "The Challenge",
+    points: [
+      "Cooling 4 high-performance servers in a 4U chassis without jet-engine noise",
+      "Managing 128GB of ECC RAM per node with enterprise reliability",
+      "Delivering 10GbE networking in a compact footprint",
+      "Achieving clean cable management in tight quarters",
+      "Maintaining thermal efficiency with positive pressure airflow"
+    ]
+  },
+  solution: {
+    title: "The Solution",
+    text: "20 premium Noctua fans creating a wall of silent, high-pressure airflow. Custom power distribution eliminating cable clutter. Supermicro's dense compute platforms delivering server-class performance. The result? A production-ready Kubernetes cluster that fits on a desk."
+  }
+};
+
+const galleryImages = [
+  {
+    src: "/6AC09EE6-EF0D-479D-AA61-5466965FD22F_1_105_c.jpeg",
+    alt: "The Noctua Wall",
+    title: "20 Premium Fans for Silent Power",
+    description: "A wall of Noctua NF-A4x20 PWM fans creates positive pressure airflow, keeping four Xeon servers cool while operating at library-quiet noise levels. This cooling solution maintains enterprise server temperatures while operating quieter than a typical desktop PC.",
+    category: "Cooling"
+  },
+  {
+    src: "/5D6A82F0-A483-4F3E-B1EE-0C1EB9AEE22C_1_105_c.jpeg",
+    alt: "Complete System Side View",
+    title: "Integrated Datacenter Overview",
+    description: "Side perspective showcasing the complete integrated system: 8\" monitoring display on top, four Supermicro servers in the middle with blue Ethernet cables, and networking layer below. A self-contained datacenter drawing less than 200W at idle in a compact 10-inch rack.",
+    category: "Overview"
+  },
+  {
+    src: "/rack-front.jpeg",
+    alt: "Server Front I/O",
+    title: "Compute Stack Front Access",
+    description: "Front-facing view of four Supermicro SYS-E200-8D servers with USB 3.0, dual 10GBASE-T Ethernet, and VGA ports per node. Managed switch at the base provides cluster connectivity. 512GB total RAM, 24 cores, and 2TB+ NVMe storage ready for Kubernetes.",
+    category: "Compute"
+  },
+  {
+    src: "/rack-internal.jpeg",
+    alt: "MikroTik CRS305 PCB",
+    title: "10GbE Switching Core Detail",
+    description: "Close-up of the MikroTik CRS305 switch PCB featuring four SFP+ cages for 10 gigabit fiber connectivity. This enterprise-grade layer-3 switch provides the high-speed backbone connecting all compute nodes with VLAN support and advanced routing.",
+    category: "Networking"
+  },
+  {
+    src: "/rack-power.jpeg",
+    alt: "Power Distribution Layer",
+    title: "Foundation Power and Switching",
+    description: "Base layer showing the Meanwell LRS-350-12 power supply alongside the Netgear managed switch. Custom DC power distribution eliminates cable clutter while providing stable 12V power to all rack components. Modular design enables easy maintenance.",
+    category: "Power"
+  }
+];
+---
+
+<Layout title={title} description={description} canonicalURL={canonicalURL}>
+  <!-- Hero Section -->
+  <div class="glass-card overflow-hidden mb-5">
+    <div class="section-header">
+      The Hardware Build: A Compact Datacenter
+    </div>
+    <div class="p-6">
+      <p class="text-xl font-semibold text-gray-800 dark:text-white mb-3">
+        {buildStory.vision.title}
+      </p>
+      <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
+        {buildStory.vision.text}
+      </p>
+    </div>
+  </div>
+
+  <!-- Challenge Section -->
+  <div class="glass-card p-6 mb-5">
+    <h2 class="text-xl font-bold mb-4 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">
+      {buildStory.challenge.title}
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {buildStory.challenge.points.map((point) => (
+        <div class="flex items-start gap-3 p-4 bg-gradient-to-r from-yellow-50 to-transparent dark:from-yellow-900/20 dark:to-transparent rounded-lg border-l-4 border-yellow-500 dark:border-yellow-400">
+          <span class="text-yellow-600 dark:text-yellow-400 text-lg font-bold">⚡</span>
+          <p class="text-sm text-gray-700 dark:text-gray-300">{point}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Solution & Gallery Section -->
+  <div class="glass-card p-6 mb-5">
+    <h2 class="text-xl font-bold mb-4 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">
+      {buildStory.solution.title}
+    </h2>
+    <p class="text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+      {buildStory.solution.text}
+    </p>
+
+    <!-- Interactive Gallery -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {galleryImages.map((image, index) => (
+        <div class="stat-card overflow-hidden group cursor-pointer lightbox-trigger" data-image-index={index}>
+          <div class="relative overflow-hidden rounded-lg mb-3">
+            <img
+              src={image.src}
+              alt={image.alt}
+              class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+              loading="lazy"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <div class="text-white">
+                <p class="text-sm font-bold mb-1">{image.title}</p>
+                <p class="text-xs opacity-90">Click to enlarge</p>
+              </div>
+            </div>
+            <div class="absolute top-2 right-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <svg class="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path>
+              </svg>
+            </div>
+          </div>
+          <h3 class="font-bold text-gray-900 dark:text-white mb-2">{image.title}</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 leading-snug">{image.description}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Bill of Materials Section -->
+  <section id="bom" class="glass-card p-6">
+    <h2 class="text-xl font-bold mb-4 text-primary-700 dark:text-primary-400 border-b-2 border-primary-200 dark:border-primary-800 pb-2">Bill of Materials</h2>
+
+    {Object.entries(groupedBOM).map(([category, items]) => (
+      <div class="mb-6">
+        <h3 class="text-lg font-bold mb-3 text-primary-700 dark:text-primary-400 flex items-center gap-2">
+          <span class="w-1.5 h-6 bg-primary-600 rounded-full"></span>
+          {category}
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {items.map((item) => (
+            <div class="stat-card group flex flex-col h-full">
+              <div class="flex-grow">
+                <h4 class="text-base font-bold mb-2 text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                  {item.name}
+                </h4>
+                <p class="text-sm text-gray-600 dark:text-gray-300 mb-3 line-clamp-2">
+                  {item.description}
+                </p>
+                <div class="flex justify-between items-center mb-3 text-sm">
+                  <span class="text-gray-600 dark:text-gray-400">Qty:</span>
+                  <span class="font-bold text-primary-600 dark:text-primary-400 text-lg">
+                    ×{item.quantity}
+                  </span>
+                </div>
+              </div>
+              {item.link ? (
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-block w-full text-center bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white text-sm font-semibold py-2 px-4 rounded-lg transition-all duration-200 hover:shadow-lg mt-auto"
+                >
+                  View →
+                </a>
+              ) : (
+                <div class="text-center text-xs text-gray-400 dark:text-gray-500 py-2 border border-gray-200 dark:border-gray-700 rounded-lg mt-auto">
+                  Link Unavailable
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="fixed inset-0 bg-black/95 z-[100] hidden items-center justify-center p-4 backdrop-blur-sm">
+    <button id="lightbox-close" class="absolute top-4 right-4 text-white hover:text-primary-400 transition-colors z-10">
+      <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+    <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 text-white hover:text-primary-400 transition-colors">
+      <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </button>
+    <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 text-white hover:text-primary-400 transition-colors">
+      <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </button>
+    <div class="max-w-6xl w-full">
+      <img id="lightbox-image" src="" alt="" class="w-full h-auto rounded-lg shadow-2xl" />
+      <div class="mt-4 text-center text-white">
+        <h3 id="lightbox-title" class="text-2xl font-bold mb-2"></h3>
+        <p id="lightbox-description" class="text-gray-300"></p>
+      </div>
+    </div>
+  </div>
+
+  <script define:vars={{ galleryImages }}>
+    let currentImageIndex = 0;
+
+    function openLightbox(index) {
+      currentImageIndex = index;
+      updateLightboxImage();
+      document.getElementById('lightbox').classList.remove('hidden');
+      document.getElementById('lightbox').classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.add('hidden');
+      document.getElementById('lightbox').classList.remove('flex');
+      document.body.style.overflow = '';
+    }
+
+    function updateLightboxImage() {
+      const image = galleryImages[currentImageIndex];
+      document.getElementById('lightbox-image').src = image.src;
+      document.getElementById('lightbox-image').alt = image.alt;
+      document.getElementById('lightbox-title').textContent = image.title;
+      document.getElementById('lightbox-description').textContent = image.description;
+    }
+
+    function nextImage() {
+      currentImageIndex = (currentImageIndex + 1) % galleryImages.length;
+      updateLightboxImage();
+    }
+
+    function prevImage() {
+      currentImageIndex = (currentImageIndex - 1 + galleryImages.length) % galleryImages.length;
+      updateLightboxImage();
+    }
+
+    // Event listeners
+    document.getElementById('lightbox-close').addEventListener('click', closeLightbox);
+    document.getElementById('lightbox-next').addEventListener('click', nextImage);
+    document.getElementById('lightbox-prev').addEventListener('click', prevImage);
+
+    // Click outside to close
+    document.getElementById('lightbox').addEventListener('click', (e) => {
+      if (e.target.id === 'lightbox') {
+        closeLightbox();
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      const lightbox = document.getElementById('lightbox');
+      if (!lightbox.classList.contains('hidden')) {
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowRight') nextImage();
+        if (e.key === 'ArrowLeft') prevImage();
+      }
+    });
+
+    // Gallery triggers
+    document.querySelectorAll('.lightbox-trigger').forEach((trigger, index) => {
+      trigger.addEventListener('click', () => openLightbox(index));
+    });
+  </script>
+</Layout>

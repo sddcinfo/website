@@ -1,0 +1,168 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = 'Kubernetes Cluster | sddc.info';
+const description = 'Production-ready Kubernetes cluster deployment with Rook Ceph storage, Calico networking, and automated configuration management.';
+const canonicalURL = '/kubernetes-cluster';
+---
+
+<Layout title={title} description={description} canonicalURL={canonicalURL}>
+  <div class="glass-card p-8 mb-8">
+    <h1 class="text-4xl font-bold text-gradient mb-4">Kubernetes Cluster</h1>
+    <p class="text-lg text-gray-600 dark:text-gray-300">A production-ready Kubernetes deployment with distributed storage, advanced networking, and enterprise-grade reliability.</p>
+  </div>
+
+  <div class="glass-card p-8 mb-8">
+    <h2 class="text-2xl font-semibold mb-4">Cluster Architecture</h2>
+    <p class="mb-6 text-gray-700 dark:text-gray-300">Our Kubernetes cluster is built on bare-metal infrastructure with a focus on high availability, performance, and operational simplicity. The entire deployment is managed through Ansible automation, enabling consistent, repeatable cluster builds.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700 text-center">
+        <div class="text-4xl mb-3">🎯</div>
+        <h3 class="font-semibold mb-2">Control Plane</h3>
+        <p class="text-gray-700 dark:text-gray-300">High-availability control plane with etcd distributed database</p>
+      </div>
+
+      <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700 text-center">
+        <div class="text-4xl mb-3">💪</div>
+        <h3 class="font-semibold mb-2">Worker Nodes</h3>
+        <p class="text-gray-700 dark:text-gray-300">Scalable compute resources for running containerized workloads</p>
+      </div>
+
+      <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700 text-center">
+        <div class="text-4xl mb-3">💾</div>
+        <h3 class="font-semibold mb-2">Storage Layer</h3>
+        <p class="text-gray-700 dark:text-gray-300">Rook Ceph provides distributed, replicated block and file storage</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card p-8 mb-8">
+    <h2 class="text-2xl font-semibold mb-6">Core Components</h2>
+
+    <div class="space-y-6">
+      <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700">
+        <h3 class="text-xl font-semibold mb-3 text-primary-700 dark:text-primary-400">Container Runtime: containerd</h3>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Industry-standard container runtime providing the foundation for running containerized applications with optimal performance and security.</p>
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <li>• OCI-compliant container execution</li>
+          <li>• Image management and distribution</li>
+          <li>• Namespace isolation</li>
+          <li>• Resource control with cgroups</li>
+        </ul>
+      </div>
+
+      <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700">
+        <h3 class="text-xl font-semibold mb-3 text-primary-700 dark:text-primary-400">Networking: Calico</h3>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">High-performance network plugin providing secure pod-to-pod communication, network policies, and BGP routing capabilities.</p>
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Layer 3 networking with BGP</li>
+          <li>• Network security policies</li>
+          <li>• IP address management (IPAM)</li>
+          <li>• Native support for 10GbE infrastructure</li>
+        </ul>
+      </div>
+
+      <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700">
+        <h3 class="text-xl font-semibold mb-3 text-primary-700 dark:text-primary-400">Storage: Rook Ceph</h3>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Cloud-native storage orchestrator providing self-managing, self-scaling, and self-healing storage services with 3x data replication.</p>
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Block storage (RBD) for databases</li>
+          <li>• Shared filesystem (CephFS)</li>
+          <li>• Object storage (S3-compatible)</li>
+          <li>• Automatic data replication and recovery</li>
+        </ul>
+      </div>
+
+      <div class="bg-primary-50 dark:bg-gray-800 p-6 rounded-lg border border-primary-200 dark:border-gray-700">
+        <h3 class="text-xl font-semibold mb-3 text-primary-700 dark:text-primary-400">Load Balancing: MetalLB</h3>
+        <p class="text-gray-700 dark:text-gray-300 mb-3">Bare-metal load balancer implementation enabling Kubernetes services to receive external IP addresses in non-cloud environments.</p>
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-600 dark:text-gray-400">
+          <li>• Layer 2 mode for local networks</li>
+          <li>• BGP mode for advanced routing</li>
+          <li>• IP address pool management</li>
+          <li>• LoadBalancer service type support</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card p-8 mb-8">
+    <h2 class="text-2xl font-semibold mb-6">Deployment Features</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="bg-gradient-to-br from-green-50 to-blue-50 dark:from-green-900 dark:to-blue-900 p-6 rounded-lg border border-green-200 dark:border-green-700">
+        <h3 class="text-lg font-semibold mb-3 text-green-700 dark:text-green-400">High Availability</h3>
+        <ul class="space-y-2 text-gray-700 dark:text-gray-300 text-sm">
+          <li>• Multi-master control plane</li>
+          <li>• Distributed etcd cluster</li>
+          <li>• Pod disruption budgets</li>
+          <li>• Node failure tolerance</li>
+        </ul>
+      </div>
+
+      <div class="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900 dark:to-pink-900 p-6 rounded-lg border border-purple-200 dark:border-purple-700">
+        <h3 class="text-lg font-semibold mb-3 text-purple-700 dark:text-purple-400">Security</h3>
+        <ul class="space-y-2 text-gray-700 dark:text-gray-300 text-sm">
+          <li>• TLS certificate management</li>
+          <li>• Role-based access control (RBAC)</li>
+          <li>• Network policy enforcement</li>
+          <li>• Pod security standards</li>
+        </ul>
+      </div>
+
+      <div class="bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900 dark:to-orange-900 p-6 rounded-lg border border-yellow-200 dark:border-yellow-700">
+        <h3 class="text-lg font-semibold mb-3 text-yellow-700 dark:text-yellow-400">Observability</h3>
+        <ul class="space-y-2 text-gray-700 dark:text-gray-300 text-sm">
+          <li>• Metrics collection with Prometheus</li>
+          <li>• Centralized logging</li>
+          <li>• Resource monitoring dashboards</li>
+          <li>• Cluster health checks</li>
+        </ul>
+      </div>
+
+      <div class="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900 dark:to-indigo-900 p-6 rounded-lg border border-blue-200 dark:border-blue-700">
+        <h3 class="text-lg font-semibold mb-3 text-blue-700 dark:text-blue-400">Automation</h3>
+        <ul class="space-y-2 text-gray-700 dark:text-gray-300 text-sm">
+          <li>• Ansible-driven deployment</li>
+          <li>• GitOps workflow integration</li>
+          <li>• Automated cluster upgrades</li>
+          <li>• Infrastructure as Code</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="glass-card p-8">
+    <h2 class="text-2xl font-semibold mb-4">Production Ready</h2>
+    <div class="bg-gradient-to-r from-primary-50 to-blue-50 dark:from-gray-800 dark:to-gray-700 p-6 rounded-lg border border-primary-200 dark:border-gray-600">
+      <p class="text-gray-700 dark:text-gray-300 mb-4">This Kubernetes cluster configuration has been tested and optimized for production workloads. The combination of bare-metal performance, enterprise storage, and comprehensive automation makes it suitable for:</p>
+      <ul class="grid grid-cols-1 md:grid-cols-2 gap-3 text-gray-700 dark:text-gray-300">
+        <li class="flex items-start">
+          <span class="text-green-600 dark:text-green-400 mr-2">✓</span>
+          <span>Stateful applications and databases</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-green-600 dark:text-green-400 mr-2">✓</span>
+          <span>High-performance computing workloads</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-green-600 dark:text-green-400 mr-2">✓</span>
+          <span>Multi-tenant application hosting</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-green-600 dark:text-green-400 mr-2">✓</span>
+          <span>CI/CD pipeline execution</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-green-600 dark:text-green-400 mr-2">✓</span>
+          <span>Microservices architectures</span>
+        </li>
+        <li class="flex items-start">
+          <span class="text-green-600 dark:text-green-400 mr-2">✓</span>
+          <span>Development and testing environments</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</Layout>
