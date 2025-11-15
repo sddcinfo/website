@@ -29,7 +29,7 @@ export async function POST({ request, env }) {
 
     // Get API key and recipient email from environment
     const resendApiKey = env.RESEND_API_KEY;
-    const contactEmail = env.CONTACT_EMAIL || 'noreply@example.com';
+    const contactEmail = env.CONTACT_EMAIL || 'bradlay@gmail.com';
 
     if (!resendApiKey) {
       console.error('RESEND_API_KEY not configured');

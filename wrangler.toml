@@ -12,9 +12,15 @@ command = "npm run build"
 directory = "dist"
 binding = "ASSETS"
 
-# Pure Workers deployment (not Pages)
-# Worker handles dynamic routes, assets served by Cloudflare
+# Custom domain routing (configured in Cloudflare Dashboard)
+routes = [
+  { pattern = "sddc.info/*", zone_name = "sddc.info" },
+  { pattern = "www.sddc.info/*", zone_name = "sddc.info" }
+]
+
+# Environment variables
+[vars]
+CONTACT_EMAIL = "bradlay@gmail.com"
 
 # Secrets to set via CLI:
 # wrangler secret put RESEND_API_KEY
-# wrangler secret put CONTACT_EMAIL

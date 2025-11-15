@@ -41,6 +41,10 @@ const { title, description, canonicalURL } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+    <!-- Cloudflare Web Analytics - Get token from: Cloudflare Dashboard > Analytics & Logs > Web Analytics -->
+    <!-- After deployment, replace YOUR_TOKEN below with the actual token -->
+    <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_TOKEN"}'></script>
   </head>
   <body>
     <button class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
@@ -56,6 +60,7 @@ const { title, description, canonicalURL } = Astro.props;
             <li><a href="/hardware" class={Astro.url.pathname === '/hardware' ? 'active' : ''}>Hardware</a></li>
             <li><a href="/performance" class={Astro.url.pathname === '/performance' ? 'active' : ''}>Performance</a></li>
             <li><a href="/inventory" class={Astro.url.pathname === '/inventory' ? 'active' : ''}>Inventory</a></li>
+            <li><a href="/contact" class={Astro.url.pathname === '/contact' ? 'active' : ''}>Contact</a></li>
           </ul>
           <h3 id="docs-nav">Documentation</h3>
           <ul role="list" aria-labelledby="docs-nav">
