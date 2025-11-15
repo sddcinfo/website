@@ -59,9 +59,12 @@ const {
     
     <title>{title}</title>
     
+    <!-- Optimized font loading: preconnect + swap for instant text rendering -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" as="style" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'" />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" /></noscript>
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
@@ -119,6 +122,15 @@ const {
       </main>
     </div>
     <script>
+      // Register Service Worker for faster subsequent loads
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {
+            // Silent fail - SW is optional enhancement
+          });
+        });
+      }
+
       document.addEventListener('DOMContentLoaded', function () {
         const sidebar = document.querySelector('.sidebar');
         const toggleBtn = document.querySelector('.mobile-nav-toggle');
