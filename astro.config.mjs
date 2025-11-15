@@ -14,10 +14,17 @@ export default defineConfig({
   }),
   output: 'server',
   trailingSlash: 'never',
+  compressHTML: true,  // Minify HTML for smaller payloads
   vite: {
     plugins: [tailwindcss()],
     build: {
-      minify: true
+      minify: 'esbuild',  // Fast minification
+      cssMinify: true,
+      rollupOptions: {
+        output: {
+          manualChunks: undefined  // Disable code splitting for faster loads
+        }
+      }
     }
   }
 });

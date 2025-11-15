@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  /* Custom font family */
-  --font-sans: 'Inter', system-ui, sans-serif;
+  /* Ultra-fast system font stack (zero external requests) */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   /* Custom primary color palette */
   --color-primary-50: #eff6ff;
