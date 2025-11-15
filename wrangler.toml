@@ -21,6 +21,3 @@ routes = [
 # Environment variables
 [vars]
 CONTACT_EMAIL = "bradlay@gmail.com"
-
-# Secrets to set via CLI:
-# wrangler secret put RESEND_API_KEY

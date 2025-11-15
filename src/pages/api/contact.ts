@@ -27,19 +27,9 @@ export async function POST({ request, env }) {
       );
     }
 
-    // Get API key and recipient email from environment
-    const resendApiKey = env.RESEND_API_KEY;
     const contactEmail = env.CONTACT_EMAIL || 'bradlay@gmail.com';
 
-    if (!resendApiKey) {
-      console.error('RESEND_API_KEY not configured');
-      return new Response(
-        JSON.stringify({ error: 'Email service not configured. Please try again later.' }),
-        { status: 500, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Prepare email content
+    // Prepare email content with metadata
     const emailContent = `
 New Contact Form Submission from SDDC.info
 
@@ -57,25 +47,36 @@ IP: ${request.headers.get('CF-Connecting-IP') || 'unknown'}
 Country: ${request.cf?.country || 'unknown'}
     `.trim();
 
-    // Send email via Resend API
-    const emailResponse = await fetch('https://api.resend.com/emails', {
+    // Send email via MailChannels (Cloudflare Workers partner, no API key needed)
+    const emailResponse = await fetch('https://api.mailchannels.net/tx/v1/send', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${resendApiKey}`,
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'SDDC.info Contact Form <onboarding@resend.dev>',
-        to: [contactEmail],
-        reply_to: email.trim().toLowerCase(),
+        personalizations: [
+          {
+            to: [{ email: contactEmail, name: 'Brad Lay' }],
+            reply_to: { email: email.trim().toLowerCase(), name: name.trim() },
+          },
+        ],
+        from: {
+          email: 'noreply@sddc.info',
+          name: 'SDDC.info Contact Form',
+        },
         subject: `[SDDC.info Contact] ${subject} - from ${name.trim()}`,
-        text: emailContent
-      })
+        content: [
+          {
+            type: 'text/plain',
+            value: emailContent,
+          },
+        ],
+      }),
     });
 
     if (!emailResponse.ok) {
       const errorData = await emailResponse.text();
-      console.error('Resend API error:', errorData);
+      console.error('MailChannels API error:', errorData);
       return new Response(
         JSON.stringify({ error: 'Failed to send email. Please try again later.' }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
@@ -85,7 +86,7 @@ Country: ${request.cf?.country || 'unknown'}
     return new Response(
       JSON.stringify({
         success: true,
-        message: 'Thank you! Your message has been sent successfully.'
+        message: 'Thank you! Your message has been sent successfully.',
       }),
       { status: 200, headers: { 'Content-Type': 'application/json' } }
     );
