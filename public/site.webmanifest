@@ -1,0 +1,19 @@
+{
+  "name": "SDDC.info - Home Lab Automation",
+  "short_name": "SDDC.info",
+  "description": "Home lab automation and software-defined datacenter documentation",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "technology", "productivity"],
+  "orientation": "any"
+}

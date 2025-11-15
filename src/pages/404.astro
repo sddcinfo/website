@@ -1,0 +1,50 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+const title = '404 - Page Not Found | sddc.info';
+const description = 'The page you are looking for could not be found.';
+const canonicalURL = '/404';
+---
+
+<Layout title={title} description={description} canonicalURL={canonicalURL}>
+  <div class="glass-card p-8 text-center">
+    <h1 class="text-6xl font-bold text-primary-600 dark:text-primary-400 mb-4">404</h1>
+    <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4">Page Not Found</h2>
+    <p class="text-gray-700 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+      The page you're looking for doesn't exist or has been moved. Let's get you back on track.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+      <a
+        href="/"
+        class="px-6 py-3 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-white font-semibold rounded-lg transition-all duration-200 hover:shadow-lg"
+      >
+        Go Home
+      </a>
+      <a
+        href="/documentation"
+        class="px-6 py-3 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white font-semibold rounded-lg transition-all duration-200"
+      >
+        View Documentation
+      </a>
+    </div>
+
+    <div class="mt-12">
+      <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Popular Pages</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+        <a href="/hardware" class="stat-card text-left hover:shadow-lg transition-shadow">
+          <h4 class="font-bold text-primary-600 dark:text-primary-400 mb-2">Hardware Build</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-300">Explore the compact datacenter setup</p>
+        </a>
+        <a href="/kubernetes-cluster" class="stat-card text-left hover:shadow-lg transition-shadow">
+          <h4 class="font-bold text-primary-600 dark:text-primary-400 mb-2">Kubernetes Cluster</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-300">Learn about the K8s setup</p>
+        </a>
+        <a href="/journey" class="stat-card text-left hover:shadow-lg transition-shadow">
+          <h4 class="font-bold text-primary-600 dark:text-primary-400 mb-2">The Journey</h4>
+          <p class="text-sm text-gray-600 dark:text-gray-300">Read about the build process</p>
+        </a>
+      </div>
+    </div>
+  </div>
+</Layout>
