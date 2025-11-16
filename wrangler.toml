@@ -19,6 +19,9 @@ directory = "dist"
 binding = "ASSETS"
 
 # Environment variables
-# Set these as secrets:
-# npx wrangler secret put CONTACT_EMAIL
-# npx wrangler secret put RESEND_API_KEY
+[vars]
+CONTACT_EMAIL = "bradlay@gmail.com"
+
+# Email service binding for contact form
+[[send_email]]
+name = "EMAIL"
