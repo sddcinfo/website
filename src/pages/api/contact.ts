@@ -1,3 +1,5 @@
+import { Resend } from 'resend';
+
 export async function POST({ request, locals }) {
   try {
     const { name, email, subject, message } = await request.json();
@@ -30,6 +32,15 @@ export async function POST({ request, locals }) {
     // Access environment variables via Cloudflare runtime
     const env = locals.runtime.env;
     const contactEmail = env.CONTACT_EMAIL || 'bradlay@gmail.com';
+    const resendApiKey = env.RESEND_API_KEY;
+
+    if (!resendApiKey) {
+      console.error('RESEND_API_KEY not configured');
+      return new Response(
+        JSON.stringify({ error: 'Email service not configured. Please contact the administrator.' }),
+        { status: 500, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     // Prepare email content with metadata
     const emailContent = `
@@ -58,46 +69,25 @@ Country: ${request.cf?.country || 'unknown'}
       country: request.cf?.country
     });
 
-    // Send email via MailChannels (native Cloudflare Workers support)
-    const emailResponse = await fetch('https://api.mailchannels.net/tx/v1/send', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        personalizations: [
-          {
-            to: [{ email: contactEmail }],
-          },
-        ],
-        from: {
-          email: 'contact@sddc.info',
-          name: 'SDDC.info Contact Form',
-        },
-        reply_to: {
-          email: email.trim().toLowerCase(),
-          name: name.trim()
-        },
-        subject: `[SDDC.info Contact] ${subject}`,
-        content: [
-          {
-            type: 'text/plain',
-            value: emailContent,
-          },
-        ],
-      }),
+    // Send email via Resend
+    const resend = new Resend(resendApiKey);
+    const { data, error } = await resend.emails.send({
+      from: 'SDDC.info Contact <contact@sddc.info>',
+      to: contactEmail,
+      replyTo: email.trim().toLowerCase(),
+      subject: `[SDDC.info Contact] ${subject}`,
+      text: emailContent,
     });
 
-    if (!emailResponse.ok) {
-      const errorData = await emailResponse.text();
-      console.error('Email sending error:', errorData);
+    if (error) {
+      console.error('Resend error:', error);
       return new Response(
         JSON.stringify({ error: 'Failed to send email. Please try again later.' }),
         { status: 500, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    console.log('Email sent successfully');
+    console.log('Email sent successfully via Resend:', data);
 
     return new Response(
       JSON.stringify({

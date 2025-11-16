@@ -19,5 +19,6 @@ directory = "dist"
 binding = "ASSETS"
 
 # Environment variables
-[vars]
-CONTACT_EMAIL = "bradlay@gmail.com"
+# Set these as secrets:
+# npx wrangler secret put CONTACT_EMAIL
+# npx wrangler secret put RESEND_API_KEY
