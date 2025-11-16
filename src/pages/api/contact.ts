@@ -1,4 +1,4 @@
-export async function POST({ request, env }) {
+export async function POST({ request, locals }) {
   try {
     const { name, email, subject, message } = await request.json();
 
@@ -27,6 +27,8 @@ export async function POST({ request, env }) {
       );
     }
 
+    // Access environment variables via Cloudflare runtime
+    const env = locals.runtime.env;
     const contactEmail = env.CONTACT_EMAIL || 'bradlay@gmail.com';
 
     // Prepare email content with metadata
