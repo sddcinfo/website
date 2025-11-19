@@ -21,7 +21,7 @@ binding = "ASSETS"
 # Environment variables
 [vars]
 CONTACT_EMAIL = "bradlay@gmail.com"
-TURNSTILE_SECRET_KEY = "1x0000000000000000000000000000000AA"
+TURNSTILE_SECRET_KEY = "0x4AAAAAACBtSS6W1epPgPYloHHq2dFbQAg"
 
 # Email service binding for contact form
 [[send_email]]
