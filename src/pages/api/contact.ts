@@ -1,15 +1,63 @@
 import { EmailMessage } from 'cloudflare:email';
 import { createMimeMessage, Mailbox } from 'mimetext';
 
+// Helper to sanitize HTML content
+function escapeHtml(unsafe: string): string {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// Helper to verify Turnstile token
+async function verifyTurnstile(token: string, secretKey: string, ip: string): Promise<boolean> {
+  const formData = new FormData();
+  formData.append('secret', secretKey);
+  formData.append('response', token);
+  formData.append('remoteip', ip);
+
+  const url = 'https://challenges.cloudflare.com/turnstile/v0/siteverify';
+  const result = await fetch(url, {
+    body: formData,
+    method: 'POST',
+  });
+
+  const outcome = await result.json();
+  return outcome.success;
+}
+
 export async function POST({ request, locals }) {
   try {
-    const { name, email, subject, message } = await request.json();
+    const { name, email, subject, message, 'cf-turnstile-response': turnstileToken } = await request.json();
 
     // Validate required fields
     if (!name || !email || !subject || !message) {
       return new Response(
         JSON.stringify({ error: 'All fields are required' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Validate Turnstile token
+    const env = locals.runtime.env;
+    const clientIP = request.headers.get('CF-Connecting-IP') || 'unknown';
+    // Use testing secret if not provided in env
+    const turnstileSecret = env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA'; 
+    
+    if (!turnstileToken) {
+       return new Response(
+        JSON.stringify({ error: 'Security check failed. Please try again.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const isValidToken = await verifyTurnstile(turnstileToken, turnstileSecret, clientIP);
+    if (!isValidToken) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid security token. Please refresh and try again.' }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
@@ -30,8 +78,6 @@ export async function POST({ request, locals }) {
       );
     }
 
-    // Access environment variables via Cloudflare runtime
-    const env = locals.runtime.env;
     const contactEmail = env.CONTACT_EMAIL || 'bradlay@gmail.com';
 
     // Use Cloudflare's native email service
@@ -39,7 +85,6 @@ export async function POST({ request, locals }) {
     const toAddress = contactEmail;
 
     // Log contact attempt
-    const clientIP = request.headers.get('CF-Connecting-IP') || 'unknown';
     console.log('Contact form submission:', {
       from: `${name} <${email}>`,
       subject,
@@ -48,12 +93,18 @@ export async function POST({ request, locals }) {
       country: request.cf?.country || 'unknown'
     });
 
+    // Sanitize inputs for HTML email
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeSubject = escapeHtml(subject);
+    const safeMessage = escapeHtml(message);
+
     // Create MIME message
     const msg = createMimeMessage();
     msg.setSender({ name: 'SDDC.info Contact Form', addr: fromAddress });
     msg.setRecipient(toAddress);
     msg.setHeader('Reply-To', new Mailbox(email, name));
-    msg.setSubject(`[SDDC.info Contact] ${subject}`);
+    msg.setSubject(`[SDDC.info Contact] ${subject}`); // Subject header is usually plain text, but good practice to be safe if used elsewhere
 
     // Add technical metadata as headers
     msg.setHeader('X-Client-IP', clientIP);
@@ -92,27 +143,27 @@ export async function POST({ request, locals }) {
     <div class="content">
         <div class="field">
             <span class="label">From:</span>
-            <span class="value">${name}</span>
+            <span class="value">${safeName}</span>
         </div>
 
         <div class="field">
             <span class="label">Email:</span>
-            <span class="value"><a href="mailto:${email}">${email}</a></span>
+            <span class="value"><a href="mailto:${safeEmail}">${safeEmail}</a></span>
         </div>
 
         <div class="field">
             <span class="label">Subject:</span>
-            <span class="value">${subject}</span>
+            <span class="value">${safeSubject}</span>
         </div>
 
         <div class="message-box">
             <span class="label">Message:</span>
-            <div style="margin-top: 10px; white-space: pre-wrap;">${message}</div>
+            <div style="margin-top: 10px; white-space: pre-wrap;">${safeMessage}</div>
         </div>
     </div>
 
     <div class="footer">
-        <p>Click "Reply" to respond directly to ${name}</p>
+        <p>Click "Reply" to respond directly to ${safeName}</p>
         <p style="color: #9ca3af;">Sent via SDDC.info Contact Form • ${new Date().toISOString()}</p>
     </div>
 </body>

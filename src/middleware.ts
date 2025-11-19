@@ -25,5 +25,9 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
   newResponse.headers.set('X-Frame-Options', 'DENY');
   newResponse.headers.set('X-XSS-Protection', '1; mode=block');
 
+  // Security headers
+  newResponse.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  newResponse.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; frame-src https://challenges.cloudflare.com; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com;");
+
   return newResponse;
 };
