@@ -8,10 +8,10 @@ routes = [
   { pattern = "www.sddc.info", custom_domain = true }
 ]
 
-# Environment variables
+# Environment variables (non-secret only — secrets via `wrangler secret put`)
 [vars]
 CONTACT_EMAIL = "bradlay@gmail.com"
-TURNSTILE_SECRET_KEY = "0x4AAAAAACBtSS6W1epPgPYloHHq2dFbQAg"
+# TURNSTILE_SECRET_KEY — set via: npx wrangler secret put TURNSTILE_SECRET_KEY
 
 # Email service binding for contact form
 [[send_email]]
