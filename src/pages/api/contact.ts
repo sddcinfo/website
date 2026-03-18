@@ -1,4 +1,5 @@
 import { EmailMessage } from 'cloudflare:email';
+import { env } from 'cloudflare:workers';
 import { createMimeMessage, Mailbox } from 'mimetext';
 
 // Helper to sanitize HTML content
@@ -28,27 +29,24 @@ async function verifyTurnstile(token: string, secretKey: string, ip: string): Pr
   return outcome.success;
 }
 
-export async function POST({ request, locals }) {
+export async function POST({ request }) {
   try {
-    const { name, email, subject, message, 'cf-turnstile-response': turnstileToken } = await request.json();
+    const { name, email: senderEmail, subject, message, 'cf-turnstile-response': turnstileToken } = await request.json();
 
     // Validate required fields
-    if (!name || !email || !subject || !message) {
+    if (!name || !senderEmail || !subject || !message) {
       return new Response(
         JSON.stringify({ error: 'All fields are required' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
 
-    // Validate Turnstile token
-    const env = locals.runtime.env;
     const clientIP = request.headers.get('CF-Connecting-IP') || 'unknown';
-    // Use testing secret if not provided in env
-    const turnstileSecret = env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA'; 
+    const turnstileSecret = env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA';
     
     // Verify Turnstile if token present (gracefully degrade if widget failed — VPN/WARP/extensions)
     if (turnstileToken) {
-      const isValidToken = await verifyTurnstile(turnstileToken, turnstileSecret, clientIP);
+      const isValidToken = await verifyTurnstile(turnstileToken as string, turnstileSecret, clientIP);
       if (!isValidToken) {
         return new Response(
           JSON.stringify({ error: 'Invalid security token. Please refresh and try again.' }),
@@ -59,7 +57,7 @@ export async function POST({ request, locals }) {
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!emailRegex.test(senderEmail)) {
       return new Response(
         JSON.stringify({ error: 'Invalid email address' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
@@ -82,7 +80,7 @@ export async function POST({ request, locals }) {
 
     // Log contact attempt
     console.log('Contact form submission:', {
-      from: `${name} <${email}>`,
+      from: `${name} <${senderEmail}>`,
       subject,
       timestamp: new Date().toISOString(),
       ip: clientIP,
@@ -91,7 +89,7 @@ export async function POST({ request, locals }) {
 
     // Sanitize inputs for HTML email
     const safeName = escapeHtml(name);
-    const safeEmail = escapeHtml(email);
+    const safeEmail = escapeHtml(senderEmail);
     const safeSubject = escapeHtml(subject);
     const safeMessage = escapeHtml(message);
 
@@ -99,7 +97,7 @@ export async function POST({ request, locals }) {
     const msg = createMimeMessage();
     msg.setSender({ name: 'SDDC.info Contact Form', addr: fromAddress });
     msg.setRecipient(toAddress);
-    msg.setHeader('Reply-To', new Mailbox(email, name));
+    msg.setHeader('Reply-To', new Mailbox(senderEmail, name));
     msg.setSubject(`[SDDC.info Contact] ${subject}`); // Subject header is usually plain text, but good practice to be safe if used elsewhere
 
     // Add technical metadata as headers
@@ -107,7 +105,7 @@ export async function POST({ request, locals }) {
     msg.setHeader('X-User-Agent', request.headers.get('User-Agent') || 'unknown');
     msg.setHeader('X-Form-Timestamp', new Date().toISOString());
     msg.setHeader('X-Form-Source', 'SDDC.info Contact Form');
-    msg.setHeader('X-Original-Email', email);
+    msg.setHeader('X-Original-Email', senderEmail);
     msg.setHeader('X-Form-Name', name);
     msg.setHeader('X-Country', request.cf?.country || 'unknown');
 
@@ -170,7 +168,7 @@ export async function POST({ request, locals }) {
 New Contact Form Inquiry from SDDC.info
 
 From: ${name}
-Email: ${email}
+Email: ${senderEmail}
 Subject: ${subject}
 
 Message:
@@ -214,7 +212,6 @@ ${new Date().toISOString()}
     return new Response(
       JSON.stringify({
         error: 'An unexpected error occurred. Please try again later.',
-        debug: errMsg,
       }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
