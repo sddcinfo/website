@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Sitemaps
-Sitemap: https://sddc.info/sitemap.xml
+Sitemap: https://sddc.info/sitemap-index.xml
 
 # Crawl-delay (optional, helps prevent server overload)
 Crawl-delay: 1
