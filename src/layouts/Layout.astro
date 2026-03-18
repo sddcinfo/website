@@ -81,6 +81,15 @@ const {
     </script>
   </head>
   <body>
+    <script is:inline>
+      // Apply dark mode synchronously before first paint to prevent flash
+      (function() {
+        var theme = localStorage.getItem('theme');
+        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.body.classList.add('dark-mode');
+        }
+      })();
+    </script>
     <button class="mobile-nav-toggle" aria-label="Open navigation">☰</button>
     <div class="main-container">
       <nav class="sidebar" role="navigation" aria-label="Main navigation">
@@ -123,6 +132,11 @@ const {
       }
 
       document.addEventListener('DOMContentLoaded', function () {
+        // Enable theme transitions only after first paint (prevents flash)
+        requestAnimationFrame(() => {
+          document.body.style.transition = 'background-color 0.2s, color 0.2s';
+        });
+
         const sidebar = document.querySelector('.sidebar');
         const toggleBtn = document.querySelector('.mobile-nav-toggle');
         const themeToggle = document.getElementById('theme-toggle');
@@ -144,10 +158,6 @@ const {
           });
         }
 
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-          document.body.classList.add('dark-mode');
-        }
       });
     </script>
   </body>
