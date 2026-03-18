@@ -7,13 +7,13 @@ const canonicalURL = '/contact';
 ---
 
 <Layout title={title} description={description} canonicalURL={canonicalURL}>
-  <div class="max-w-2xl mx-auto">
-    <div class="glass-card p-6 mb-6">
-      <h1 class="text-4xl font-bold text-gradient mb-4">Get In Touch</h1>
-      <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">Have questions about our infrastructure automation projects? We'd love to hear from you.</p>
-    </div>
+  <div class="glass-card p-6 mb-6">
+    <h1 class="text-4xl font-bold text-gradient mb-4">Get In Touch</h1>
+    <p class="text-lg text-gray-600 dark:text-gray-300">Have questions about our infrastructure automation projects? We'd love to hear from you.</p>
+  </div>
 
-    <div class="glass-card p-6">
+  <div class="glass-card p-6">
+    <div class="max-w-2xl">
       <form id="contact-form" class="space-y-6">
         <div>
           <label for="name" class="block text-sm font-medium mb-2">Name *</label>
@@ -56,6 +56,7 @@ const canonicalURL = '/contact';
           Send Message
         </button>
       </form>
+    </div>
     </div>
   </div>
 
