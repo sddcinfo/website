@@ -43,7 +43,7 @@ const canonicalURL = '/contact';
         </div>
 
         <!-- Turnstile Widget -->
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAACspQ4T-qSHmAPrH" data-theme="auto"></div>
+        <div id="turnstile-container" style="min-height:65px"></div>
 
         <div class="hidden">
           <label for="honeypot">Leave this field empty</label>
@@ -59,7 +59,32 @@ const canonicalURL = '/contact';
     </div>
   </div>
 
-  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script is:inline>
+    // Load Turnstile API and render widget with polling
+    (function() {
+      var script = document.createElement('script');
+      script.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+      script.async = true;
+      document.head.appendChild(script);
+
+      function tryRender() {
+        var el = document.getElementById('turnstile-container');
+        if (window.turnstile && el) {
+          window.turnstile.render(el, {
+            sitekey: '0x4AAAAAACspQ4T-qSHmAPrH',
+            theme: 'auto'
+          });
+        } else {
+          setTimeout(tryRender, 100);
+        }
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', tryRender);
+      } else {
+        tryRender();
+      }
+    })();
+  </script>
 
   <script>
     document.getElementById('contact-form').addEventListener('submit', async (e) => {
