@@ -29,10 +29,7 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 
   // Security headers
   newResponse.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-  // Skip CSP on contact page to allow Turnstile widget to load without restrictions
-  if (url.pathname !== '/contact') {
-    newResponse.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; frame-src https://challenges.cloudflare.com; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com; font-src 'self'; base-uri 'self'; form-action 'self';");
-  }
+  newResponse.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; frame-src https://challenges.cloudflare.com; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com; font-src 'self'; base-uri 'self'; form-action 'self';");
 
   return newResponse;
 };
