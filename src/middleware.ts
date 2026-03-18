@@ -24,12 +24,10 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 
   // Performance headers
   newResponse.headers.set('X-Content-Type-Options', 'nosniff');
-  newResponse.headers.set('X-Frame-Options', 'DENY');
-  newResponse.headers.set('X-XSS-Protection', '1; mode=block');
 
   // Security headers
   newResponse.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-  newResponse.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; frame-src https://challenges.cloudflare.com; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; font-src 'self' https://fonts.gstatic.com; base-uri 'self'; form-action 'self';");
+  newResponse.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; frame-src https://challenges.cloudflare.com; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; font-src 'self' https://fonts.gstatic.com; base-uri 'self'; form-action 'self'; frame-ancestors 'self';");
 
   return newResponse;
 };
