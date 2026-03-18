@@ -29,7 +29,7 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
 
   // Security headers
   newResponse.headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
-  newResponse.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; frame-src https://challenges.cloudflare.com; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; font-src 'self'; base-uri 'self'; form-action 'self';");
+  newResponse.headers.set('Content-Security-Policy', "default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; frame-src https://challenges.cloudflare.com; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com https://cloudflareinsights.com; font-src 'self' https://fonts.gstatic.com; base-uri 'self'; form-action 'self';");
 
   return newResponse;
 };
