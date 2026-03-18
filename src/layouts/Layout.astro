@@ -84,7 +84,7 @@ const {
           "email": "bradlay@gmail.com"
         },
         "inLanguage": "en-US",
-        "copyrightYear": "2025",
+        "copyrightYear": "2026",
         "keywords": "home lab, kubernetes, automation, devops, infrastructure as code, software-defined datacenter, homelab, self-hosted"
       }
     </script>
@@ -126,13 +126,9 @@ const {
       </main>
     </div>
     <script>
-      // Register Service Worker for faster subsequent loads
+      // Unregister legacy service worker for returning visitors
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(() => {
-            // Silent fail - SW is optional enhancement
-          });
-        });
+        navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister()));
       }
 
       document.addEventListener('DOMContentLoaded', function () {

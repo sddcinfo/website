@@ -5,15 +5,15 @@
   "description": "Comprehensive documentation website for fully automated bare-metal Kubernetes platform provisioning - Astro + Cloudflare Workers",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node fix-routes.js",
+    "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy --config dist/server/wrangler.json"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^12.6.10",
+    "@astrojs/cloudflare": "^13.1.2",
     "@tailwindcss/vite": "^4.1.17",
-    "astro": "^5.15.7",
+    "astro": "^6.0.5",
     "mimetext": "^3.0.27",
     "tailwindcss": "^4.1.17"
   },

@@ -15,7 +15,7 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
   } else if (url.pathname.match(/\.(xml|txt|json|webmanifest)$/)) {
     // Semi-static files: cache for 1 day
     newResponse.headers.set('Cache-Control', 'public, max-age=86400, must-revalidate');
-  } else if (url.pathname === '/' || !url.pathname.includes('.')) {
+  } else if ((url.pathname === '/' || !url.pathname.includes('.')) && !url.pathname.startsWith('/api/')) {
     // HTML pages: cache for 1 hour, revalidate
     newResponse.headers.set('Cache-Control', 'public, max-age=3600, must-revalidate');
   }

@@ -5,26 +5,16 @@ import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  adapter: cloudflare({
-    mode: 'directory',  // Directory mode for Workers
-    wasmModuleImports: true,
-    routes: {
-      strategy: 'include-all'  // Let worker handle ALL routes including static assets
-    }
-  }),
+  site: 'https://sddc.info',
+  adapter: cloudflare(),
   output: 'server',
   trailingSlash: 'never',
-  compressHTML: true,  // Minify HTML for smaller payloads
+  compressHTML: true,
   vite: {
     plugins: [tailwindcss()],
     build: {
-      minify: 'esbuild',  // Fast minification
+      minify: 'esbuild',
       cssMinify: true,
-      rollupOptions: {
-        output: {
-          manualChunks: undefined  // Disable code splitting for faster loads
-        }
-      }
     }
   }
 });
