@@ -15,6 +15,7 @@ export default defineConfig({
     name: 'Inter',
     cssVariable: '--font-inter',
     weights: [400, 500, 600, 700],
+    display: 'block',
   }],
   trailingSlash: 'never',
   compressHTML: true,
