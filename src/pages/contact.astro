@@ -4,9 +4,7 @@ import Layout from '../layouts/Layout.astro';
 const title = 'Contact | sddc.info';
 const description = 'Get in touch with the SDDC.info team for questions about our automated Kubernetes infrastructure projects.';
 const canonicalURL = '/contact';
-// DEBUG: Cloudflare's always-passes visible test key
-// Production key: 0x4AAAAAACsyIo1SFmB1QJcg
-const turnstileSitekey = '1x00000000000000000000AA';
+const turnstileSitekey = '0x4AAAAAACsyIo1SFmB1QJcg';
 ---
 
 <Layout title={title} description={description} canonicalURL={canonicalURL}>
@@ -45,7 +43,7 @@ const turnstileSitekey = '1x00000000000000000000AA';
       </div>
 
       <!-- Turnstile CAPTCHA -->
-      <div class="cf-turnstile" data-sitekey={turnstileSitekey} data-theme="auto"></div>
+      <div class="cf-turnstile" data-sitekey={turnstileSitekey} data-theme="auto" data-error-callback="onTurnstileError"></div>
 
       <div class="hidden">
         <label for="honeypot">Leave this field empty</label>
@@ -60,31 +58,19 @@ const turnstileSitekey = '1x00000000000000000000AA';
     </form>
   </div>
 
-  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 
   <script is:inline>
-    // Debug: explicit Turnstile rendering with console logging
-    (function poll() {
-      if (window.turnstile) {
-        var el = document.querySelector('.cf-turnstile');
-        console.log('[Turnstile] API loaded, container:', el);
-        console.log('[Turnstile] container dimensions:', el && el.offsetWidth + 'x' + el.offsetHeight);
-        try {
-          var widgetId = window.turnstile.render(el, {
-            sitekey: el.getAttribute('data-sitekey'),
-            theme: 'auto',
-            callback: function(token) { console.log('[Turnstile] success, token length:', token.length); },
-            'error-callback': function(err) { console.error('[Turnstile] error:', err); },
-            'timeout-callback': function() { console.error('[Turnstile] timeout'); }
-          });
-          console.log('[Turnstile] render returned widgetId:', widgetId);
-        } catch(e) {
-          console.error('[Turnstile] render threw:', e);
-        }
-      } else {
-        setTimeout(poll, 100);
+    // Fallback if Turnstile fails (VPN, WARP, extensions, etc.)
+    window.onTurnstileError = function() {
+      var el = document.querySelector('.cf-turnstile');
+      if (el) {
+        el.innerHTML = '<p style="color:#6b7280;font-size:14px;padding:8px 0;">Security check unavailable. If you are using a VPN or Cloudflare WARP, try disabling it temporarily.</p>';
+        el.style.minHeight = 'auto';
+        // Allow form submission without Turnstile token
+        el.setAttribute('data-turnstile-failed', 'true');
       }
-    })();
+    };
   </script>
 
   <script>
@@ -99,9 +85,10 @@ const turnstileSitekey = '1x00000000000000000000AA';
         return;
       }
 
-      // Get Turnstile token
       const turnstileToken = formData.get('cf-turnstile-response');
-      if (!turnstileToken) {
+      const turnstileFailed = document.querySelector('[data-turnstile-failed]');
+
+      if (!turnstileToken && !turnstileFailed) {
         messageDiv.className = 'p-4 rounded-lg bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
         messageDiv.textContent = 'Please complete the security check.';
         messageDiv.classList.remove('hidden');
@@ -111,15 +98,13 @@ const turnstileSitekey = '1x00000000000000000000AA';
       try {
         const response = await fetch('/api/contact', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             name: formData.get('name'),
             email: formData.get('email'),
             subject: formData.get('subject'),
             message: formData.get('message'),
-            'cf-turnstile-response': turnstileToken
+            'cf-turnstile-response': turnstileToken || ''
           }),
         });
 
@@ -129,18 +114,14 @@ const turnstileSitekey = '1x00000000000000000000AA';
           messageDiv.className = 'p-4 rounded-lg bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200';
           messageDiv.textContent = 'Thank you! Your message has been sent successfully.';
           form.reset();
-          if (window.turnstile) {
-            window.turnstile.reset();
-          }
+          if (window.turnstile) window.turnstile.reset();
         } else {
           messageDiv.className = 'p-4 rounded-lg bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
           messageDiv.textContent = result.error || 'An error occurred. Please try again.';
         }
 
         messageDiv.classList.remove('hidden');
-        setTimeout(() => {
-          messageDiv.classList.add('hidden');
-        }, 5000);
+        setTimeout(() => messageDiv.classList.add('hidden'), 5000);
       } catch (error) {
         messageDiv.className = 'p-4 rounded-lg bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200';
         messageDiv.textContent = 'An error occurred. Please try again.';

@@ -46,19 +46,15 @@ export async function POST({ request, locals }) {
     // Use testing secret if not provided in env
     const turnstileSecret = env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA'; 
     
-    if (!turnstileToken) {
-       return new Response(
-        JSON.stringify({ error: 'Security check failed. Please try again.' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    const isValidToken = await verifyTurnstile(turnstileToken, turnstileSecret, clientIP);
-    if (!isValidToken) {
-      return new Response(
-        JSON.stringify({ error: 'Invalid security token. Please refresh and try again.' }),
-        { status: 403, headers: { 'Content-Type': 'application/json' } }
-      );
+    // Verify Turnstile if token present (gracefully degrade if widget failed — VPN/WARP/extensions)
+    if (turnstileToken) {
+      const isValidToken = await verifyTurnstile(turnstileToken, turnstileSecret, clientIP);
+      if (!isValidToken) {
+        return new Response(
+          JSON.stringify({ error: 'Invalid security token. Please refresh and try again.' }),
+          { status: 403, headers: { 'Content-Type': 'application/json' } }
+        );
+      }
     }
 
     // Validate email format
