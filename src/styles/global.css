@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark-mode, .dark-mode *));
+
 @theme inline {
   --font-sans: var(--font-inter), system-ui, sans-serif;
 }
@@ -19,44 +21,10 @@
 }
 
 @layer base {
-  :root {
-    --bg-color: #ffffff;
-    --bg-alt-color: #f7f7f7;
-    --text-color: #2c3e50;
-    --text-muted-color: #7f8c8d;
-    --primary-color: #3498db;
-    --primary-hover-color: #2980b9;
-    --border-color: #ecf0f1;
-    --card-bg-color: #ffffff;
-    --card-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    --code-bg-color: #2c3e50;
-    --code-text-color: #ecf0f1;
-    --sidebar-bg-color: #2c3e50;
-    --sidebar-text-color: #ecf0f1;
-    --sidebar-link-hover-bg: #34495e;
-  }
-
-  body.dark-mode {
-    --bg-color: #1a1a1a;
-    --bg-alt-color: #242424;
-    --text-color: #ecf0f1;
-    --text-muted-color: #95a5a6;
-    --primary-color: #3498db;
-    --primary-hover-color: #5dade2;
-    --border-color: #3a3a3a;
-    --card-bg-color: #2c2c2c;
-    --card-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    --code-bg-color: #0d0d0d;
-    --code-text-color: #ecf0f1;
-    --sidebar-bg-color: #212121;
-    --sidebar-text-color: #ecf0f1;
-    --sidebar-link-hover-bg: #383838;
-  }
-
   body {
     font-family: var(--font-sans);
     line-height: 1.7;
-    color: var(--text-color);
+    color: #2c3e50;
     background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #dbeafe 100%);
     margin: 0;
     transition: background-color 0.2s, color 0.2s;
@@ -79,6 +47,7 @@
   }
 
   body.dark-mode {
+    color: #ecf0f1;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
   }
 
