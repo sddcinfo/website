@@ -25,6 +25,15 @@
     scrollbar-gutter: stable;
   }
 
+  /* Turnstile widget needs explicit height — Tailwind resets collapse it */
+  .cf-turnstile {
+    min-height: 65px;
+  }
+  .cf-turnstile iframe {
+    min-height: 65px !important;
+    height: 65px !important;
+  }
+
   body {
     font-family: var(--font-sans);
     line-height: 1.7;
