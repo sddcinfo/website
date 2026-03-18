@@ -209,10 +209,12 @@ ${new Date().toISOString()}
     );
 
   } catch (error) {
-    console.error('Contact form error:', error);
+    const errMsg = error instanceof Error ? error.message : String(error);
+    console.error('Contact form error:', errMsg);
     return new Response(
       JSON.stringify({
-        error: 'An unexpected error occurred. Please try again later.'
+        error: 'An unexpected error occurred. Please try again later.',
+        debug: errMsg,
       }),
       { status: 500, headers: { 'Content-Type': 'application/json' } }
     );
