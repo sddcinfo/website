@@ -16,8 +16,10 @@ export const onRequest: MiddlewareHandler = async (context, next) => {
     // Semi-static files: cache for 1 day
     newResponse.headers.set('Cache-Control', 'public, max-age=86400, must-revalidate');
   } else if ((url.pathname === '/' || !url.pathname.includes('.')) && !url.pathname.startsWith('/api/')) {
-    // HTML pages: cache for 1 hour, revalidate
-    newResponse.headers.set('Cache-Control', 'public, max-age=3600, must-revalidate');
+    // HTML pages: always revalidate (browser makes conditional request,
+    // gets 304 if unchanged — fast, but never serves stale HTML with
+    // broken asset references after a deploy)
+    newResponse.headers.set('Cache-Control', 'no-cache');
   }
 
   // Performance headers
