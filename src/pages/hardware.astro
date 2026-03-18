@@ -103,18 +103,9 @@ const galleryImages = [
 
 <Layout title={title} description={description} canonicalURL={canonicalURL}>
   <!-- Hero Section -->
-  <div class="glass-card overflow-hidden mb-6">
-    <div class="section-header">
-      The Hardware Build: A Compact Datacenter
-    </div>
-    <div class="p-6">
-      <p class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-3">
-        {buildStory.vision.title}
-      </p>
-      <p class="text-gray-700 dark:text-gray-300 leading-relaxed">
-        {buildStory.vision.text}
-      </p>
-    </div>
+  <div class="glass-card p-6 mb-6">
+    <h1 class="text-4xl font-bold text-gradient mb-4">The Hardware Build</h1>
+    <p class="text-lg text-gray-600 dark:text-gray-300">A compact datacenter: {buildStory.vision.text}</p>
   </div>
 
   <!-- Challenge Section -->
