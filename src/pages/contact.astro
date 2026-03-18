@@ -58,7 +58,32 @@ const turnstileSitekey = '0x4AAAAAACsyIo1SFmB1QJcg';
     </form>
   </div>
 
-  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+  <script is:inline src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+
+  <script is:inline>
+    // Debug: explicit Turnstile rendering with console logging
+    (function poll() {
+      if (window.turnstile) {
+        var el = document.querySelector('.cf-turnstile');
+        console.log('[Turnstile] API loaded, container:', el);
+        console.log('[Turnstile] container dimensions:', el && el.offsetWidth + 'x' + el.offsetHeight);
+        try {
+          var widgetId = window.turnstile.render(el, {
+            sitekey: el.getAttribute('data-sitekey'),
+            theme: 'auto',
+            callback: function(token) { console.log('[Turnstile] success, token length:', token.length); },
+            'error-callback': function(err) { console.error('[Turnstile] error:', err); },
+            'timeout-callback': function() { console.error('[Turnstile] timeout'); }
+          });
+          console.log('[Turnstile] render returned widgetId:', widgetId);
+        } catch(e) {
+          console.error('[Turnstile] render threw:', e);
+        }
+      } else {
+        setTimeout(poll, 100);
+      }
+    })();
+  </script>
 
   <script>
     document.getElementById('contact-form').addEventListener('submit', async (e) => {
