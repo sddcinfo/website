@@ -42,10 +42,10 @@ export async function POST({ request }) {
     }
 
     const clientIP = request.headers.get('CF-Connecting-IP') || 'unknown';
-    const turnstileSecret = env.TURNSTILE_SECRET_KEY || '1x0000000000000000000000000000000AA';
+    const turnstileSecret = env.TURNSTILE_SECRET_KEY;
     
-    // Verify Turnstile if token present (gracefully degrade if widget failed — VPN/WARP/extensions)
-    if (turnstileToken) {
+    // Verify Turnstile if token and secret present (gracefully degrade if widget failed — VPN/WARP/extensions)
+    if (turnstileToken && turnstileSecret) {
       const isValidToken = await verifyTurnstile(turnstileToken as string, turnstileSecret, clientIP);
       if (!isValidToken) {
         return new Response(
