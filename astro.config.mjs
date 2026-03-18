@@ -1,5 +1,5 @@
 // @ts-check
-import { defineConfig } from 'astro/config';
+import { defineConfig, fontProviders } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
@@ -10,6 +10,12 @@ export default defineConfig({
   adapter: cloudflare(),
   integrations: [sitemap()],
   output: 'server',
+  fonts: [{
+    provider: fontProviders.google(),
+    name: 'Inter',
+    cssVariable: '--font-inter',
+    weights: [400, 500, 600, 700],
+  }],
   trailingSlash: 'never',
   compressHTML: true,
   vite: {
