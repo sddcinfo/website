@@ -1,43 +1,44 @@
-# Astro Starter Kit: Minimal
+# sddc.info
 
-```sh
-npm create astro@latest -- --template minimal
+Documentation website for a fully automated bare-metal Kubernetes home lab platform. Built with Astro 6, Tailwind CSS v4, and deployed on Cloudflare Workers.
+
+## Tech Stack
+
+- **Framework**: [Astro 6](https://astro.build) (SSR mode)
+- **Styling**: [Tailwind CSS v4](https://tailwindcss.com) (CSS-first config)
+- **Font**: Inter via Astro Fonts API (self-hosted at build time)
+- **Deployment**: [Cloudflare Workers](https://workers.cloudflare.com) with static asset serving
+- **Email**: Cloudflare Email Workers (contact form)
+- **CAPTCHA**: Cloudflare Turnstile
+
+## Commands
+
+| Command | Action |
+|:--------|:-------|
+| `npm install` | Install dependencies |
+| `npm run dev` | Start dev server (`localhost:4321`) |
+| `npm run build` | Build for production (`dist/`) |
+| `npm run preview` | Preview build with workerd runtime |
+| `npm run deploy` | Deploy to Cloudflare Workers |
+
+## Architecture
+
+```
+src/
+  layouts/Layout.astro    # Shell: head, nav sidebar, dark mode, JSON-LD
+  pages/                  # 11 content pages + 404 + API endpoint
+    api/contact.ts        # POST handler (Turnstile + Email Workers)
+  styles/global.css       # Tailwind theme, components, dark mode
+  middleware.ts           # Cache-Control, CSP, security headers
+public/                   # Static assets (images, robots.txt, manifest)
+wrangler.toml             # Worker config (vars, bindings, custom domains)
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Deployment
 
-## 🚀 Project Structure
+The site is deployed as a Cloudflare Worker with custom domains `sddc.info` and `www.sddc.info`. The Astro Cloudflare adapter (v13) uses `@cloudflare/vite-plugin` to build the worker and static assets separately:
 
-Inside of your Astro project, you'll see the following folders and files:
+- `dist/server/` - Worker entry point + generated `wrangler.json`
+- `dist/client/` - Static assets (images, CSS, fonts)
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+Deploy reads the generated config: `wrangler deploy --config dist/server/wrangler.json`
