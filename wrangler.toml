@@ -3,11 +3,12 @@ main = "dist/_worker.js/index.js"
 compatibility_date = "2024-11-14"
 compatibility_flags = ["nodejs_compat"]
 
-# Custom domain routing
-routes = [
-  { pattern = "sddc.info/*", zone_name = "sddc.info" },
-  { pattern = "www.sddc.info/*", zone_name = "sddc.info" }
-]
+# Custom domains (managed by Cloudflare, auto DNS + SSL)
+[[workers.custom_domains]]
+hostname = "sddc.info"
+
+[[workers.custom_domains]]
+hostname = "www.sddc.info"
 
 [build]
 command = "npm run build"
