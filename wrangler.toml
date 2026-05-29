@@ -1,5 +1,5 @@
 name = "sddc-info-website"
-compatibility_date = "2026-03-17"
+compatibility_date = "2026-04-11"
 compatibility_flags = ["nodejs_compat"]
 
 # Custom domains (managed by Cloudflare, auto DNS + SSL)
